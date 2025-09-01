@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import AudioReactiveAvatar from '@/components/avatar/AudioReactiveAvatar';
+// AudioReactiveAvatar component is not implemented yet
+// import AudioReactiveAvatar from '@/components/avatar/AudioReactiveAvatar';
 
 export default function AudioReactiveAvatarDemo() {
   const [isListening, setIsListening] = useState(false);
@@ -313,13 +314,15 @@ export default function AudioReactiveAvatarDemo() {
           </div>
 
           {/* アバター表示 */}
-          <div className="bg-gray-800 rounded-lg p-6 h-[600px]">
-            <AudioReactiveAvatar
-              audioAnalyser={analyserRef.current}
-              isSpeaking={isListening || isPlayingAudio}
-              currentPhoneme={currentPhoneme}
-              showDebug={true}
-            />
+          <div className="bg-gray-800 rounded-lg p-6 h-[600px] flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-gray-400 mb-4">AudioReactiveAvatar component is not implemented yet</p>
+              <p className="text-sm text-gray-500">
+                Audio Analysis: {isListening || isPlayingAudio ? 'Active' : 'Inactive'}<br />
+                Phoneme: {currentPhoneme || 'None'}<br />
+                Debug: Enabled
+              </p>
+            </div>
           </div>
         </div>
       </div>

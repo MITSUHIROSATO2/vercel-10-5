@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import SimplifiedLipSyncAvatar from '@/components/SimplifiedLipSyncAvatar';
+// SimplifiedLipSyncAvatar component is not implemented yet
+// import SimplifiedLipSyncAvatar from '@/components/SimplifiedLipSyncAvatar';
 
 export default function TestAvatarPage() {
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -14,12 +15,15 @@ export default function TestAvatarPage() {
         <h1 className="text-3xl font-bold text-white mb-8">アバターアニメーションテスト</h1>
         
         {/* アバター表示 */}
-        <div className="mb-8">
-          <SimplifiedLipSyncAvatar 
-            isSpeaking={isSpeaking}
-            audioLevel={audioLevel}
-            currentWord={currentWord}
-          />
+        <div className="mb-8 bg-gray-800 rounded-lg p-6 h-[400px] flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-gray-400 mb-4">SimplifiedLipSyncAvatar component is not implemented yet</p>
+            <p className="text-sm text-gray-500">
+              Speaking: {isSpeaking ? 'Yes' : 'No'}<br />
+              Audio Level: {(audioLevel * 100).toFixed(0)}%<br />
+              Current Word: {currentWord}
+            </p>
+          </div>
         </div>
         
         {/* コントロールパネル */}
