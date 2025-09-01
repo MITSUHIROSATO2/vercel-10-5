@@ -505,7 +505,7 @@ export default function FacialExpressionAnalyzer() {
                     showWireframe={showWireframe}
                     onMorphListUpdate={(morphs) => setMorphList(morphs)}
                   />
-                  <Environment preset="studio" intensity={0.5} />
+                  <Environment preset="studio" />
                 </Suspense>
                 <OrbitControls 
                   target={selectedAvatar.includes('boy') ? [0, 1.5, 0] : [0, 1.6, 0]}
