@@ -271,8 +271,8 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
             }
             
             // Opacityマップ（まつ毛用）
-            if (mapping.opacity) {
-              const opacityMap = await loadTexture(mapping.opacity);
+            if ('opacity' in mapping && mapping.opacity) {
+              const opacityMap = await loadTexture(mapping.opacity as string);
               newMat.alphaMap = opacityMap;
               newMat.transparent = true;
               newMat.alphaTest = 0.3;

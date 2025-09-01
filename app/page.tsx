@@ -197,7 +197,10 @@ export default function Home() {
     
     // 編集済みがなければオリジナルまたはカスタムから取得
     if (!scenario) {
-      scenario = [...patientScenarios, ...customScenarios].find(s => s.id === scenarioId);
+      const foundScenario = [...patientScenarios, ...customScenarios].find(s => s.id === scenarioId);
+      if (foundScenario) {
+        scenario = foundScenario;
+      }
     }
     
     if (scenario) {
@@ -233,7 +236,7 @@ export default function Home() {
       // 新規作成
       setEvaluations(prev => [...prev, evaluation]);
     }
-    setShowEvaluation(false);
+    setShowAIEvaluation(false);
     
     // localStorageに保存
     const storedEvaluations = localStorage.getItem('evaluations');
@@ -265,7 +268,7 @@ export default function Home() {
   const handleEditEvaluation = (evaluation: EvaluationType) => {
     setEditingEvaluation(evaluation);
     setShowEvaluationList(false);
-    setShowEvaluation(true);
+    setShowAIEvaluation(true);
   };
 
   // localStorageから評価とシナリオを読み込み

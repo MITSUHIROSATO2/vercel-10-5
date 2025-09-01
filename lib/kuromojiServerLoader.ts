@@ -33,7 +33,7 @@ export class ServerDictionaryLoader {
               decompressed.byteOffset,
               decompressed.byteOffset + decompressed.byteLength
             );
-            resolve(arrayBuffer);
+            resolve(arrayBuffer as ArrayBuffer);
           });
         } else {
           // Convert Buffer to ArrayBuffer
@@ -41,7 +41,7 @@ export class ServerDictionaryLoader {
             data.byteOffset,
             data.byteOffset + data.byteLength
           );
-          resolve(arrayBuffer);
+          resolve(arrayBuffer as ArrayBuffer);
         }
       });
     });

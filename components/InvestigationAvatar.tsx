@@ -106,8 +106,10 @@ function AvatarInvestigator() {
     if (actions) {
       console.log('Available actions:', Object.keys(actions));
       Object.values(actions).forEach(action => {
-        action.play();
-        action.setEffectiveWeight(0.1);
+        if (action) {
+          action.play();
+          action.setEffectiveWeight(0.1);
+        }
       });
     }
     

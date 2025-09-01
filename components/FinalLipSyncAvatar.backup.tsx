@@ -6,8 +6,8 @@ import { OrbitControls, useGLTF, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 // 少年アバター用のリップシンクコンポーネントを動的インポート
-const BoyAvatarLipSync = lazy(() => import('./BoyAvatarLipSync'));
-const SimpleBoyAvatar = lazy(() => import('./SimpleBoyAvatar'));
+// const BoyAvatarLipSync = lazy(() => import('./BoyAvatarLipSync'));
+// const SimpleBoyAvatar = lazy(() => import('./SimpleBoyAvatar'));
 
 interface AvatarModelProps {
   isSpeaking: boolean;
@@ -270,14 +270,8 @@ function AvatarModel({
   // 少年アバターの場合は専用コンポーネントを使用
   if (isBoyModel) {
     // シンプル版を使用（より安定）
-    return (
-      <SimpleBoyAvatar
-        isSpeaking={isSpeaking}
-        audioLevel={audioLevel}
-        currentWord={currentWord}
-        onLoaded={onLoaded}
-      />
-    );
+    // SimpleBoyAvatarは存在しないため、nullを返す
+    return null;
   }
   
   // モデル別のリップシンク設定
@@ -1328,7 +1322,7 @@ export default function FinalLipSyncAvatar({
             modelPath={modelPath}
             lipSyncIntensity={lipSyncIntensity}
           />
-          <Environment preset="studio" intensity={0.5} />
+          <Environment preset="studio" />
         </Suspense>
         
         <OrbitControls

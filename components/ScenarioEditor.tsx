@@ -22,7 +22,7 @@ export default function ScenarioEditor({ scenario, onSave, onCancel }: ScenarioE
     setEditedScenario(prev => ({
       ...prev,
       [category]: {
-        ...prev[category as keyof PatientScenario],
+        ...(prev[category as keyof PatientScenario] as any || {}),
         [field]: value
       }
     }));

@@ -178,7 +178,7 @@ export default function SimplestLipSync({
             isSpeaking={isSpeaking} 
             audioLevel={audioLevel}
           />
-          <Environment preset="studio" intensity={0.5} />
+          <Environment preset="studio" />
         </Suspense>
         
         <OrbitControls

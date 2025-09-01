@@ -376,7 +376,7 @@ export default function StableLipSyncAvatar({
             currentPhoneme={currentPhoneme}
             speechProgress={speechProgress}
           />
-          <Environment preset="studio" intensity={0.5} />
+          <Environment preset="studio" />
         </Suspense>
         
         <OrbitControls

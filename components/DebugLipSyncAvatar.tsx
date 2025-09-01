@@ -237,7 +237,7 @@ export default function DebugLipSyncAvatar({
         {/* アバターモデル */}
         <Suspense fallback={<Loader />}>
           <AvatarModel isSpeaking={isSpeaking} audioLevel={audioLevel} />
-          <Environment preset="studio" intensity={0.5} />
+          <Environment preset="studio" />
         </Suspense>
         
         {/* カメラコントロール */}

@@ -167,7 +167,7 @@ export default function TestLipSyncAvatar({
             audioLevel={audioLevel}
             testIndex={currentTestIndex}
           />
-          <Environment preset="studio" intensity={0.5} />
+          <Environment preset="studio" />
         </Suspense>
         
         <OrbitControls

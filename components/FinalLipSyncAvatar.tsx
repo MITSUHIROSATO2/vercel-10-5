@@ -1085,7 +1085,8 @@ function AvatarModel({
     
     Object.entries(emotionPreset).forEach(([morphName, targetValue]) => {
       const currentValue = emotionMorphValues.current[morphName] || 0;
-      emotionMorphValues.current[morphName] = currentValue + (targetValue - currentValue) * 0.1;
+      const target = targetValue as number;
+      emotionMorphValues.current[morphName] = currentValue + (target - currentValue) * 0.1;
     });
     
     // 単語が変わったかチェック（先行動作のため）
@@ -1780,14 +1781,14 @@ function AvatarModel({
           applyMorph('Brow_Drop_Right', blinkValue * 0.1);
           
           // デバッグ：適用されたモーフターゲットを確認（一度だけ）
-          if (blinkValue > 0.9 && !window.blinkDebugLogged) {
+          if (blinkValue > 0.9 && !(window as any).blinkDebugLogged) {
             console.log(`[boy_improved] Applying blink morphs:
               A14/A15: ${(blinkValue * 1.2).toFixed(2)}
               Eye_Blink_L/R: ${blinkValue.toFixed(2)}
               Eyes_Blink: ${(blinkValue * 0.8).toFixed(2)}
               EO morphs: ${(blinkValue * 0.3).toFixed(2)}
               Cheek/Brow: ${(blinkValue * 0.25).toFixed(2)} / ${(blinkValue * 0.1).toFixed(2)}`);
-            window.blinkDebugLogged = true;
+            (window as any).blinkDebugLogged = true;
           }
         } else {
           // 成人アバター
@@ -2123,7 +2124,7 @@ export default function FinalLipSyncAvatar({
             selectedAvatar={selectedAvatar}
             lipSyncIntensity={lipSyncIntensity}
           />
-          <Environment preset="studio" intensity={0.5} />
+          <Environment preset="studio" />
         </Suspense>
         
         <OrbitControls

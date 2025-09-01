@@ -256,7 +256,7 @@ export async function applyAdultImprovedTextures(scene: THREE.Object3D) {
           try {
             // 色の設定
             if ('color' in mapping && mapping.color) {
-              newMat.color = new THREE.Color(mapping.color);
+              newMat.color = new THREE.Color(mapping.color as THREE.ColorRepresentation);
             }
             
             // テクスチャの読み込み

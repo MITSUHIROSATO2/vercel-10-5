@@ -212,7 +212,7 @@ export default function DirectIndexAvatar({
             audioLevel={audioLevel}
             currentWord={currentWord}
           />
-          <Environment preset="studio" intensity={0.5} />
+          <Environment preset="studio" />
         </Suspense>
         
         <OrbitControls

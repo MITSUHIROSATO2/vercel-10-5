@@ -111,7 +111,7 @@ export function useAdvancedLipSync(
   const [tonguePosition, setTonguePosition] = useState({ x: 0, y: 0, z: 0 });
   
   const phonemeQueueRef = useRef<PhonemeData[]>([]);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number>(0);
   const lastUpdateTimeRef = useRef<number>(0);
   
   // テキストから音素列を生成
