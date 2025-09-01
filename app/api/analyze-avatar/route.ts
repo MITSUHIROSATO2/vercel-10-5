@@ -7,7 +7,7 @@ import path from 'path';
 
 // Node.js環境でThree.jsを使うための設定
 if (typeof window === 'undefined') {
-  // @ts-ignore
+  // @ts-expect-error - self is not defined in Node.js environment
   global.self = global;
 }
 

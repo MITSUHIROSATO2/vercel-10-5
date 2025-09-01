@@ -1135,7 +1135,7 @@ function AvatarModel({
     }
     
     // リップシンクの計算（音声波形同期版）
-    let targetMorphs: { [key: string]: number } = {};
+    const targetMorphs: { [key: string]: number } = {};
     if (isSpeaking) {
       // 実際の音声レベルを使用（スムージング済み）
       const realAudioLevel = smoothedAudioLevel.current || audioLevel || 0.3;
@@ -1268,8 +1268,8 @@ function AvatarModel({
     group.current.position.y = Math.sin(animationTime.current * 0.8) * 0.001;
     
     // 舌の位置と回転の変数（スコープ外でも使用するため）
-    let tongueRotation = { x: 0, y: 0, z: 0 };
-    let tonguePosition = { x: 0, y: 0, z: 0 };
+    const tongueRotation = { x: 0, y: 0, z: 0 };
+    const tonguePosition = { x: 0, y: 0, z: 0 };
     
     // 舌のモーフターゲット制御 - 下唇・下の歯と連動
     if (isSpeaking) {
