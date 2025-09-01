@@ -160,8 +160,14 @@ async function analyzeFBX(filePath: string): Promise<ModelData> {
   
   return new Promise((resolve, reject) => {
     try {
+      // Convert Buffer to ArrayBuffer
+      const arrayBuffer = fileBuffer.buffer.slice(
+        fileBuffer.byteOffset,
+        fileBuffer.byteOffset + fileBuffer.byteLength
+      );
+      
       // FBXLoader requires ArrayBuffer
-      const fbx = loader.parse(fileBuffer.buffer, '');
+      const fbx = loader.parse(arrayBuffer as ArrayBuffer, '');
       const data = analyzeModel(fbx);
       resolve(data);
     } catch (error) {
