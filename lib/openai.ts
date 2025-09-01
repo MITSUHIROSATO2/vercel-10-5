@@ -1,8 +1,22 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// OpenAIクライアントを条件付きで初期化
+const createOpenAIClient = () => {
+  const apiKey = process.env.OPENAI_API_KEY;
+  
+  // APIキーが設定されていない場合はダミーのキーを使用（ビルド時のエラーを回避）
+  if (!apiKey || apiKey === 'your_openai_api_key_here') {
+    return new OpenAI({
+      apiKey: 'dummy-key-for-build',
+    });
+  }
+  
+  return new OpenAI({
+    apiKey: apiKey,
+  });
+};
+
+const openai = createOpenAIClient();
 
 export interface PatientMessage {
   role: 'system' | 'user' | 'assistant';

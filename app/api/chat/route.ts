@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     console.log('API Key exists:', !!apiKey);
     console.log('API Key length:', apiKey?.length);
     
-    if (!apiKey || apiKey === 'your_openai_api_key_here') {
+    if (!apiKey || apiKey === 'your_openai_api_key_here' || apiKey === 'dummy-key-for-build') {
       console.log('No valid API key found, using mock response');
       const mockResponse = getRandomMockResponse();
       return NextResponse.json({ response: mockResponse });
