@@ -1,0 +1,6067 @@
+{
+  "meshes": [
+    {
+      "name": "Blazer",
+      "type": "SkinnedMesh",
+      "shapeKeys": [],
+      "vertexCount": 2660,
+      "faceCount": 4154,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.662145733833313,
+          "y": 0.8924515247344971,
+          "z": -0.17071698606014252
+        },
+        "max": {
+          "x": 0.6665827035903931,
+          "y": 1.6141873598098755,
+          "z": 0.15122519433498383
+        },
+        "center": {
+          "x": 0.00002218484828953038,
+          "y": 0.012533194142583137,
+          "z": -0.00009745895644741598
+        },
+        "size": {
+          "x": 1.328728437423706,
+          "y": 0.7217358350753784,
+          "z": 0.32194218039512634
+        }
+      },
+      "isMouthRelated": false,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Blazer",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Business_Shirt",
+      "type": "SkinnedMesh",
+      "shapeKeys": [],
+      "vertexCount": 1107,
+      "faceCount": 1646,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.6648668050765991,
+          "y": 0.9973922371864319,
+          "z": -0.09913019835948944
+        },
+        "max": {
+          "x": 0.661726176738739,
+          "y": 1.6222561597824097,
+          "z": 0.1274738311767578
+        },
+        "center": {
+          "x": -0.00001570314133830797,
+          "y": 0.013098241692075685,
+          "z": 0.00014171816091869405
+        },
+        "size": {
+          "x": 1.3265929818153381,
+          "y": 0.6248639225959778,
+          "z": 0.22660402953624725
+        }
+      },
+      "isMouthRelated": false,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Business_Shirt",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_1",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 331,
+      "faceCount": 592,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.12626408110372722,
+          "y": 1.5028231143951416,
+          "z": -0.111605329439044
+        },
+        "max": {
+          "x": 0.12483939056983218,
+          "y": 1.7664762735366821,
+          "z": 0.18085654079914093
+        },
+        "center": {
+          "x": -0.000007123452510253653,
+          "y": 0.01634649657428644,
+          "z": 0.0003462560490610587
+        },
+        "size": {
+          "x": 0.2511034716735594,
+          "y": 0.2636531591415405,
+          "z": 0.29246187023818493
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Tongue",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_2",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 4354,
+      "faceCount": 8316,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.4788994311238639,
+          "y": 0.9392257928848267,
+          "z": -0.5543618937954307
+        },
+        "max": {
+          "x": 0.4612185398582369,
+          "y": 2.392137885093689,
+          "z": 0.549375451169908
+        },
+        "center": {
+          "x": -0.0000884044543521414,
+          "y": 0.016656818017583674,
+          "z": -0.000024932212570334678
+        },
+        "size": {
+          "x": 0.9401179709821008,
+          "y": 1.4529120922088623,
+          "z": 1.1037373449653387
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Skin_Head",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_3",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 234,
+      "faceCount": 340,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.18115882575511932,
+          "y": 1.3676657676696777,
+          "z": -0.14371932670474052
+        },
+        "max": {
+          "x": 0.18140916526317596,
+          "y": 1.5571712255477905,
+          "z": 0.09762036055326462
+        },
+        "center": {
+          "x": 0.000001251697512305583,
+          "y": 0.014624184639211335,
+          "z": -0.0002304948256054186
+        },
+        "size": {
+          "x": 0.3625679910182953,
+          "y": 0.1895054578781128,
+          "z": 0.24133968725800514
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Skin_Body",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_4",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 3762,
+      "faceCount": 6456,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.8001275882124901,
+          "y": 1.1244032382965088,
+          "z": -0.14131348580121994
+        },
+        "max": {
+          "x": 0.8001407235860825,
+          "y": 1.5527901649475098,
+          "z": 0.0549005214124918
+        },
+        "center": {
+          "x": 6.567686649389115e-8,
+          "y": 0.013385966717020414,
+          "z": -0.00043206481228623937
+        },
+        "size": {
+          "x": 1.6002683117985725,
+          "y": 0.428386926651001,
+          "z": 0.19621400721371174
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Skin_Arm",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_5",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 210,
+      "faceCount": 308,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.110445536673069,
+          "y": 0.04187791049480438,
+          "z": -0.06171994376927614
+        },
+        "max": {
+          "x": 0.11002165451645851,
+          "y": 0.12936867773532867,
+          "z": 0.05123273318167776
+        },
+        "center": {
+          "x": -0.000002119410735679922,
+          "y": 0.0008562329220123677,
+          "z": -0.0000524360517659548
+        },
+        "size": {
+          "x": 0.2204671911895275,
+          "y": 0.08749076724052429,
+          "z": 0.1129526769509539
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Skin_Leg",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_6",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 680,
+      "faceCount": 1120,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.7967711687088013,
+          "y": 1.1371161937713623,
+          "z": -0.0951293408870697
+        },
+        "max": {
+          "x": 0.7967715859413147,
+          "y": 1.1813713312149048,
+          "z": 0.03223980963230133
+        },
+        "center": {
+          "x": 2.086162520509305e-9,
+          "y": 0.011592437365820163,
+          "z": -0.00031444764924538904
+        },
+        "size": {
+          "x": 1.593542754650116,
+          "y": 0.04425513744354248,
+          "z": 0.12736915051937103
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Nails",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_7",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 748,
+      "faceCount": 1200,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.0835274439305067,
+          "y": 1.5695525407791138,
+          "z": 0.05099271237850189
+        },
+        "max": {
+          "x": 0.08535860478878021,
+          "y": 1.7717660665512085,
+          "z": 0.14751698076725006
+        },
+        "center": {
+          "x": 0.000009155804086719357,
+          "y": 0.016706592663230158,
+          "z": 0.0009925484435435727
+        },
+        "size": {
+          "x": 0.16888604871928692,
+          "y": 0.20221352577209473,
+          "z": 0.09652426838874817
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Eyelash",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_8",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 1403,
+      "faceCount": 2362,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.03243790194392204,
+          "y": 1.6294792890548706,
+          "z": 0.03022450953722
+        },
+        "max": {
+          "x": 0.03147374093532562,
+          "y": 1.6591819524765015,
+          "z": 0.09344015270471573
+        },
+        "center": {
+          "x": -0.000004820804935228712,
+          "y": 0.016443305840120326,
+          "z": 0.0006183232973890757
+        },
+        "size": {
+          "x": 0.06391164287924767,
+          "y": 0.02970266342163086,
+          "z": 0.06321564316749573
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Upper_Teeth",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_9",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 1474,
+      "faceCount": 2480,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.03238787176087499,
+          "y": 1.5787910223007202,
+          "z": 0.0059354230761528015
+        },
+        "max": {
+          "x": 0.03158794343471527,
+          "y": 1.6394513845443726,
+          "z": 0.08911190181970596
+        },
+        "center": {
+          "x": -0.000003999641541399621,
+          "y": 0.016091211674558847,
+          "z": 0.0004752366138569275
+        },
+        "size": {
+          "x": 0.06397581519559026,
+          "y": 0.060660362243652344,
+          "z": 0.08317647874355316
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Lower_Teeth",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_10",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 165,
+      "faceCount": 320,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.05096127465367317,
+          "y": 1.6866549253463745,
+          "z": 0.04514707624912262
+        },
+        "max": {
+          "x": -0.016972457990050316,
+          "y": 1.720788836479187,
+          "z": 0.07881397008895874
+        },
+        "center": {
+          "x": -0.0003396686556264312,
+          "y": 0.017037218428316292,
+          "z": 0.0006198052178366803
+        },
+        "size": {
+          "x": 0.033988816663622856,
+          "y": 0.0341339111328125,
+          "z": 0.03366689383983612
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Eye_R",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_11",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 165,
+      "faceCount": 320,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.051046255975961685,
+          "y": 1.6865698099136353,
+          "z": 0.04506290704011917
+        },
+        "max": {
+          "x": -0.01688748598098755,
+          "y": 1.7208740711212158,
+          "z": 0.07957257330417633
+        },
+        "center": {
+          "x": -0.0003396687021925589,
+          "y": 0.017037219024362726,
+          "z": 0.0006231773877923771
+        },
+        "size": {
+          "x": 0.034158769994974136,
+          "y": 0.034304261207580566,
+          "z": 0.03450966626405716
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Cornea_R",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_12",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 165,
+      "faceCount": 320,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": 0.01650630123913288,
+          "y": 1.6862850189208984,
+          "z": 0.043788861483335495
+        },
+        "max": {
+          "x": 0.050595514476299286,
+          "y": 1.7205168008804321,
+          "z": 0.07755862921476364
+        },
+        "center": {
+          "x": 0.00033550907107794854,
+          "y": 0.01703400871826688,
+          "z": 0.0006067374399288568
+        },
+        "size": {
+          "x": 0.034089213237166405,
+          "y": 0.03423178195953369,
+          "z": 0.033769767731428146
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Eye_L",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_Body_13",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Merged_Open_Mouth"
+      ],
+      "vertexCount": 165,
+      "faceCount": 320,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": 0.016421079635620117,
+          "y": 1.686199426651001,
+          "z": 0.04370444267988205
+        },
+        "max": {
+          "x": 0.0506807379424572,
+          "y": 1.7206023931503296,
+          "z": 0.07831954210996628
+        },
+        "center": {
+          "x": 0.0003355090803911741,
+          "y": 0.01703400871826688,
+          "z": 0.0006101199103119986
+        },
+        "size": {
+          "x": 0.03425965830683708,
+          "y": 0.03440296649932861,
+          "z": 0.03461509943008423
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Std_Cornea_L",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_EyeOcclusion_1",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "EO Inner Height L",
+        "EO Inner Height R",
+        "EO Inner Upper Height L",
+        "EO Inner Upper Height R",
+        "EO Inner Lower Height L",
+        "EO Inner Lower Height R",
+        "EO Center Upper Height L",
+        "EO Center Upper Height R",
+        "EO Center Lower Height L",
+        "EO Center Lower Height R",
+        "EO Outer Height L",
+        "EO Outer Height R",
+        "EO Outer Upper Height L",
+        "EO Outer Upper Height R",
+        "EO Outer Lower Height L",
+        "EO Outer Lower Height R",
+        "EO Inner Width L",
+        "EO Inner Width R",
+        "EO Outer Width L",
+        "EO Outer Width R",
+        "EO Bulge L",
+        "EO Bulge R",
+        "EO Depth L",
+        "EO Depth R",
+        "EO Duct Depth L",
+        "EO Duct Depth R",
+        "EO Upper Depth L",
+        "EO Upper Depth R",
+        "EO Lower Depth L",
+        "EO Lower Depth R",
+        "EO Inner Depth L",
+        "EO Inner Depth R",
+        "EO Inner Upper Depth L",
+        "EO Inner Upper Depth R",
+        "EO Inner Lower Depth L",
+        "EO Inner Lower Depth R",
+        "EO Center Upper Depth L",
+        "EO Center Upper Depth R",
+        "EO Center Lower Depth L",
+        "EO Center Lower Depth R",
+        "EO Outer Depth L",
+        "EO Outer Depth R",
+        "EO Outer Upper Depth L",
+        "EO Outer Upper Depth R",
+        "EO Outer Lower Depth L",
+        "EO Outer Lower Depth R"
+      ],
+      "vertexCount": 91,
+      "faceCount": 144,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.05610530450940132,
+          "y": 1.6505526304244995,
+          "z": 0.06462705135345459
+        },
+        "max": {
+          "x": -0.005295200273394585,
+          "y": 1.7453546524047852,
+          "z": 0.12431754916906357
+        },
+        "center": {
+          "x": -0.0003070025170519384,
+          "y": 0.01697953603462421,
+          "z": 0.0009447229814963862
+        },
+        "size": {
+          "x": 0.05081010423600674,
+          "y": 0.09480202198028564,
+          "z": 0.05969049781560898
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": true,
+      "materials": [
+        {
+          "name": "Std_Eye_Occlusion_R",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_EyeOcclusion_2",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "EO Inner Height L",
+        "EO Inner Height R",
+        "EO Inner Upper Height L",
+        "EO Inner Upper Height R",
+        "EO Inner Lower Height L",
+        "EO Inner Lower Height R",
+        "EO Center Upper Height L",
+        "EO Center Upper Height R",
+        "EO Center Lower Height L",
+        "EO Center Lower Height R",
+        "EO Outer Height L",
+        "EO Outer Height R",
+        "EO Outer Upper Height L",
+        "EO Outer Upper Height R",
+        "EO Outer Lower Height L",
+        "EO Outer Lower Height R",
+        "EO Inner Width L",
+        "EO Inner Width R",
+        "EO Outer Width L",
+        "EO Outer Width R",
+        "EO Bulge L",
+        "EO Bulge R",
+        "EO Depth L",
+        "EO Depth R",
+        "EO Duct Depth L",
+        "EO Duct Depth R",
+        "EO Upper Depth L",
+        "EO Upper Depth R",
+        "EO Lower Depth L",
+        "EO Lower Depth R",
+        "EO Inner Depth L",
+        "EO Inner Depth R",
+        "EO Inner Upper Depth L",
+        "EO Inner Upper Depth R",
+        "EO Inner Lower Depth L",
+        "EO Inner Lower Depth R",
+        "EO Center Upper Depth L",
+        "EO Center Upper Depth R",
+        "EO Center Lower Depth L",
+        "EO Center Lower Depth R",
+        "EO Outer Depth L",
+        "EO Outer Depth R",
+        "EO Outer Upper Depth L",
+        "EO Outer Upper Depth R",
+        "EO Outer Lower Depth L",
+        "EO Outer Lower Depth R"
+      ],
+      "vertexCount": 91,
+      "faceCount": 144,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": 0.0038465801626443863,
+          "y": 1.6502598524093628,
+          "z": 0.063629649579525
+        },
+        "max": {
+          "x": 0.05568714812397957,
+          "y": 1.7449692487716675,
+          "z": 0.12408889830112457
+        },
+        "center": {
+          "x": 0.00029766863477970716,
+          "y": 0.01697614512645873,
+          "z": 0.0009385927184240653
+        },
+        "size": {
+          "x": 0.05184056796133518,
+          "y": 0.09470939636230469,
+          "z": 0.06045924872159958
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": true,
+      "materials": [
+        {
+          "name": "Std_Eye_Occlusion_L",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_TearLine_1",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "TL Inner Height L",
+        "TL Inner Height R",
+        "TL Inner Upper Height L",
+        "TL Inner Upper Height R",
+        "TL Inner Lower Height L",
+        "TL Inner Lower Height R",
+        "TL Center Upper Height L",
+        "TL Center Upper Height R",
+        "TL Center Lower Height L",
+        "TL Center Lower Height R",
+        "TL Outer Height L",
+        "TL Outer Height R",
+        "TL Outer Upper Height L",
+        "TL Outer Upper Height R",
+        "TL Outer Lower Height L",
+        "TL Outer Lower Height R",
+        "TL Inner Width L",
+        "TL Inner Width R",
+        "TL Outer Width L",
+        "TL Outer Width R",
+        "TL Depth L",
+        "TL Depth R",
+        "TL Upper Depth L",
+        "TL Upper Depth R",
+        "TL Lower Depth L",
+        "TL Lower Depth R",
+        "TL Duct Depth L",
+        "TL Duct Depth R",
+        "TL Inner Depth L",
+        "TL Inner Depth R",
+        "TL Inner Upper Depth L",
+        "TL Inner Upper Depth R",
+        "TL Inner Lower Depth L",
+        "TL Inner Lower Depth R",
+        "TL Center Upper Depth L",
+        "TL Center Upper Depth R",
+        "TL Center Lower Depth L",
+        "TL Center Lower Depth R",
+        "TL Outer Depth L",
+        "TL Outer Depth R",
+        "TL Outer Upper Depth L",
+        "TL Outer Upper Depth R",
+        "TL Outer Lower Depth L",
+        "TL Outer Lower Depth R"
+      ],
+      "vertexCount": 98,
+      "faceCount": 136,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.05651604384183884,
+          "y": 1.6521143913269043,
+          "z": 0.06409208476543427
+        },
+        "max": {
+          "x": -0.0060326531529426575,
+          "y": 1.7445826530456543,
+          "z": 0.12155181914567947
+        },
+        "center": {
+          "x": -0.00031274347798354585,
+          "y": 0.016983484842252317,
+          "z": 0.0009282194988082457
+        },
+        "size": {
+          "x": 0.05048339068889618,
+          "y": 0.09246826171875,
+          "z": 0.05745973438024521
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": true,
+      "materials": [
+        {
+          "name": "Std_Tearline_R",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "CC_Base_TearLine_2",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "TL Inner Height L",
+        "TL Inner Height R",
+        "TL Inner Upper Height L",
+        "TL Inner Upper Height R",
+        "TL Inner Lower Height L",
+        "TL Inner Lower Height R",
+        "TL Center Upper Height L",
+        "TL Center Upper Height R",
+        "TL Center Lower Height L",
+        "TL Center Lower Height R",
+        "TL Outer Height L",
+        "TL Outer Height R",
+        "TL Outer Upper Height L",
+        "TL Outer Upper Height R",
+        "TL Outer Lower Height L",
+        "TL Outer Lower Height R",
+        "TL Inner Width L",
+        "TL Inner Width R",
+        "TL Outer Width L",
+        "TL Outer Width R",
+        "TL Depth L",
+        "TL Depth R",
+        "TL Upper Depth L",
+        "TL Upper Depth R",
+        "TL Lower Depth L",
+        "TL Lower Depth R",
+        "TL Duct Depth L",
+        "TL Duct Depth R",
+        "TL Inner Depth L",
+        "TL Inner Depth R",
+        "TL Inner Upper Depth L",
+        "TL Inner Upper Depth R",
+        "TL Inner Lower Depth L",
+        "TL Inner Lower Depth R",
+        "TL Center Upper Depth L",
+        "TL Center Upper Depth R",
+        "TL Center Lower Depth L",
+        "TL Center Lower Depth R",
+        "TL Outer Depth L",
+        "TL Outer Depth R",
+        "TL Outer Upper Depth L",
+        "TL Outer Upper Depth R",
+        "TL Outer Lower Depth L",
+        "TL Outer Lower Depth R"
+      ],
+      "vertexCount": 98,
+      "faceCount": 136,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": 0.004467969760298729,
+          "y": 1.6518776416778564,
+          "z": 0.06305734813213348
+        },
+        "max": {
+          "x": 0.05597900412976742,
+          "y": 1.744101881980896,
+          "z": 0.1205955222249031
+        },
+        "center": {
+          "x": 0.00030223486269485497,
+          "y": 0.016979897238763475,
+          "z": 0.0009182643312603753
+        },
+        "size": {
+          "x": 0.05151103436946869,
+          "y": 0.09222424030303955,
+          "z": 0.05753817409276962
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": true,
+      "materials": [
+        {
+          "name": "Std_Tearline_L",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Classic_short_1",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "Tousle_Front",
+        "Tousle_Mid",
+        "Tousle_Back",
+        "Hairline_High_ALL",
+        "Hairline_High_R",
+        "Hairline_High_L",
+        "Hairline_High_M",
+        "Hairline_Low_ALL",
+        "Hairline_Low_R",
+        "Hairline_Low_L",
+        "Hairline_Low_M",
+        "Hairline_Out_All",
+        "Sideburns_Longer",
+        "Sideburns_Shorter",
+        "Sideburns_Out"
+      ],
+      "vertexCount": 32647,
+      "faceCount": 31578,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.16879476408939809,
+          "y": 1.4988677501678467,
+          "z": -0.2406397331506014
+        },
+        "max": {
+          "x": 0.16009096708148718,
+          "y": 1.9730230569839478,
+          "z": 0.21912830299697816
+        },
+        "center": {
+          "x": -0.00004351898406682942,
+          "y": 0.017359453647744938,
+          "z": -0.00010755714836402645
+        },
+        "size": {
+          "x": 0.32888573117088526,
+          "y": 0.4741553068161011,
+          "z": 0.45976803614757955
+        }
+      },
+      "isMouthRelated": false,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Hair_Transparency",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Classic_short_2",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "Tousle_Front",
+        "Tousle_Mid",
+        "Tousle_Back",
+        "Hairline_High_ALL",
+        "Hairline_High_R",
+        "Hairline_High_L",
+        "Hairline_High_M",
+        "Hairline_Low_ALL",
+        "Hairline_Low_R",
+        "Hairline_Low_L",
+        "Hairline_Low_M",
+        "Hairline_Out_All",
+        "Sideburns_Longer",
+        "Sideburns_Shorter",
+        "Sideburns_Out"
+      ],
+      "vertexCount": 742,
+      "faceCount": 1368,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.11895440518856049,
+          "y": 1.5473830699920654,
+          "z": -0.13725248025730252
+        },
+        "max": {
+          "x": 0.10792086624132935,
+          "y": 1.884818196296692,
+          "z": 0.12808979069814086
+        },
+        "center": {
+          "x": -0.00005516769350306161,
+          "y": 0.017161005947865404,
+          "z": -0.00004581344677179796
+        },
+        "size": {
+          "x": 0.22687527142988984,
+          "y": 0.33743512630462646,
+          "z": 0.2653422709554434
+        }
+      },
+      "isMouthRelated": false,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Scalp_Transparency",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "FormalTie",
+      "type": "SkinnedMesh",
+      "shapeKeys": [],
+      "vertexCount": 2827,
+      "faceCount": 4608,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.02827010117471218,
+          "y": 1.025050401687622,
+          "z": 0.030464181676506996
+        },
+        "max": {
+          "x": 0.033332619816064835,
+          "y": 1.5114442110061646,
+          "z": 0.14141884446144104
+        },
+        "center": {
+          "x": 0.00002531259264098272,
+          "y": 0.01268247277999357,
+          "z": 0.0008594151114803151
+        },
+        "size": {
+          "x": 0.061602720990777016,
+          "y": 0.4863938093185425,
+          "z": 0.11095466278493404
+        }
+      },
+      "isMouthRelated": false,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Tie2",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Kevin_Brow_1",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_None",
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "Head_Turn_Up",
+        "Head_Turn_Down",
+        "Head_Turn_L",
+        "Head_Turn_R",
+        "Head_Tilt_L",
+        "Head_Tilt_R",
+        "Turn_Jaw_Down",
+        "Turn_Jaw_L",
+        "Turn_Jaw_R",
+        "Move_Jaw_Down",
+        "Move_Jaw_L",
+        "Move_Jaw_R",
+        "Left_Eyeball_Look_R",
+        "Left_Eyeball_Look_L",
+        "Left_Eyeball_Look_Down",
+        "Left_Eyeball_Look_Up",
+        "Right_Eyeball_Look_R",
+        "Right_Eyeball_Look_L",
+        "Right_Eyeball_Look_Down",
+        "Right_Eyeball_Look_Up",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Male_BrowMerged_Open_Mouth"
+      ],
+      "vertexCount": 1210,
+      "faceCount": 874,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.09063711855560541,
+          "y": 1.6518592834472656,
+          "z": 0.02963530272245407
+        },
+        "max": {
+          "x": 0.08935322985053062,
+          "y": 1.8269926309585571,
+          "z": 0.15931783616542816
+        },
+        "center": {
+          "x": -0.000006419443381888192,
+          "y": 0.017394259183237115,
+          "z": 0.0009447656733222523
+        },
+        "size": {
+          "x": 0.17999034840613604,
+          "y": 0.1751333475112915,
+          "z": 0.1296825334429741
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Male_Brow_Transparency",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Kevin_Brow_2",
+      "type": "SkinnedMesh",
+      "shapeKeys": [
+        "V_None",
+        "V_Open",
+        "V_Explosive",
+        "V_Dental_Lip",
+        "V_Tight_O",
+        "V_Tight",
+        "V_Wide",
+        "V_Affricate",
+        "V_Lip_Open",
+        "V_Tongue_up",
+        "V_Tongue_Raise",
+        "V_Tongue_Out",
+        "V_Tongue_Narrow",
+        "V_Tongue_Lower",
+        "V_Tongue_Curl_U",
+        "V_Tongue_Curl_D",
+        "Brow_Raise_Inner_Left",
+        "Brow_Raise_Inner_Right",
+        "Brow_Raise_Outer_Left",
+        "Brow_Raise_Outer_Right",
+        "Brow_Drop_Left",
+        "Brow_Drop_Right",
+        "Brow_Raise_Left",
+        "Brow_Raise_Right",
+        "Eyes_Blink",
+        "Eye_Blink_L",
+        "Eye_Blink_R",
+        "Eye_Wide_L",
+        "Eye_Wide_R",
+        "Eye_Squint_L",
+        "Eye_Squint_R",
+        "Nose_Scrunch",
+        "Nose_Flanks_Raise",
+        "Nose_Flank_Raise_L",
+        "Nose_Flank_Raise_R",
+        "Nose_Nostrils_Flare",
+        "Cheek_Raise_L",
+        "Cheek_Raise_R",
+        "Cheeks_Suck",
+        "Cheek_Blow_L",
+        "Cheek_Blow_R",
+        "Mouth_Smile",
+        "Mouth_Smile_L",
+        "Mouth_Smile_R",
+        "Mouth_Frown",
+        "Mouth_Frown_L",
+        "Mouth_Frown_R",
+        "Mouth_Blow",
+        "Mouth_Pucker",
+        "Mouth_Pucker_Open",
+        "Mouth_Widen",
+        "Mouth_Widen_Sides",
+        "Mouth_Dimple_L",
+        "Mouth_Dimple_R",
+        "Mouth_Plosive",
+        "Mouth_Lips_Tight",
+        "Mouth_Lips_Tuck",
+        "Mouth_Lips_Open",
+        "Mouth_Lips_Part",
+        "Mouth_Bottom_Lip_Down",
+        "Mouth_Top_Lip_Up",
+        "Mouth_Top_Lip_Under",
+        "Mouth_Bottom_Lip_Under",
+        "Mouth_Snarl_Upper_L",
+        "Mouth_Snarl_Upper_R",
+        "Mouth_Snarl_Lower_L",
+        "Mouth_Snarl_Lower_R",
+        "Mouth_Bottom_Lip_Bite",
+        "Mouth_Down",
+        "Mouth_Up",
+        "Mouth_L",
+        "Mouth_R",
+        "Mouth_Lips_Jaw_Adjust",
+        "Mouth_Bottom_Lip_Trans",
+        "Mouth_Skewer",
+        "Mouth_Open",
+        "Head_Turn_Up",
+        "Head_Turn_Down",
+        "Head_Turn_L",
+        "Head_Turn_R",
+        "Head_Tilt_L",
+        "Head_Tilt_R",
+        "Turn_Jaw_Down",
+        "Turn_Jaw_L",
+        "Turn_Jaw_R",
+        "Move_Jaw_Down",
+        "Move_Jaw_L",
+        "Move_Jaw_R",
+        "Left_Eyeball_Look_R",
+        "Left_Eyeball_Look_L",
+        "Left_Eyeball_Look_Down",
+        "Left_Eyeball_Look_Up",
+        "Right_Eyeball_Look_R",
+        "Right_Eyeball_Look_L",
+        "Right_Eyeball_Look_Down",
+        "Right_Eyeball_Look_Up",
+        "eye_shape_L",
+        "eye_shape_R",
+        "eye_shape_angry_L",
+        "eye_shape_angry_R",
+        "double_eyelid_up_L",
+        "double_eyelid_up_R",
+        "lips_smooth_lower",
+        "lips_curve_shape_lower",
+        "eyes_smile_shape_L",
+        "eyes_smile_shape_R",
+        "smile_coner_shape_L",
+        "smile_coner_shape_R",
+        "A01_Brow_Inner_Up",
+        "A02_Brow_Down_Left",
+        "A03_Brow_Down_Right",
+        "A04_Brow_Outer_Up_Left",
+        "A05_Brow_Outer_Up_Right",
+        "A06_Eye_Look_Up_Left",
+        "A07_Eye_Look_Up_Right",
+        "A08_Eye_Look_Down_Left",
+        "A09_Eye_Look_Down_Right",
+        "A10_Eye_Look_Out_Left",
+        "A11_Eye_Look_In_Left",
+        "A12_Eye_Look_In_Right",
+        "A13_Eye_Look_Out_Right",
+        "A14_Eye_Blink_Left",
+        "A15_Eye_Blink_Right",
+        "A16_Eye_Squint_Left",
+        "A17_Eye_Squint_Right",
+        "A18_Eye_Wide_Left",
+        "A19_Eye_Wide_Right",
+        "A20_Cheek_Puff",
+        "A21_Cheek_Squint_Left",
+        "A22_Cheek_Squint_Right",
+        "A23_Nose_Sneer_Left",
+        "A24_Nose_Sneer_Right",
+        "A25_Jaw_Open",
+        "A26_Jaw_Forward",
+        "A27_Jaw_Left",
+        "A28_Jaw_Right",
+        "A29_Mouth_Funnel",
+        "A30_Mouth_Pucker",
+        "A31_Mouth_Left",
+        "A32_Mouth_Right",
+        "A33_Mouth_Roll_Upper",
+        "A34_Mouth_Roll_Lower",
+        "A35_Mouth_Shrug_Upper",
+        "A36_Mouth_Shrug_Lower",
+        "A37_Mouth_Close",
+        "A38_Mouth_Smile_Left",
+        "A39_Mouth_Smile_Right",
+        "A40_Mouth_Frown_Left",
+        "A41_Mouth_Frown_Right",
+        "A42_Mouth_Dimple_Left",
+        "A43_Mouth_Dimple_Right",
+        "A44_Mouth_Upper_Up_Left",
+        "A45_Mouth_Upper_Up_Right",
+        "A46_Mouth_Lower_Down_Left",
+        "A47_Mouth_Lower_Down_Right",
+        "A48_Mouth_Press_Left",
+        "A49_Mouth_Press_Right",
+        "A50_Mouth_Stretch_Left",
+        "A51_Mouth_Stretch_Right",
+        "A52_Tongue_Out",
+        "T01_Tongue_Up",
+        "T02_Tongue_Down",
+        "T03_Tongue_Left",
+        "T04_Tongue_Right",
+        "T05_Tongue_Roll",
+        "T06_Tongue_Tip_Up",
+        "T07_Tongue_Tip_Down",
+        "T08_Tongue_Width",
+        "T09_Tongue_Thickness",
+        "T10_Tongue_Bulge_Left",
+        "T11_Tongue_Bulge_Right",
+        "Male_BrowMerged_Open_Mouth"
+      ],
+      "vertexCount": 137,
+      "faceCount": 192,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.10065843677148223,
+          "y": 1.631561517715454,
+          "z": 0.007863737642765045
+        },
+        "max": {
+          "x": 0.0987746985629201,
+          "y": 1.8352007865905762,
+          "z": 0.16819795966148376
+        },
+        "center": {
+          "x": -0.000009418690832286528,
+          "y": 0.017333811134089272,
+          "z": 0.0008803084668448161
+        },
+        "size": {
+          "x": 0.19943313533440232,
+          "y": 0.20363926887512207,
+          "z": 0.16033422201871872
+        }
+      },
+      "isMouthRelated": true,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Male_Brow_Base_Transparency",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "shoes",
+      "type": "SkinnedMesh",
+      "shapeKeys": [],
+      "vertexCount": 4322,
+      "faceCount": 3448,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.13839231431484222,
+          "y": 0.000006879646662127925,
+          "z": -0.07306463271379471
+        },
+        "max": {
+          "x": 0.13790307939052582,
+          "y": 0.14827245473861694,
+          "z": 0.21275468170642853
+        },
+        "center": {
+          "x": -0.0000024461745669057677,
+          "y": 0.0007413966553548884,
+          "z": 0.0006984502293515896
+        },
+        "size": {
+          "x": 0.27629539370536804,
+          "y": 0.14826557509195482,
+          "z": 0.28581931442022324
+        }
+      },
+      "isMouthRelated": false,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "cuir",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slim_Jeans",
+      "type": "SkinnedMesh",
+      "shapeKeys": [],
+      "vertexCount": 4729,
+      "faceCount": 7682,
+      "hasSkeleton": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "boundingBox": {
+        "min": {
+          "x": -0.18622656166553497,
+          "y": 0.0679268091917038,
+          "z": -0.14461886882781982
+        },
+        "max": {
+          "x": 0.18498796224594116,
+          "y": 1.0621132850646973,
+          "z": 0.13382625579833984
+        },
+        "center": {
+          "x": -0.000006192996959544783,
+          "y": 0.005650200344990183,
+          "z": -0.000053963063941231404
+        },
+        "size": {
+          "x": 0.37121452391147614,
+          "y": 0.9941864758729935,
+          "z": 0.27844512462615967
+        }
+      },
+      "isMouthRelated": false,
+      "isEyeRelated": false,
+      "materials": [
+        {
+          "name": "Slim_Jeans",
+          "type": "MeshPhysicalMaterial",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    }
+  ],
+  "bones": [
+    {
+      "name": "CC_Base_BoneRoot",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "rotation": {
+        "x": -1.5707962925663537,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_Hip"
+      ]
+    },
+    {
+      "name": "CC_Base_Hip",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 99.06687927246094
+      },
+      "rotation": {
+        "x": 1.5707962925663537,
+        "y": 0,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_Pelvis",
+        "CC_Base_Waist"
+      ]
+    },
+    {
+      "name": "CC_Base_Pelvis",
+      "position": {
+        "x": -3.552712620009317e-15,
+        "y": 0.0000152587890625,
+        "z": 2.745248934843403e-7
+      },
+      "rotation": {
+        "x": 0.07505346075475423,
+        "y": 0.0004951154849641714,
+        "z": 0.00572848219501331
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999999403953552,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_L_Thigh",
+        "CC_Base_R_Thigh"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Thigh",
+      "position": {
+        "x": 9.691208839416504,
+        "y": -2.548384428024292,
+        "z": -0.11144953966140747
+      },
+      "rotation": {
+        "x": -0.07381074381304538,
+        "y": -0.0000806098972576576,
+        "z": 3.1188406512461824
+      },
+      "scale": {
+        "x": 1.0000005960464478,
+        "y": 0.9999994039535522,
+        "z": 1.0000079870224
+      },
+      "children": [
+        "CC_Base_L_Calf",
+        "CC_Base_L_ThighTwist01"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Calf",
+      "position": {
+        "x": 0.00004944919055560604,
+        "y": 44.666534423828125,
+        "z": 0.00017373997252434492
+      },
+      "rotation": {
+        "x": -0.03830391872130517,
+        "y": 0.0010096829974155558,
+        "z": -0.007865280707856841
+      },
+      "scale": {
+        "x": 0.9999998211860657,
+        "y": 0.9999998807907104,
+        "z": 0.9999998807907104
+      },
+      "children": [
+        "CC_Base_L_Foot",
+        "CC_Base_L_CalfTwist01",
+        "CC_Base_L_KneeShareBone"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Foot",
+      "position": {
+        "x": -0.00008542404975742102,
+        "y": 45.5993537902832,
+        "z": -0.00004885531961917877
+      },
+      "rotation": {
+        "x": 1.3373190038006428,
+        "y": -0.011623976104030695,
+        "z": 0.11431978805943603
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1.0000001192092896,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_L_ToeBaseShareBone",
+        "CC_Base_L_ToeBase"
+      ]
+    },
+    {
+      "name": "CC_Base_L_ToeBaseShareBone",
+      "position": {
+        "x": 0.000014097429811954498,
+        "y": 14.849849700927734,
+        "z": -0.000021010637283325195
+      },
+      "rotation": {
+        "x": 0.10275397347627335,
+        "y": 0.02767646471510007,
+        "z": -0.03739900722471614
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1,
+        "z": 1.0000001192092896
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_ToeBase",
+      "position": {
+        "x": 0.000013947486877441406,
+        "y": 14.849865913391113,
+        "z": -0.000022590160369873047
+      },
+      "rotation": {
+        "x": 0.1027407628092597,
+        "y": 0.027319576476326185,
+        "z": -0.037399396100213596
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1.0000001192092896
+      },
+      "children": [
+        "CC_Base_L_PinkyToe1",
+        "CC_Base_L_RingToe1",
+        "CC_Base_L_MidToe1",
+        "CC_Base_L_IndexToe1",
+        "CC_Base_L_BigToe1"
+      ]
+    },
+    {
+      "name": "CC_Base_L_PinkyToe1",
+      "position": {
+        "x": -2.9297285079956055,
+        "y": 0.2557240426540375,
+        "z": -0.45376676321029663
+      },
+      "rotation": {
+        "x": 0.03585169362771602,
+        "y": 0.11999311738592025,
+        "z": 0.05337209091987201
+      },
+      "scale": {
+        "x": 0.9999998211860657,
+        "y": 1,
+        "z": 0.9999998807907104
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_RingToe1",
+      "position": {
+        "x": -1.5815836191177368,
+        "y": 1.6959669589996338,
+        "z": -0.07610709965229034
+      },
+      "rotation": {
+        "x": 0.0072209057489982,
+        "y": 0.15772107758528023,
+        "z": 0.12816333822563813
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1.0000001192092896,
+        "z": 0.9999999403953552
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_MidToe1",
+      "position": {
+        "x": -0.000033661723136901855,
+        "y": 2.7360901832580566,
+        "z": 0.000008743256330490112
+      },
+      "rotation": {
+        "x": 0.12146829685741004,
+        "y": 0.11727642073145336,
+        "z": 0.05730333435100782
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999999403953552,
+        "z": 0.9999999403953552
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_IndexToe1",
+      "position": {
+        "x": 1.7265276908874512,
+        "y": 2.861940622329712,
+        "z": 0.31980231404304504
+      },
+      "rotation": {
+        "x": 0.06172159153000079,
+        "y": 0.11487210084699181,
+        "z": 0.05711270595164009
+      },
+      "scale": {
+        "x": 0.9999998807907104,
+        "y": 0.9999999403953552,
+        "z": 0.9999998211860657
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_BigToe1",
+      "position": {
+        "x": 4.040606498718262,
+        "y": 2.614461898803711,
+        "z": 0.598903238773346
+      },
+      "rotation": {
+        "x": 0.21316895041074752,
+        "y": 0.015135580320564078,
+        "z": -0.1224625530346422
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1.0000001192092896,
+        "z": 0.9999998807907104
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_CalfTwist01",
+      "position": {
+        "x": -0.00001236898242495954,
+        "y": -0.000008743256330490112,
+        "z": -0.00000426173210144043
+      },
+      "rotation": {
+        "x": -0.000014394798117914624,
+        "y": -6.940542526089214e-7,
+        "z": -0.000018105365138222257
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999999403953552,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_L_CalfTwist02"
+      ]
+    },
+    {
+      "name": "CC_Base_L_CalfTwist02",
+      "position": {
+        "x": -0.0004334298428148031,
+        "y": 22.740936279296875,
+        "z": 0.0003392025828361511
+      },
+      "rotation": {
+        "x": -0.0000027450269828945894,
+        "y": 0.00002417233654632721,
+        "z": -0.0000033798328533664505
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_KneeShareBone",
+      "position": {
+        "x": -0.00001236898242495954,
+        "y": -0.000008743256330490112,
+        "z": -0.00000426173210144043
+      },
+      "rotation": {
+        "x": 0.000009733016042490024,
+        "y": 0.032166045678549804,
+        "z": 0.000013451138741316686
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_ThighTwist01",
+      "position": {
+        "x": -0.0000028024865059705917,
+        "y": 0.00003717737854458392,
+        "z": -8.625720511190593e-7
+      },
+      "rotation": {
+        "x": 0.00004578688848297018,
+        "y": -0.0000028400034195621827,
+        "z": 0.000015542078014852375
+      },
+      "scale": {
+        "x": 0.9999998211860657,
+        "y": 0.9999999403953552,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_L_ThighTwist02"
+      ]
+    },
+    {
+      "name": "CC_Base_L_ThighTwist02",
+      "position": {
+        "x": 0.00034491170663386583,
+        "y": 22.244325637817383,
+        "z": -0.0010285667376592755
+      },
+      "rotation": {
+        "x": -1.3389660215801014e-7,
+        "y": -0.00000394340076181619,
+        "z": -1.2788454139444645e-7
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1.0000001192092896
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_Thigh",
+      "position": {
+        "x": -9.765667915344238,
+        "y": -2.442176580429077,
+        "z": -0.14031532406806946
+      },
+      "rotation": {
+        "x": -0.07423594689704908,
+        "y": 0.00002552264875476234,
+        "z": -3.1300200458314738
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 0.9999999403953552,
+        "z": 1.0000075101852417
+      },
+      "children": [
+        "CC_Base_R_Calf",
+        "CC_Base_R_ThighTwist01"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Calf",
+      "position": {
+        "x": 0.00017711077816784382,
+        "y": 44.689300537109375,
+        "z": -0.00042556424159556627
+      },
+      "rotation": {
+        "x": -0.03871261099066573,
+        "y": -0.0003288771126952315,
+        "z": 0.007789582490964901
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1.0000001192092896
+      },
+      "children": [
+        "CC_Base_R_KneeShareBone",
+        "CC_Base_R_Foot",
+        "CC_Base_R_CalfTwist01"
+      ]
+    },
+    {
+      "name": "CC_Base_R_KneeShareBone",
+      "position": {
+        "x": -0.000003083521733060479,
+        "y": -0.000028677284717559814,
+        "z": -0.0000037653371691703796
+      },
+      "rotation": {
+        "x": 0.000009694799540519796,
+        "y": -0.03216622083322366,
+        "z": -0.000013121993590890919
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1.0000001192092896,
+        "z": 0.9999998807907104
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_Foot",
+      "position": {
+        "x": 0.00006048477371223271,
+        "y": 45.6532096862793,
+        "z": -0.00003080349415540695
+      },
+      "rotation": {
+        "x": 1.3371149430919145,
+        "y": 0.01068465324636562,
+        "z": -0.11392164635447248
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999998211860657,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_R_ToeBase",
+        "CC_Base_R_ToeBaseShareBone"
+      ]
+    },
+    {
+      "name": "CC_Base_R_ToeBase",
+      "position": {
+        "x": 0.0011232933029532433,
+        "y": 14.83084487915039,
+        "z": 0.07932645082473755
+      },
+      "rotation": {
+        "x": 0.1026274696428491,
+        "y": -0.02064584438131708,
+        "z": 0.03743524476959417
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999998211860657,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_R_BigToe1",
+        "CC_Base_R_PinkyToe1",
+        "CC_Base_R_RingToe1",
+        "CC_Base_R_IndexToe1",
+        "CC_Base_R_MidToe1"
+      ]
+    },
+    {
+      "name": "CC_Base_R_BigToe1",
+      "position": {
+        "x": -4.1950201988220215,
+        "y": 2.629423141479492,
+        "z": 0.5699353218078613
+      },
+      "rotation": {
+        "x": 0.21456138374097797,
+        "y": -0.03207070527868478,
+        "z": 0.12378814670927187
+      },
+      "scale": {
+        "x": 1,
+        "y": 1.0000001192092896,
+        "z": 0.9999999403953552
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_PinkyToe1",
+      "position": {
+        "x": 2.924729108810425,
+        "y": 0.15498772263526917,
+        "z": -0.5288490653038025
+      },
+      "rotation": {
+        "x": 0.035597403875739224,
+        "y": -0.13128955843577467,
+        "z": -0.05318740710707918
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1,
+        "z": 0.9999999403953552
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_RingToe1",
+      "position": {
+        "x": 1.5619486570358276,
+        "y": 1.6179155111312866,
+        "z": -0.12790954113006592
+      },
+      "rotation": {
+        "x": 0.004815654211125758,
+        "y": -0.18221513883311846,
+        "z": -0.12852716152730956
+      },
+      "scale": {
+        "x": 0.9999998807907104,
+        "y": 1,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_IndexToe1",
+      "position": {
+        "x": -1.77022123336792,
+        "y": 2.905599355697632,
+        "z": 0.3130827248096466
+      },
+      "rotation": {
+        "x": 0.060890364705972776,
+        "y": -0.13622471409888431,
+        "z": -0.056842220061763496
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1,
+        "z": 0.9999999403953552
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_MidToe1",
+      "position": {
+        "x": 0.000004837289452552795,
+        "y": 2.7702090740203857,
+        "z": 0.000018600374460220337
+      },
+      "rotation": {
+        "x": 0.12046343718076444,
+        "y": -0.1424459493701327,
+        "z": -0.05670464473369433
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_ToeBaseShareBone",
+      "position": {
+        "x": 0.001124243251979351,
+        "y": 14.830836296081543,
+        "z": 0.07932525873184204
+      },
+      "rotation": {
+        "x": 0.10264073597646911,
+        "y": -0.021005230109692716,
+        "z": 0.03743488512994501
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999998211860657,
+        "z": 0.9999998807907104
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_CalfTwist01",
+      "position": {
+        "x": -0.000003083521733060479,
+        "y": -0.000028677284717559814,
+        "z": -0.0000037653371691703796
+      },
+      "rotation": {
+        "x": -0.00001423392123109194,
+        "y": 5.811484506493003e-7,
+        "z": 0.000018468727421146888
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_R_CalfTwist02"
+      ]
+    },
+    {
+      "name": "CC_Base_R_CalfTwist02",
+      "position": {
+        "x": 0.0004587713337969035,
+        "y": 22.826650619506836,
+        "z": 0.00032069534063339233
+      },
+      "rotation": {
+        "x": -0.000003010519549438665,
+        "y": -0.000024198652262332712,
+        "z": 0.0000033450405231261095
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1.0000001192092896,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_ThighTwist01",
+      "position": {
+        "x": 0.000001465694367652759,
+        "y": 0.0000032329990062862635,
+        "z": -9.001814760267735e-7
+      },
+      "rotation": {
+        "x": 0.000045711831436476054,
+        "y": 0.0000026418587204255284,
+        "z": -0.00001526519590722309
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_R_ThighTwist02"
+      ]
+    },
+    {
+      "name": "CC_Base_R_ThighTwist02",
+      "position": {
+        "x": -0.0002523036964703351,
+        "y": 22.344669342041016,
+        "z": -0.0012387116439640522
+      },
+      "rotation": {
+        "x": 3.543956248198552e-11,
+        "y": 0.000003940481292387433,
+        "z": 1.3100154198926863e-7
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_Waist",
+      "position": {
+        "x": -0.04419447481632233,
+        "y": 7.682426452636719,
+        "z": 0.5777285695075989
+      },
+      "rotation": {
+        "x": 0.2806580081258511,
+        "y": 0.00021011069262096685,
+        "z": 0.00436091719185645
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_Spine01"
+      ]
+    },
+    {
+      "name": "CC_Base_Spine01",
+      "position": {
+        "x": -0.000001498381607234478,
+        "y": 4.286417484283447,
+        "z": 0.0013046452077105641
+      },
+      "rotation": {
+        "x": -0.36737073460958425,
+        "y": -0.0015135052278635731,
+        "z": -0.00451088507273205
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999999403953552,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_Spine02"
+      ]
+    },
+    {
+      "name": "CC_Base_Spine02",
+      "position": {
+        "x": -0.03797007352113724,
+        "y": 13.67888069152832,
+        "z": 0.020643921568989754
+      },
+      "rotation": {
+        "x": -0.027640934046338314,
+        "y": 0.002969675480746759,
+        "z": 0.0010783747517588086
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_NeckTwist01",
+        "CC_Base_L_Clavicle",
+        "CC_Base_L_RibsTwist",
+        "CC_Base_R_RibsTwist",
+        "CC_Base_R_Clavicle"
+      ]
+    },
+    {
+      "name": "CC_Base_NeckTwist01",
+      "position": {
+        "x": 0.08651786297559738,
+        "y": 30.79239845275879,
+        "z": 0.005935243796557188
+      },
+      "rotation": {
+        "x": 0.22419103295343443,
+        "y": -0.011954727077193462,
+        "z": -0.005013527447210414
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999999403953552,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_NeckTwist02"
+      ]
+    },
+    {
+      "name": "CC_Base_NeckTwist02",
+      "position": {
+        "x": 0.003403596580028534,
+        "y": 3.7664577960968018,
+        "z": -0.008520683273673058
+      },
+      "rotation": {
+        "x": 0.10931211396873873,
+        "y": 0.013436177242163016,
+        "z": 0.01363624288099755
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_Head"
+      ]
+    },
+    {
+      "name": "CC_Base_Head",
+      "position": {
+        "x": 0.000315107055939734,
+        "y": 3.909083366394043,
+        "z": -0.000006532674888148904
+      },
+      "rotation": {
+        "x": -0.21924132862636206,
+        "y": 0.001029444685715117,
+        "z": -0.010562775454162465
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 0.9999998807907104
+      },
+      "children": [
+        "CC_Base_FacialBone"
+      ]
+    },
+    {
+      "name": "CC_Base_FacialBone",
+      "position": {
+        "x": 2.3265602067112923e-7,
+        "y": 0.00005423056427389383,
+        "z": -0.000001945540816450375
+      },
+      "rotation": {
+        "x": 1.570790843175109,
+        "y": 1.5707963267948966,
+        "z": 0
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999999403953552,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_JawRoot",
+        "CC_Base_R_Eye",
+        "CC_Base_L_Eye",
+        "CC_Base_UpperJaw"
+      ]
+    },
+    {
+      "name": "CC_Base_JawRoot",
+      "position": {
+        "x": 1.7270889282226562,
+        "y": 2.4166617393493652,
+        "z": -0.020560938864946365
+      },
+      "rotation": {
+        "x": -0.000023899889430549454,
+        "y": -0.0001434075394551659,
+        "z": 1.5707565099069474
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_Tongue01",
+        "CC_Base_Teeth02"
+      ]
+    },
+    {
+      "name": "CC_Base_Tongue01",
+      "position": {
+        "x": 3.355609893798828,
+        "y": 1.2257894277572632,
+        "z": 0.0013449689140543342
+      },
+      "rotation": {
+        "x": 0.00017159382965058754,
+        "y": -0.001268946649156964,
+        "z": 0.048185421137016245
+      },
+      "scale": {
+        "x": 0.9999998807907104,
+        "y": 0.9999999403953552,
+        "z": 0.9999998807907104
+      },
+      "children": [
+        "CC_Base_Tongue02"
+      ]
+    },
+    {
+      "name": "CC_Base_Tongue02",
+      "position": {
+        "x": 1.19015634059906,
+        "y": 0.00018394085054751486,
+        "z": -6.114132702350616e-7
+      },
+      "rotation": {
+        "x": 0.00006691279684504402,
+        "y": 0.0009458209451206073,
+        "z": 0.2358466778453223
+      },
+      "scale": {
+        "x": 1,
+        "y": 1.0000001192092896,
+        "z": 1.0000001192092896
+      },
+      "children": [
+        "CC_Base_Tongue03"
+      ]
+    },
+    {
+      "name": "CC_Base_Tongue03",
+      "position": {
+        "x": 1.8056623935699463,
+        "y": 0.0004463207151275128,
+        "z": 0.000013331416994333267
+      },
+      "rotation": {
+        "x": -0.000003524541716132703,
+        "y": 3.437720602118557e-7,
+        "z": -0.000028579873595181964
+      },
+      "scale": {
+        "x": 0.9999998807907104,
+        "y": 1,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_Teeth02",
+      "position": {
+        "x": 3.480381965637207,
+        "y": 1.4578968286514282,
+        "z": 0.0196172334253788
+      },
+      "rotation": {
+        "x": -3.1412729639532704,
+        "y": 0.0001942253131595755,
+        "z": 0.00000996535258688003
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_Eye",
+      "position": {
+        "x": 7.723856449127197,
+        "y": 7.808310031890869,
+        "z": -3.347158193588257
+      },
+      "rotation": {
+        "x": -3.1414536522235808,
+        "y": 1.5705152910435785,
+        "z": 0
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999999403953552,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_Eye",
+      "position": {
+        "x": 7.691618919372559,
+        "y": 7.677941799163818,
+        "z": 3.4045183658599854
+      },
+      "rotation": {
+        "x": 3.1414387744688668,
+        "y": 1.5705231056327036,
+        "z": 0
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999998807907104,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_UpperJaw",
+      "position": {
+        "x": 3.130554676055908,
+        "y": 6.828803539276123,
+        "z": -0.01939692534506321
+      },
+      "rotation": {
+        "x": 0.00008973229658703931,
+        "y": 0.000002719307390788038,
+        "z": 1.5708107930278565
+      },
+      "scale": {
+        "x": 0.9999998807907104,
+        "y": 0.9999998807907104,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_Teeth01"
+      ]
+    },
+    {
+      "name": "CC_Base_Teeth01",
+      "position": {
+        "x": 0.1612337976694107,
+        "y": 0.016573643311858177,
+        "z": 0.0181947760283947
+      },
+      "rotation": {
+        "x": 3.141564145239252,
+        "y": -0.00007530546901252426,
+        "z": -0.00035091935276726965
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999997019767761,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_Clavicle",
+      "position": {
+        "x": 5.8050031661987305,
+        "y": 23.472789764404297,
+        "z": 0.6976189613342285
+      },
+      "rotation": {
+        "x": 0.11394664574897805,
+        "y": 0.2921831545510793,
+        "z": -1.5491603127609839
+      },
+      "scale": {
+        "x": 0.9999998807907104,
+        "y": 0.9999998807907104,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_L_Upperarm"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Upperarm",
+      "position": {
+        "x": -0.04826483875513077,
+        "y": 13.058677673339844,
+        "z": -0.06985438615083694
+      },
+      "rotation": {
+        "x": 0.2642204022918017,
+        "y": 0.01512487113066595,
+        "z": -0.5301774906102967
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_L_Forearm",
+        "CC_Base_L_UpperarmTwist01"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Forearm",
+      "position": {
+        "x": -0.015071162953972816,
+        "y": 27.155040740966797,
+        "z": 0.14035236835479736
+      },
+      "rotation": {
+        "x": 0.027816196105195316,
+        "y": 0.00002588096536484398,
+        "z": -0.005183402438024504
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1.0000001192092896,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_L_ForearmTwist01",
+        "CC_Base_L_ElbowShareBone",
+        "CC_Base_L_Hand"
+      ]
+    },
+    {
+      "name": "CC_Base_L_ForearmTwist01",
+      "position": {
+        "x": 0.000019585713744163513,
+        "y": 0.000013161450624465942,
+        "z": 0.000004634261131286621
+      },
+      "rotation": {
+        "x": -4.791243982410454e-7,
+        "y": 0.000007062688440286317,
+        "z": -0.000011629118616953011
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1.0000001192092896,
+        "z": 0.9999998807907104
+      },
+      "children": [
+        "CC_Base_L_ForearmTwist02"
+      ]
+    },
+    {
+      "name": "CC_Base_L_ForearmTwist02",
+      "position": {
+        "x": 0.0037347376346588135,
+        "y": 11.891369819641113,
+        "z": 0.0011076480150222778
+      },
+      "rotation": {
+        "x": 0.000009016014834849737,
+        "y": 2.830593096439545e-7,
+        "z": 0.000011910071041313446
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1.0000001192092896,
+        "z": 1.0000001192092896
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_ElbowShareBone",
+      "position": {
+        "x": 0.000019585713744163513,
+        "y": 0.000013161450624465942,
+        "z": 0.000004634261131286621
+      },
+      "rotation": {
+        "x": -0.0009217066991983778,
+        "y": 0.0008568004607761244,
+        "z": -0.0006692559131682382
+      },
+      "scale": {
+        "x": 1,
+        "y": 1.0000001192092896,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_Hand",
+      "position": {
+        "x": 0.020647360011935234,
+        "y": 23.839574813842773,
+        "z": -0.13813111186027527
+      },
+      "rotation": {
+        "x": -0.10107839193434022,
+        "y": -0.0021040351125820415,
+        "z": -0.006674858698825006
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_L_Pinky1",
+        "CC_Base_L_Ring1",
+        "CC_Base_L_Mid1",
+        "CC_Base_L_Index1",
+        "CC_Base_L_Thumb1"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Pinky1",
+      "position": {
+        "x": 0.501447856426239,
+        "y": 9.071419715881348,
+        "z": -1.819258213043213
+      },
+      "rotation": {
+        "x": 0.10251231355348997,
+        "y": 0.004963191827121963,
+        "z": -0.07088894598554647
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 0.9999998211860657
+      },
+      "children": [
+        "CC_Base_L_Pinky2"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Pinky2",
+      "position": {
+        "x": -0.000006802380084991455,
+        "y": 3.200453519821167,
+        "z": -0.0000017285346984863281
+      },
+      "rotation": {
+        "x": 0.027027029199308685,
+        "y": -0.0103742198694268,
+        "z": -0.024751907936588644
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_L_Pinky3"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Pinky3",
+      "position": {
+        "x": -0.09326402842998505,
+        "y": 1.6934702396392822,
+        "z": 0.016010403633117676
+      },
+      "rotation": {
+        "x": -0.016038897744048385,
+        "y": 0.01894841945038335,
+        "z": 0.18138812084797773
+      },
+      "scale": {
+        "x": 0.9999998807907104,
+        "y": 0.9999999403953552,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_Ring1",
+      "position": {
+        "x": -0.04351433739066124,
+        "y": 8.950806617736816,
+        "z": -0.006103038787841797
+      },
+      "rotation": {
+        "x": 0.0951380562899677,
+        "y": 0.0038536792293449563,
+        "z": -0.018826081538768878
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_L_Ring2"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Ring2",
+      "position": {
+        "x": -0.000010445713996887207,
+        "y": 4.4611406326293945,
+        "z": -5.364418029785156e-7
+      },
+      "rotation": {
+        "x": 0.011234412595793919,
+        "y": -0.00014995233830926118,
+        "z": -0.10810193283727404
+      },
+      "scale": {
+        "x": 0.9999998211860657,
+        "y": 0.9999999403953552,
+        "z": 0.9999998807907104
+      },
+      "children": [
+        "CC_Base_L_Ring3"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Ring3",
+      "position": {
+        "x": -0.000006970018148422241,
+        "y": 2.5853271484375,
+        "z": -2.384185791015625e-7
+      },
+      "rotation": {
+        "x": 0.02586567419234624,
+        "y": 0.005139001396482199,
+        "z": 0.03519121467729194
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999998211860657,
+        "z": 0.9999998807907104
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_Mid1",
+      "position": {
+        "x": -0.46187666058540344,
+        "y": 9.179015159606934,
+        "z": 1.905019760131836
+      },
+      "rotation": {
+        "x": 0.11540899132941598,
+        "y": 0.0006933051553339124,
+        "z": -0.04712842215305005
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 0.9999998807907104
+      },
+      "children": [
+        "CC_Base_L_Mid2"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Mid2",
+      "position": {
+        "x": 0.0003735590726137161,
+        "y": 4.519470691680908,
+        "z": -0.018892601132392883
+      },
+      "rotation": {
+        "x": 0.023509029246801712,
+        "y": 0.002458238567617238,
+        "z": -0.07010810781760525
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999999403953552,
+        "z": 1.0000001192092896
+      },
+      "children": [
+        "CC_Base_L_Mid3"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Mid3",
+      "position": {
+        "x": 0.000004231929779052734,
+        "y": 2.9891953468322754,
+        "z": 3.5762786865234375e-7
+      },
+      "rotation": {
+        "x": -0.0032455696927474473,
+        "y": 0.008538837107161126,
+        "z": 0.05805668935421445
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_Index1",
+      "position": {
+        "x": -0.32593199610710144,
+        "y": 8.927569389343262,
+        "z": 4.233519554138184
+      },
+      "rotation": {
+        "x": 0.09640688406555348,
+        "y": 0.000047481519451214446,
+        "z": -0.03407687656573484
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999999403953552,
+        "z": 0.9999998211860657
+      },
+      "children": [
+        "CC_Base_L_Index2"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Index2",
+      "position": {
+        "x": 0.0000023455359041690826,
+        "y": 4.008488178253174,
+        "z": -0.000009357929229736328
+      },
+      "rotation": {
+        "x": 0.013798211055284754,
+        "y": 0.00886607473181499,
+        "z": -0.0879960444928853
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1.0000001192092896,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_L_Index3"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Index3",
+      "position": {
+        "x": -0.03669779747724533,
+        "y": 2.8275623321533203,
+        "z": -0.022937774658203125
+      },
+      "rotation": {
+        "x": -0.043297302011427556,
+        "y": -0.0008874750568008341,
+        "z": -0.020162430820771033
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1.0000001192092896,
+        "z": 0.9999999403953552
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_Thumb1",
+      "position": {
+        "x": 0.6202589273452759,
+        "y": 1.903970718383789,
+        "z": 2.846108913421631
+      },
+      "rotation": {
+        "x": 0.9360341494211294,
+        "y": -0.26481862053765837,
+        "z": -0.01873237747361084
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999999403953552,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_L_Thumb2"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Thumb2",
+      "position": {
+        "x": -0.000004582107067108154,
+        "y": 5.699414253234863,
+        "z": -0.000012606382369995117
+      },
+      "rotation": {
+        "x": -0.4186543116506113,
+        "y": -0.015810038879757276,
+        "z": 0.1188603522737705
+      },
+      "scale": {
+        "x": 1,
+        "y": 1.0000001192092896,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_L_Thumb3"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Thumb3",
+      "position": {
+        "x": 0.013266563415527344,
+        "y": 2.8796842098236084,
+        "z": 0.04255342483520508
+      },
+      "rotation": {
+        "x": -0.02123700858256799,
+        "y": -0.0073395835244208524,
+        "z": 0.10371831228613415
+      },
+      "scale": {
+        "x": 1,
+        "y": 1.0000001192092896,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_UpperarmTwist01",
+      "position": {
+        "x": -0.000013688579201698303,
+        "y": -0.000007495284080505371,
+        "z": 0.0000020265579223632812
+      },
+      "rotation": {
+        "x": 0.000005796463813128773,
+        "y": -0.002634866544703036,
+        "z": 9.86252616027306e-7
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1.0000001192092896
+      },
+      "children": [
+        "CC_Base_L_UpperarmTwist02"
+      ]
+    },
+    {
+      "name": "CC_Base_L_UpperarmTwist02",
+      "position": {
+        "x": -0.000054407864809036255,
+        "y": 13.569113731384277,
+        "z": -0.00006026029586791992
+      },
+      "rotation": {
+        "x": 0.0000023933773389744686,
+        "y": 0.002634753933115395,
+        "z": 9.561831792195618e-8
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 0.9999998807907104
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_L_RibsTwist",
+      "position": {
+        "x": 11.199470520019531,
+        "y": 5.676708221435547,
+        "z": 10.362567901611328
+      },
+      "rotation": {
+        "x": -1.4556364227468277,
+        "y": 0.00376139596839648,
+        "z": 3.141229778814065
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 0.9999998211860657
+      },
+      "children": [
+        "CC_Base_L_Breast"
+      ]
+    },
+    {
+      "name": "CC_Base_L_Breast",
+      "position": {
+        "x": -0.0003317983355373144,
+        "y": 1.9999632835388184,
+        "z": -0.012294021435081959
+      },
+      "rotation": {
+        "x": 0.006965414289937506,
+        "y": 0.0009157797394292893,
+        "z": 0.000021436929574697415
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_RibsTwist",
+      "position": {
+        "x": -10.997662544250488,
+        "y": 5.715973377227783,
+        "z": 10.370582580566406
+      },
+      "rotation": {
+        "x": -1.4556362686817759,
+        "y": 0.0034286841143984044,
+        "z": 3.1412288245577744
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1.0000001192092896,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_R_Breast"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Breast",
+      "position": {
+        "x": -0.000019423896446824074,
+        "y": 1.9999958276748657,
+        "z": 0.00009147636592388153
+      },
+      "rotation": {
+        "x": 0.006965688671191877,
+        "y": 0.0005838351769646763,
+        "z": 0.000023753840973036595
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1.0000001192092896,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_Clavicle",
+      "position": {
+        "x": -5.51780891418457,
+        "y": 23.53761100769043,
+        "z": 0.657076895236969
+      },
+      "rotation": {
+        "x": 0.1120571203384537,
+        "y": -0.29249690808613943,
+        "z": 1.5443327827609874
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999999403953552,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_R_Upperarm"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Upperarm",
+      "position": {
+        "x": -0.005236022174358368,
+        "y": 13.239608764648438,
+        "z": 0.03199946880340576
+      },
+      "rotation": {
+        "x": 0.2654228568449205,
+        "y": -0.015167361837655352,
+        "z": 0.5354826259053607
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999997615814209,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_R_Forearm",
+        "CC_Base_R_UpperarmTwist01"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Forearm",
+      "position": {
+        "x": -0.038705021142959595,
+        "y": 27.05636215209961,
+        "z": 0.13793063163757324
+      },
+      "rotation": {
+        "x": 0.025152549005875897,
+        "y": 0.00034195877850629974,
+        "z": 0.0032659435958689417
+      },
+      "scale": {
+        "x": 1,
+        "y": 1.0000001192092896,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_R_ElbowShareBone",
+        "CC_Base_R_ForearmTwist01",
+        "CC_Base_R_Hand"
+      ]
+    },
+    {
+      "name": "CC_Base_R_ElbowShareBone",
+      "position": {
+        "x": -0.00002368539571762085,
+        "y": -0.0000031739473342895508,
+        "z": 0.00000616908073425293
+      },
+      "rotation": {
+        "x": -0.0009217718957846353,
+        "y": -0.0008582836591760604,
+        "z": 0.0006680906409819
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999998211860657,
+        "z": 0.9999999403953552
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_ForearmTwist01",
+      "position": {
+        "x": -0.00002368539571762085,
+        "y": -0.0000031739473342895508,
+        "z": 0.00000616908073425293
+      },
+      "rotation": {
+        "x": -3.7458231312718865e-7,
+        "y": -0.00000718678613480043,
+        "z": 0.000011757515058433411
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999999403953552,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_R_ForearmTwist02"
+      ]
+    },
+    {
+      "name": "CC_Base_R_ForearmTwist02",
+      "position": {
+        "x": -0.051997918635606766,
+        "y": 11.958375930786133,
+        "z": 0.0018004775047302246
+      },
+      "rotation": {
+        "x": 0.00000897234491422718,
+        "y": 0.00017221113911621306,
+        "z": -0.000011972527815144786
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1,
+        "z": 1.0000001192092896
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_Hand",
+      "position": {
+        "x": -0.02060162089765072,
+        "y": 23.83962059020996,
+        "z": -0.13848602771759033
+      },
+      "rotation": {
+        "x": -0.0997145290064741,
+        "y": 0.004701973589186278,
+        "z": 0.0066111713912873635
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999998807907104,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_R_Ring1",
+        "CC_Base_R_Mid1",
+        "CC_Base_R_Thumb1",
+        "CC_Base_R_Index1",
+        "CC_Base_R_Pinky1"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Ring1",
+      "position": {
+        "x": 0.03301641345024109,
+        "y": 8.943953514099121,
+        "z": -0.00499725341796875
+      },
+      "rotation": {
+        "x": 0.09514733160502942,
+        "y": -0.0041115545307530785,
+        "z": 0.019124613313603645
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999999403953552,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_R_Ring2"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Ring2",
+      "position": {
+        "x": -0.000004773959517478943,
+        "y": 4.469654560089111,
+        "z": -4.172325134277344e-7
+      },
+      "rotation": {
+        "x": 0.011167526590953897,
+        "y": -0.0015609145952232624,
+        "z": 0.10509279032779496
+      },
+      "scale": {
+        "x": 0.9999998211860657,
+        "y": 1,
+        "z": 0.9999998211860657
+      },
+      "children": [
+        "CC_Base_R_Ring3"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Ring3",
+      "position": {
+        "x": 0.000005342066287994385,
+        "y": 2.585343599319458,
+        "z": 2.6263296604156494e-7
+      },
+      "rotation": {
+        "x": 0.02516517672351822,
+        "y": -0.0042074949314933234,
+        "z": -0.033404677759775424
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999999403953552,
+        "z": 1.0000001192092896
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_Mid1",
+      "position": {
+        "x": 0.45631980895996094,
+        "y": 9.178750991821289,
+        "z": 1.9063425064086914
+      },
+      "rotation": {
+        "x": 0.11556886789807333,
+        "y": -0.001415154670630821,
+        "z": 0.047137519277585624
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_R_Mid2"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Mid2",
+      "position": {
+        "x": -0.00035792787093669176,
+        "y": 4.519482135772705,
+        "z": -0.0189497172832489
+      },
+      "rotation": {
+        "x": 0.02240908762368234,
+        "y": -0.00360900378089226,
+        "z": 0.0681810666934235
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_R_Mid3"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Mid3",
+      "position": {
+        "x": -0.000009763985872268677,
+        "y": 2.989081859588623,
+        "z": 1.1920928955078125e-7
+      },
+      "rotation": {
+        "x": -0.0022796554704115333,
+        "y": -0.007560781252190809,
+        "z": -0.05550555703377141
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 0.9999998807907104,
+        "z": 0.9999998807907104
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_Thumb1",
+      "position": {
+        "x": -0.6384502649307251,
+        "y": 1.899956464767456,
+        "z": 2.8806533813476562
+      },
+      "rotation": {
+        "x": 0.9354501787472738,
+        "y": 0.26147118993598223,
+        "z": 0.021166191346853932
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1,
+        "z": 1.0000001192092896
+      },
+      "children": [
+        "CC_Base_R_Thumb2"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Thumb2",
+      "position": {
+        "x": 0.000002339482307434082,
+        "y": 5.776289939880371,
+        "z": -0.000009894371032714844
+      },
+      "rotation": {
+        "x": -0.4185417302857065,
+        "y": 0.01833946810980837,
+        "z": -0.11817853641267935
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_R_Thumb3"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Thumb3",
+      "position": {
+        "x": 0.04534158110618591,
+        "y": 2.7547688484191895,
+        "z": -0.014163732528686523
+      },
+      "rotation": {
+        "x": -0.02106560842223112,
+        "y": 0.007955624324062476,
+        "z": -0.10378864176734072
+      },
+      "scale": {
+        "x": 0.9999998807907104,
+        "y": 0.9999999403953552,
+        "z": 1
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_Index1",
+      "position": {
+        "x": 0.31364870071411133,
+        "y": 8.927292823791504,
+        "z": 4.234441757202148
+      },
+      "rotation": {
+        "x": 0.09676706187767352,
+        "y": -0.0008325424044024743,
+        "z": 0.0364390697245548
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999998807907104,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_R_Index2"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Index2",
+      "position": {
+        "x": 0.002314932644367218,
+        "y": 3.9455325603485107,
+        "z": -0.0008368492126464844
+      },
+      "rotation": {
+        "x": 0.013353183026826388,
+        "y": -0.009661601481946743,
+        "z": 0.08574004319193018
+      },
+      "scale": {
+        "x": 0.9999998211860657,
+        "y": 1,
+        "z": 1.0000001192092896
+      },
+      "children": [
+        "CC_Base_R_Index3"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Index3",
+      "position": {
+        "x": 0.0000010672956705093384,
+        "y": 2.7977397441864014,
+        "z": 1.4901161193847656e-7
+      },
+      "rotation": {
+        "x": -0.03834670795244267,
+        "y": 0.0008908363683954084,
+        "z": 0.013413248998598972
+      },
+      "scale": {
+        "x": 1.0000001192092896,
+        "y": 1.0000001192092896,
+        "z": 1.0000001192092896
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_Pinky1",
+      "position": {
+        "x": -0.49857237935066223,
+        "y": 9.072440147399902,
+        "z": -1.8198065757751465
+      },
+      "rotation": {
+        "x": 0.10282050363604975,
+        "y": -0.005176993834859081,
+        "z": 0.07082033083742616
+      },
+      "scale": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_R_Pinky2"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Pinky2",
+      "position": {
+        "x": -0.000011727213859558105,
+        "y": 3.161588668823242,
+        "z": 3.5762786865234375e-7
+      },
+      "rotation": {
+        "x": 0.025585307889046602,
+        "y": 0.009859655209270008,
+        "z": 0.024083506135259752
+      },
+      "scale": {
+        "x": 1,
+        "y": 0.9999999403953552,
+        "z": 0.9999999403953552
+      },
+      "children": [
+        "CC_Base_R_Pinky3"
+      ]
+    },
+    {
+      "name": "CC_Base_R_Pinky3",
+      "position": {
+        "x": 0.000003166496753692627,
+        "y": 1.807347297668457,
+        "z": -0.0000017881393432617188
+      },
+      "rotation": {
+        "x": -0.014665552954080192,
+        "y": -0.017716587960488396,
+        "z": -0.17947973975784137
+      },
+      "scale": {
+        "x": 0.9999999403953552,
+        "y": 1,
+        "z": 0.9999999403953552
+      },
+      "children": []
+    },
+    {
+      "name": "CC_Base_R_UpperarmTwist01",
+      "position": {
+        "x": -0.000030444934964179993,
+        "y": -0.000011265277862548828,
+        "z": 0.0000030994415283203125
+      },
+      "rotation": {
+        "x": 0.000005742660688980993,
+        "y": 0.0026289976429212693,
+        "z": -0.0000011512692800012547
+      },
+      "scale": {
+        "x": 1,
+        "y": 1.000000238418579,
+        "z": 1
+      },
+      "children": [
+        "CC_Base_R_UpperarmTwist02"
+      ]
+    },
+    {
+      "name": "CC_Base_R_UpperarmTwist02",
+      "position": {
+        "x": -0.00003339303657412529,
+        "y": 13.570483207702637,
+        "z": -0.00029653310775756836
+      },
+      "rotation": {
+        "x": 0.0000024930573732996347,
+        "y": -0.002629394157903282,
+        "z": -7.434426041138771e-8
+      },
+      "scale": {
+        "x": 0.9999998807907104,
+        "y": 0.9999998807907104,
+        "z": 0.9999999403953552
+      },
+      "children": []
+    }
+  ],
+  "animations": [
+    {
+      "name": "Boxers|Default",
+      "duration": 0.01666666753590107,
+      "tracks": 3
+    },
+    {
+      "name": "Armature|Default",
+      "duration": 0.01666666753590107,
+      "tracks": 303
+    }
+  ],
+  "hierarchy": "Scene (Group)\n  Boxers (Object3D)\n  Armature (Object3D)\n    Blazer (SkinnedMesh) [Mesh]\n    Business_Shirt (SkinnedMesh) [Mesh]\n    CC_Base_Body (Group)\n      CC_Base_Body_1 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_2 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_3 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_4 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_5 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_6 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_7 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_8 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_9 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_10 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_11 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_12 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n      CC_Base_Body_13 (SkinnedMesh) [Mesh] [ShapeKeys: 151]\n    CC_Base_EyeOcclusion (Group)\n      CC_Base_EyeOcclusion_1 (SkinnedMesh) [Mesh] [ShapeKeys: 90]\n      CC_Base_EyeOcclusion_2 (SkinnedMesh) [Mesh] [ShapeKeys: 90]\n    CC_Base_TearLine (Group)\n      CC_Base_TearLine_1 (SkinnedMesh) [Mesh] [ShapeKeys: 88]\n      CC_Base_TearLine_2 (SkinnedMesh) [Mesh] [ShapeKeys: 88]\n    Classic_short (Group)\n      Classic_short_1 (SkinnedMesh) [Mesh] [ShapeKeys: 15]\n      Classic_short_2 (SkinnedMesh) [Mesh] [ShapeKeys: 15]\n    FormalTie (SkinnedMesh) [Mesh]\n    Kevin_Brow (Group)\n      Kevin_Brow_1 (SkinnedMesh) [Mesh] [ShapeKeys: 172]\n      Kevin_Brow_2 (SkinnedMesh) [Mesh] [ShapeKeys: 172]\n    shoes (SkinnedMesh) [Mesh]\n    Slim_Jeans (SkinnedMesh) [Mesh]\n    CC_Base_BoneRoot (Bone) [Bone]\n      CC_Base_Hip (Bone) [Bone]\n        CC_Base_Pelvis (Bone) [Bone]\n          CC_Base_L_Thigh (Bone) [Bone]\n            CC_Base_L_Calf (Bone) [Bone]\n              CC_Base_L_Foot (Bone) [Bone]\n                CC_Base_L_ToeBaseShareBone (Bone) [Bone]\n                CC_Base_L_ToeBase (Bone) [Bone]\n                  CC_Base_L_PinkyToe1 (Bone) [Bone]\n                  CC_Base_L_RingToe1 (Bone) [Bone]\n                  CC_Base_L_MidToe1 (Bone) [Bone]\n                  CC_Base_L_IndexToe1 (Bone) [Bone]\n                  CC_Base_L_BigToe1 (Bone) [Bone]\n              CC_Base_L_CalfTwist01 (Bone) [Bone]\n                CC_Base_L_CalfTwist02 (Bone) [Bone]\n              CC_Base_L_KneeShareBone (Bone) [Bone]\n            CC_Base_L_ThighTwist01 (Bone) [Bone]\n              CC_Base_L_ThighTwist02 (Bone) [Bone]\n          CC_Base_R_Thigh (Bone) [Bone]\n            CC_Base_R_Calf (Bone) [Bone]\n              CC_Base_R_KneeShareBone (Bone) [Bone]\n              CC_Base_R_Foot (Bone) [Bone]\n                CC_Base_R_ToeBase (Bone) [Bone]\n                  CC_Base_R_BigToe1 (Bone) [Bone]\n                  CC_Base_R_PinkyToe1 (Bone) [Bone]\n                  CC_Base_R_RingToe1 (Bone) [Bone]\n                  CC_Base_R_IndexToe1 (Bone) [Bone]\n                  CC_Base_R_MidToe1 (Bone) [Bone]\n                CC_Base_R_ToeBaseShareBone (Bone) [Bone]\n              CC_Base_R_CalfTwist01 (Bone) [Bone]\n                CC_Base_R_CalfTwist02 (Bone) [Bone]\n            CC_Base_R_ThighTwist01 (Bone) [Bone]\n              CC_Base_R_ThighTwist02 (Bone) [Bone]\n        CC_Base_Waist (Bone) [Bone]\n          CC_Base_Spine01 (Bone) [Bone]\n            CC_Base_Spine02 (Bone) [Bone]\n              CC_Base_NeckTwist01 (Bone) [Bone]\n                CC_Base_NeckTwist02 (Bone) [Bone]\n                  CC_Base_Head (Bone) [Bone]\n                    CC_Base_FacialBone (Bone) [Bone]\n                      CC_Base_JawRoot (Bone) [Bone]\n                        CC_Base_Tongue01 (Bone) [Bone]\n                          CC_Base_Tongue02 (Bone) [Bone]\n                            CC_Base_Tongue03 (Bone) [Bone]\n                        CC_Base_Teeth02 (Bone) [Bone]\n                      CC_Base_R_Eye (Bone) [Bone]\n                      CC_Base_L_Eye (Bone) [Bone]\n                      CC_Base_UpperJaw (Bone) [Bone]\n                        CC_Base_Teeth01 (Bone) [Bone]\n              CC_Base_L_Clavicle (Bone) [Bone]\n                CC_Base_L_Upperarm (Bone) [Bone]\n                  CC_Base_L_Forearm (Bone) [Bone]\n                    CC_Base_L_ForearmTwist01 (Bone) [Bone]\n                      CC_Base_L_ForearmTwist02 (Bone) [Bone]\n                    CC_Base_L_ElbowShareBone (Bone) [Bone]\n                    CC_Base_L_Hand (Bone) [Bone]\n                      CC_Base_L_Pinky1 (Bone) [Bone]\n                        CC_Base_L_Pinky2 (Bone) [Bone]\n                          CC_Base_L_Pinky3 (Bone) [Bone]\n                      CC_Base_L_Ring1 (Bone) [Bone]\n                        CC_Base_L_Ring2 (Bone) [Bone]\n                          CC_Base_L_Ring3 (Bone) [Bone]\n                      CC_Base_L_Mid1 (Bone) [Bone]\n                        CC_Base_L_Mid2 (Bone) [Bone]\n                          CC_Base_L_Mid3 (Bone) [Bone]\n                      CC_Base_L_Index1 (Bone) [Bone]\n                        CC_Base_L_Index2 (Bone) [Bone]\n                          CC_Base_L_Index3 (Bone) [Bone]\n                      CC_Base_L_Thumb1 (Bone) [Bone]\n                        CC_Base_L_Thumb2 (Bone) [Bone]\n                          CC_Base_L_Thumb3 (Bone) [Bone]\n                  CC_Base_L_UpperarmTwist01 (Bone) [Bone]\n                    CC_Base_L_UpperarmTwist02 (Bone) [Bone]\n              CC_Base_L_RibsTwist (Bone) [Bone]\n                CC_Base_L_Breast (Bone) [Bone]\n              CC_Base_R_RibsTwist (Bone) [Bone]\n                CC_Base_R_Breast (Bone) [Bone]\n              CC_Base_R_Clavicle (Bone) [Bone]\n                CC_Base_R_Upperarm (Bone) [Bone]\n                  CC_Base_R_Forearm (Bone) [Bone]\n                    CC_Base_R_ElbowShareBone (Bone) [Bone]\n                    CC_Base_R_ForearmTwist01 (Bone) [Bone]\n                      CC_Base_R_ForearmTwist02 (Bone) [Bone]\n                    CC_Base_R_Hand (Bone) [Bone]\n                      CC_Base_R_Ring1 (Bone) [Bone]\n                        CC_Base_R_Ring2 (Bone) [Bone]\n                          CC_Base_R_Ring3 (Bone) [Bone]\n                      CC_Base_R_Mid1 (Bone) [Bone]\n                        CC_Base_R_Mid2 (Bone) [Bone]\n                          CC_Base_R_Mid3 (Bone) [Bone]\n                      CC_Base_R_Thumb1 (Bone) [Bone]\n                        CC_Base_R_Thumb2 (Bone) [Bone]\n                          CC_Base_R_Thumb3 (Bone) [Bone]\n                      CC_Base_R_Index1 (Bone) [Bone]\n                        CC_Base_R_Index2 (Bone) [Bone]\n                          CC_Base_R_Index3 (Bone) [Bone]\n                      CC_Base_R_Pinky1 (Bone) [Bone]\n                        CC_Base_R_Pinky2 (Bone) [Bone]\n                          CC_Base_R_Pinky3 (Bone) [Bone]\n                  CC_Base_R_UpperarmTwist01 (Bone) [Bone]\n                    CC_Base_R_UpperarmTwist02 (Bone) [Bone]\n",
+  "stats": {
+    "totalMeshes": 26,
+    "totalShapeKeys": 2693,
+    "totalBones": 101,
+    "totalVertices": 64615,
+    "totalFaces": 80564
+  }
+}

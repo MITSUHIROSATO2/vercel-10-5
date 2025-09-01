@@ -1,0 +1,802 @@
+{
+  "timestamp": "2025-09-01T09:10:48.783Z",
+  "avatar": "female",
+  "modelPath": "/models/Hayden_059d-NO-GUI.glb",
+  "meshCount": 102,
+  "meshes": [
+    {
+      "name": "cs_ctrl_ik_solid_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 28,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_ctrl_ik_solid_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 28,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_pupil_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 72,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_pupil_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 72,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_eye_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 136,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_eye_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 136,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_eyebrow_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 18,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_eyebrow_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 18,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_fk",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 21,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_circle_ik",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 15,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_plane_4_fill",
+      "type": "Mesh",
+      "materialName": "cs_buttons",
+      "vertexCount": 4,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_arrow_cross_solid",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 130,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_pos_solid_eye_offset_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 128,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_pos_solid_eye_offset_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 128,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_arrow_twist_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 24,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_arrow_twist_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 24,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_bar_01",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 8,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_bar_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 8,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_bar_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 8,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_circle_01",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 33,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_circle_02",
+      "type": "Mesh",
+      "materialName": "cs_solid_grey",
+      "vertexCount": 33,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_circle_02_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 66,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_circle_02_green",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 66,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_circle_02_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 66,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_ik004",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 94,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_ik004_1",
+      "type": "Mesh",
+      "materialName": "cs_solid_black",
+      "vertexCount": 96,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_ik004_2",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 94,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_ik004_3",
+      "type": "Mesh",
+      "materialName": "cs_solid_black",
+      "vertexCount": 96,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_circle_squashed_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 64,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_circle_squashed_green",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 64,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_circle_squashed_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 64,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_fk_blue003",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 50,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_fk_blue003_1",
+      "type": "Mesh",
+      "materialName": "cs_solid_black",
+      "vertexCount": 4,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_fk_blue003_2",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 50,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_fk_blue003_3",
+      "type": "Mesh",
+      "materialName": "cs_solid_black",
+      "vertexCount": 4,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_plane_2",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 8,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_plane_2_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 8,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_plane_2_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 8,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_plane_3",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 4,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_plane_3_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 8,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_plane_3_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 8,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_plane_5_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 8,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_plane_5_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 8,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_torus_04_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 48,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_torus_04_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 48,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_torus_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 98,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_torus_green",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 98,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_torus_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 98,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_triangle",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 3,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_pos_solid",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 128,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_eye_aim_blue",
+      "type": "Mesh",
+      "materialName": "cs_solid_blue",
+      "vertexCount": 152,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_eye_aim_global",
+      "type": "Mesh",
+      "materialName": "cs_solid_green",
+      "vertexCount": 136,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_solid_eye_aim_red",
+      "type": "Mesh",
+      "materialName": "cs_solid_red.012",
+      "vertexCount": 152,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_user_c_shoulderl002",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 16,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_user_c_shoulderr002",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 16,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_cube_solid",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 24,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_cube_solid_offset",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 24,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_sphere_solid_offset",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 240,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_sphere_solid",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 240,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_user_c_shoulderl003",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 16,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_user_c_shoulderr003",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 16,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_user_c_shoulderr004",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 16,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_user_c_shoulderl004",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 16,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_user_c_shoulderl",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 16,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "cs_user_c_shoulderr",
+      "type": "Mesh",
+      "materialName": "unnamed",
+      "vertexCount": 16,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hair_hvyf",
+      "type": "Mesh",
+      "materialName": "Hay-Hair",
+      "vertexCount": 4057,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hair_napef",
+      "type": "Mesh",
+      "materialName": "Hay-Hair",
+      "vertexCount": 3191,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hair_partclr",
+      "type": "Mesh",
+      "materialName": "Hay-Hair.clr",
+      "vertexCount": 5280,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hair_partf",
+      "type": "Mesh",
+      "materialName": "Hay-Hair",
+      "vertexCount": 5982,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hairclr",
+      "type": "Mesh",
+      "materialName": "Hay-Hair.clr",
+      "vertexCount": 22465,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hairf",
+      "type": "Mesh",
+      "materialName": "Hay-Hair",
+      "vertexCount": 13872,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hair_Partclr",
+      "type": "Mesh",
+      "materialName": "Hay-Hair.clr",
+      "vertexCount": 3244,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Roundcube001",
+      "type": "Mesh",
+      "materialName": "Hayden_Skin",
+      "vertexCount": 16111,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Roundcube001_1",
+      "type": "Mesh",
+      "materialName": "Teeth",
+      "vertexCount": 848,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Roundcube001_2",
+      "type": "Mesh",
+      "materialName": "Material.035",
+      "vertexCount": 132,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Roundcube001_3",
+      "type": "Mesh",
+      "materialName": "Eyebrow",
+      "vertexCount": 8402,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Roundcube001_4",
+      "type": "Mesh",
+      "materialName": "Eyelashes",
+      "vertexCount": 5418,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Eyebrows",
+      "type": "Mesh",
+      "materialName": "Eyebrow",
+      "vertexCount": 8402,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Eyelashes_bottom",
+      "type": "Mesh",
+      "materialName": "Eyelashes",
+      "vertexCount": 612,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Eyelashes_top",
+      "type": "Mesh",
+      "materialName": "Eyelashes",
+      "vertexCount": 4806,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Teeth_bottom",
+      "type": "Mesh",
+      "materialName": "Teeth",
+      "vertexCount": 440,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Teeth_top",
+      "type": "Mesh",
+      "materialName": "Teeth",
+      "vertexCount": 408,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Tongue",
+      "type": "Mesh",
+      "materialName": "Material.035",
+      "vertexCount": 132,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Plane073",
+      "type": "Mesh",
+      "materialName": "eye preview.001",
+      "vertexCount": 177,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Plane073_1",
+      "type": "Mesh",
+      "materialName": "pupil preview.001",
+      "vertexCount": 25,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Plane073_2",
+      "type": "Mesh",
+      "materialName": "eye rim preview.001",
+      "vertexCount": 32,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Plane009",
+      "type": "Mesh",
+      "materialName": "eye preview.001",
+      "vertexCount": 64,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Plane009_1",
+      "type": "Mesh",
+      "materialName": "pupil preview.001",
+      "vertexCount": 25,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Plane009_2",
+      "type": "Mesh",
+      "materialName": "eye rim preview.001",
+      "vertexCount": 32,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hayden_body_Blender",
+      "type": "Mesh",
+      "materialName": "Hayden_Skin",
+      "vertexCount": 16111,
+      "hasMorphTargets": true,
+      "morphTargets": [
+        "Mouth fix-smile wide",
+        "Mouth fix-Oh wide"
+      ]
+    },
+    {
+      "name": "Eye_R_Color",
+      "type": "Mesh",
+      "materialName": "eye-color",
+      "vertexCount": 546,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Eye_L_Clear",
+      "type": "Mesh",
+      "materialName": "eye clear",
+      "vertexCount": 450,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Eye_L_Color",
+      "type": "Mesh",
+      "materialName": "eye-color",
+      "vertexCount": 433,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Eye_R_Clear",
+      "type": "Mesh",
+      "materialName": "eye clear",
+      "vertexCount": 450,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hair_hvy",
+      "type": "Mesh",
+      "materialName": "Hay-Hair",
+      "vertexCount": 4057,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hair_nape",
+      "type": "Mesh",
+      "materialName": "Hay-Hair",
+      "vertexCount": 3191,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Haircap",
+      "type": "Mesh",
+      "materialName": "Hay-Hair",
+      "vertexCount": 2185,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hair",
+      "type": "Mesh",
+      "materialName": "Hay-Hair",
+      "vertexCount": 22465,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hair_fly",
+      "type": "Mesh",
+      "materialName": "Hay-Hair",
+      "vertexCount": 7117,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Hair_Part",
+      "type": "Mesh",
+      "materialName": "Hay-Hair",
+      "vertexCount": 7450,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Frilly_Dress",
+      "type": "Mesh",
+      "materialName": "Frilly Sweater",
+      "vertexCount": 7018,
+      "hasMorphTargets": false
+    },
+    {
+      "name": "Shoe-Sneaker_style",
+      "type": "Mesh",
+      "materialName": "Sneakers",
+      "vertexCount": 1490,
+      "hasMorphTargets": false
+    }
+  ],
+  "summary": {
+    "totalMeshes": 102,
+    "meshesWithMorphTargets": 12,
+    "totalVertices": 180747,
+    "uniqueMaterials": [
+      "cs_solid_blue",
+      "cs_solid_red.012",
+      "unnamed",
+      "cs_buttons",
+      "cs_solid_green",
+      "cs_solid_grey",
+      "cs_solid_black",
+      "Hay-Hair",
+      "Hay-Hair.clr",
+      "Hayden_Skin",
+      "Teeth",
+      "Material.035",
+      "Eyebrow",
+      "Eyelashes",
+      "eye preview.001",
+      "pupil preview.001",
+      "eye rim preview.001",
+      "eye-color",
+      "eye clear",
+      "Frilly Sweater",
+      "Sneakers"
+    ],
+    "allMorphTargets": [
+      "Mouth fix-smile wide",
+      "Mouth fix-Oh wide"
+    ]
+  }
+}
