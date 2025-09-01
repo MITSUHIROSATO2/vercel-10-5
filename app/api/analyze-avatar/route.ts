@@ -103,8 +103,14 @@ async function analyzeGLB(filePath: string): Promise<ModelData> {
   const loader = new GLTFLoader();
   
   return new Promise((resolve, reject) => {
+    // Convert Buffer to ArrayBuffer
+    const arrayBuffer = fileBuffer.buffer.slice(
+      fileBuffer.byteOffset,
+      fileBuffer.byteOffset + fileBuffer.byteLength
+    );
+    
     loader.parse(
-      fileBuffer.buffer,
+      arrayBuffer as ArrayBuffer,
       '',
       (gltf) => {
         console.log('=== GLTF解析開始 ===');
