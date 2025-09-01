@@ -350,8 +350,8 @@ export default function FacialExpressionAnalyzer() {
         totalMeshes: meshInfo.length,
         meshesWithMorphTargets: meshInfo.filter((m: any) => m.hasMorphTargets).length,
         totalVertices: meshInfo.reduce((sum: number, m: any) => sum + m.vertexCount, 0),
-        uniqueMaterials: [...new Set(meshInfo.map((m: any) => m.materialName))],
-        allMorphTargets: [...new Set(meshInfo.flatMap((m: any) => m.morphTargets || []))]
+        uniqueMaterials: Array.from(new Set(meshInfo.map((m: any) => m.materialName))),
+        allMorphTargets: Array.from(new Set(meshInfo.flatMap((m: any) => m.morphTargets || [])))
       }
     };
 
