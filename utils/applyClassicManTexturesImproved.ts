@@ -5,10 +5,14 @@ import * as THREE from 'three';
  * JSONの分析に基づいた正確なマッピング
  */
 export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
-  // console.log('=== ClassicMan改良版 テクスチャ適用開始 ===');
+  console.log('=== ClassicMan改良版 テクスチャ適用開始 ===');
   
   const textureLoader = new THREE.TextureLoader();
-  const basePath = '/models/ClassicMan.fbm/';
+  // Blob StorageのベースURL - 環境に応じて切り替え
+  const isProduction = process.env.NODE_ENV === 'production';
+  const basePath = isProduction 
+    ? 'https://ayyxiwfdxbwzwqa7.public.blob.vercel-storage.com/ClassicMan.fbm/'
+    : '/models/ClassicMan.fbm/';
   
   // 統計情報
   const stats = {
@@ -201,7 +205,7 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
     stats.totalMeshes++;
     const meshName = child.name;
     const lowerMeshName = meshName.toLowerCase();
-    // console.log(`\n処理中: ${meshName}`);
+    console.log(`\n処理中: ${meshName}`);
     
     // ヒゲを非表示
     if (lowerMeshName.includes('beard') || 
@@ -238,13 +242,13 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
       if (!material) return;
       
       const matName = material.name || '';
-      // console.log(`  マテリアル: ${matName}`);
+      console.log(`  マテリアル: ${matName}`);
       
       // テクスチャマッピングを取得
       const mapping = getTextureForMesh(meshName, matName);
       
       if (mapping) {
-        // console.log(`    → タイプ: ${mapping.type}`);
+        console.log(`    → タイプ: ${mapping.type}`);
         
         if (mapping.type === 'hide') {
           child.visible = false;
@@ -345,14 +349,18 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
             }
             
             // マテリアルを置き換え
+            console.log(`    マテリアル置き換え: ${matName} -> 新規マテリアル`);
             if (Array.isArray(child.material)) {
               child.material[index] = newMat;
+              console.log(`    配列のインデックス ${index} を置き換え`);
             } else {
               child.material = newMat;
+              console.log(`    単一マテリアルを置き換え`);
             }
             
             newMat.needsUpdate = true;
             stats.processedMeshes++;
+            console.log(`    ✓ 処理完了`);
             
           } catch (error) {
             console.error(`    エラー: ${error}`);
@@ -410,11 +418,11 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
   await Promise.all(processPromises);
   
   // 統計情報を出力
-  // console.log('\n=== 適用結果 ===');
-  // console.log(`総メッシュ数: ${stats.totalMeshes}`);
-  // console.log(`処理済み: ${stats.processedMeshes}`);
-  // console.log(`テクスチャ適用: ${stats.texturesApplied}`);
-  // console.log(`エラー: ${stats.errors}`);
-  // 
-  // console.log('=== ClassicMan改良版 テクスチャ適用完了 ===');
+  console.log('\n=== 適用結果 ===');
+  console.log(`総メッシュ数: ${stats.totalMeshes}`);
+  console.log(`処理済み: ${stats.processedMeshes}`);
+  console.log(`テクスチャ適用: ${stats.texturesApplied}`);
+  console.log(`エラー: ${stats.errors}`);
+  
+  console.log('=== ClassicMan改良版 テクスチャ適用完了 ===');
 }

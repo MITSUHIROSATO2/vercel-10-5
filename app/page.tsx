@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useAutoVoiceDetection } from '@/hooks/useAutoVoiceDetection';
 import { useElevenLabsSpeech } from '@/hooks/useElevenLabsSpeech';
@@ -8,7 +8,14 @@ import { useElevenLabsSpeech } from '@/hooks/useElevenLabsSpeech';
 // リップシンクアバターを動的インポート（SSRを無効化）
 const FinalLipSyncAvatar = dynamic(
   () => import('@/components/FinalLipSyncAvatar'),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-[400px]">
+        <div className="text-cyan-400 animate-pulse">モデルを読み込み中...</div>
+      </div>
+    )
+  }
 );
 import { patientScenarios, formatScenarioForAI } from '@/lib/scenarios';
 import type { PatientScenario } from '@/lib/scenarioTypes';
@@ -47,6 +54,11 @@ export default function Home() {
       setSelectedAvatar(avatar);
     }
   };
+  
+  // onLoaded コールバックをメモ化
+  const handleAvatarLoaded = React.useCallback(() => {
+    setIsAvatarLoaded(true);
+  }, []);
 
   const isConversationActiveRef = useRef(false);
   
@@ -363,24 +375,31 @@ export default function Home() {
               )}
               {/* リップシンク対応アバター表示部分 */}
               <div className="scan-overlay" style={{ minHeight: '400px' }}>
-                <FinalLipSyncAvatar 
-                  isSpeaking={isSpeaking || isCurrentlySpeaking} 
-                  currentWord={currentWord}
-                  audioLevel={audioLevel}
-                  currentPhoneme={currentPhoneme}
-                  speechProgress={speechProgress}
-                  modelPath={
-                    selectedAvatar === 'adult' 
-                      ? (process.env.NEXT_PUBLIC_MODEL_ADULT || '/models/成人男性.glb')
-                      : selectedAvatar === 'boy'
-                      ? (process.env.NEXT_PUBLIC_MODEL_BOY || '/models/少年アバター.glb')
-                      : selectedAvatar === 'boy_improved'
-                      ? (process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED || '/models/少年改アバター.glb')
-                      : (process.env.NEXT_PUBLIC_MODEL_FEMALE || '/models/Hayden_059d-NO-GUI.glb')
-                  }
-                  selectedAvatar={selectedAvatar}
-                  onLoaded={() => setIsAvatarLoaded(true)}
-                />
+                <React.Suspense fallback={
+                  <div className="flex items-center justify-center h-[400px]">
+                    <div className="text-cyan-400 animate-pulse">モデルを読み込み中...</div>
+                  </div>
+                }>
+                  <FinalLipSyncAvatar 
+                    key={selectedAvatar} // アバター変更時に完全に再マウント
+                    isSpeaking={isSpeaking || isCurrentlySpeaking} 
+                    currentWord={currentWord}
+                    audioLevel={audioLevel}
+                    currentPhoneme={currentPhoneme}
+                    speechProgress={speechProgress}
+                    modelPath={
+                      selectedAvatar === 'adult' 
+                        ? (process.env.NEXT_PUBLIC_MODEL_ADULT || '/models/成人男性.glb')
+                        : selectedAvatar === 'boy'
+                        ? (process.env.NEXT_PUBLIC_MODEL_BOY || '/models/少年アバター.glb')
+                        : selectedAvatar === 'boy_improved'
+                        ? (process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED || '/models/少年改アバター.glb')
+                        : (process.env.NEXT_PUBLIC_MODEL_FEMALE || '/models/Hayden_059d-NO-GUI.glb')
+                    }
+                    selectedAvatar={selectedAvatar}
+                    onLoaded={handleAvatarLoaded}
+                  />
+                </React.Suspense>
               </div>
             </div>
           </div>

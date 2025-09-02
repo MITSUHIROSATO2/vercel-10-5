@@ -751,36 +751,32 @@ function AvatarModel({
   const lastPeakTime = useRef<number>(0);
   const lastDebugTime = useRef<number>(0);
   
-  // GLBファイル読み込みのエラーハンドリング
-  let scene;
-  try {
-    console.log('[Model] Loading from path:', modelPath);
-    const gltf = useGLTF(modelPath);
-    scene = gltf.scene;
-    console.log('[Model] Successfully loaded');
-  } catch (error) {
-    // Suspenseによる初回レンダリング時のエラーは無視（正常な動作）
-    // モデルは非同期で読み込まれるため、初回はエラーになることがある
-    if (process.env.NODE_ENV === 'development') {
-      // 開発環境でのみ警告を表示（エラーではなく情報として）
-      console.info(`Loading model: ${modelPath}`);
-    }
-    // フォールバックとして空のシーンを作成
-    scene = new THREE.Group();
-  }
+  // GLBファイル読み込み（Suspenseと連携）
+  const gltf = useGLTF(modelPath);
+  const scene = gltf.scene;
   
   useEffect(() => {
-    if (!scene) return;
+    console.log('=== useEffect実行 ===');
+    console.log('scene:', scene ? 'あり' : 'なし');
+    console.log('modelPath:', modelPath);
+    console.log('isBoyImprovedModel:', isBoyImprovedModel);
+    
+    if (!scene) {
+      console.log('シーンがないため処理をスキップ');
+      return;
+    }
     
     // 少年アバターの場合のみログ出力
     const isBoyAvatar = modelPath.includes('少年');
     
-    // モデルごとのテクスチャ適用（初回のみ実行）
-    const textureAppliedKey = `texture_applied_${modelPath}`;
-    if (modelPath.includes('少年アバター') && !scene.userData[textureAppliedKey]) {
-      // 新しい少年アバター - 初回のみテクスチャを適用
-      scene.userData[textureAppliedKey] = true; // 適用済みフラグをセット
-      
+    // モデルごとのテクスチャ適用
+    // URLエンコードされた文字列とデコードされた文字列の両方をチェック
+    const decodedPath = decodeURIComponent(modelPath);
+    console.log('decodedPath:', decodedPath);
+    
+    if (modelPath.includes('少年アバター') || modelPath.includes('%E5%B0%91%E5%B9%B4%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC')) {
+      console.log('→ 少年アバターとして処理');
+      // 新しい少年アバター - テクスチャを適用
       import('@/utils/applyBoyAvatarTextures').then(async ({ applyBoyAvatarTextures }) => {
         // テクスチャを適用（ログなし）
         await applyBoyAvatarTextures(scene, false);
@@ -791,29 +787,28 @@ function AvatarModel({
           }, 100);
         }
       });
-    } else if ((modelPath.includes('少年改') || isBoyImprovedModel) && !scene.userData[textureAppliedKey]) {
-      // 少年改アバター/ClassicMan改良版 - 初回のみテクスチャを適用
-      scene.userData[textureAppliedKey] = true; // 適用済みフラグをセット
-      
+    } else if (modelPath.includes('少年改') || modelPath.includes('%E5%B0%91%E5%B9%B4%E6%94%B9') || decodedPath.includes('少年改') || isBoyImprovedModel) {
+      // 少年改アバター/ClassicMan改良版 - テクスチャを適用
+      console.log('→ 少年改アバターとして処理');
+      console.log('=== 少年改アバター検出 - テクスチャ適用開始 ===');
       import('@/utils/applyClassicManTexturesImproved').then(async ({ applyClassicManTexturesImproved }) => {
         await applyClassicManTexturesImproved(scene);
+        console.log('=== 少年改アバター - テクスチャ適用完了 ===');
         
         if (onLoaded) {
           setTimeout(() => {
             onLoaded();
           }, 100);
         }
+      }).catch((error) => {
+        console.error('少年改アバターテクスチャ適用エラー:', error);
       });
-    } else if ((modelPath.includes('Hayden') || modelPath.includes('female')) && !scene.userData[textureAppliedKey]) {
-      // 女性アバター - テクスチャ適用を一時的に無効化
-      console.log('=== 女性アバター検出 - テクスチャ適用をスキップ（デバッグ用） ===');
-      scene.userData[textureAppliedKey] = true; // 適用済みフラグをセット
-      
-      // テクスチャ適用をコメントアウト
-      /*
+    } else if (modelPath.includes('Hayden') || modelPath.includes('female') || decodedPath.includes('Hayden')) {
+      // 女性アバター - テクスチャ適用
+      console.log('→ 女性アバターとして処理');
       import('@/utils/applyFemaleAvatarTextures').then(async ({ applyFemaleAvatarTextures }) => {
         try {
-          await applyFemaleAvatarTextures(scene, true); // ログを有効化
+          await applyFemaleAvatarTextures(scene, false); // ログを無効化
           console.log('=== 女性アバターテクスチャ適用完了 ===');
         } catch (error) {
           console.error('女性アバターテクスチャ適用エラー:', error);
@@ -825,16 +820,9 @@ function AvatarModel({
           }, 100);
         }
       });
-      */
-      
-      // テクスチャなしでも onLoaded を呼ぶ
-      if (onLoaded) {
-        setTimeout(() => {
-          onLoaded();
-        }, 100);
-      }
     } else {
       // 成人男性モデルの場合はすぐに通知
+      console.log('→ その他のモデルとして処理（成人男性など）');
       if (onLoaded) {
         setTimeout(() => {
           onLoaded();
@@ -997,7 +985,7 @@ function AvatarModel({
     
     setMorphTargets(morphMeshes);
     setOralMeshes(oralMeshList);
-  }, [scene, onLoaded]); // selectedAvatarを依存配列から削除（安定性向上）
+  }, [scene, onLoaded, modelPath, selectedAvatar, isBoyImprovedModel]); // 依存配列を適切に設定
   
   useFrame((state, delta) => {
     if (!group.current) return;
