@@ -778,33 +778,45 @@ function AvatarModel({
         }
       });
     } else if (modelPath.includes('少年改') || modelPath.includes('%E5%B0%91%E5%B9%B4%E6%94%B9') || decodedPath.includes('少年改') || isBoyImprovedModel) {
-      // 少年改アバター/ClassicMan改良版 - テクスチャを適用
-      import('@/utils/applyClassicManTexturesImproved').then(async ({ applyClassicManTexturesImproved }) => {
-        await applyClassicManTexturesImproved(scene);
-        
-        if (onLoaded) {
-          setTimeout(() => {
-            onLoaded();
-          }, 100);
-        }
-      }).catch((error) => {
-        console.error('少年改アバターテクスチャ適用エラー:', error);
-      });
+      // 少年改アバター/ClassicMan改良版 - テクスチャ適用を一時的に無効化
+      console.log('[AvatarModel] 少年改アバターのテクスチャ適用を一時的にスキップ');
+      if (onLoaded) {
+        setTimeout(() => {
+          onLoaded();
+        }, 100);
+      }
+      // import('@/utils/applyClassicManTexturesImproved').then(async ({ applyClassicManTexturesImproved }) => {
+      //   await applyClassicManTexturesImproved(scene);
+      //   
+      //   if (onLoaded) {
+      //     setTimeout(() => {
+      //       onLoaded();
+      //     }, 100);
+      //   }
+      // }).catch((error) => {
+      //   console.error('少年改アバターテクスチャ適用エラー:', error);
+      // });
     } else if (modelPath.includes('Hayden') || modelPath.includes('female') || decodedPath.includes('Hayden')) {
-      // 女性アバター - テクスチャ適用
-      import('@/utils/applyFemaleAvatarTextures').then(async ({ applyFemaleAvatarTextures }) => {
-        try {
-          await applyFemaleAvatarTextures(scene, false); // ログを無効化
-        } catch (error) {
-          console.error('女性アバターテクスチャ適用エラー:', error);
-        }
-        
-        if (onLoaded) {
-          setTimeout(() => {
-            onLoaded();
-          }, 100);
-        }
-      });
+      // 女性アバター - テクスチャ適用を一時的に無効化
+      console.log('[AvatarModel] 女性アバターのテクスチャ適用を一時的にスキップ');
+      if (onLoaded) {
+        setTimeout(() => {
+          onLoaded();
+        }, 100);
+      }
+      // import('@/utils/applyFemaleAvatarTextures').then(async ({ applyFemaleAvatarTextures }) => {
+      //   try {
+      //     await applyFemaleAvatarTextures(scene, false); // ログを無効化
+      //   } catch (error) {
+      //     console.error('女性アバターテクスチャ適用エラー:', error);
+      //   }
+      //   
+      //   if (onLoaded) {
+      //     setTimeout(() => {
+      //       onLoaded();
+      //     }, 100);
+      //   }
+      // });
     } else {
       // 成人男性モデルの場合はすぐに通知
       if (onLoaded) {
