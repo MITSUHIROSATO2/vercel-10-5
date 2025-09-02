@@ -5,25 +5,19 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { getModelPath } from '@/lib/modelPaths';
 
 // モデルURLをプリロード（クライアントサイドのみ）
 if (typeof window !== 'undefined') {
-  const modelUrls: string[] = [
-    process.env.NEXT_PUBLIC_MODEL_ADULT,
-    process.env.NEXT_PUBLIC_MODEL_BOY,
-    process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED,
-    process.env.NEXT_PUBLIC_MODEL_FEMALE,
-    '/models/成人男性.glb',
-    '/models/少年アバター.glb',
-    '/models/少年改アバター.glb',
-    '/models/Hayden_059d-NO-GUI.glb'
-  ].filter((url): url is string => url !== undefined && typeof url === 'string');
+  const modelTypes: ('adult' | 'boy' | 'boy_improved' | 'female')[] = ['adult', 'boy', 'boy_improved', 'female'];
   
-  modelUrls.forEach(url => {
+  modelTypes.forEach(type => {
     try {
-      useGLTF.preload(url);
+      const modelPath = getModelPath(type);
+      useGLTF.preload(modelPath);
+      console.log(`Preloading model ${type}: ${modelPath}`);
     } catch (error) {
-      console.warn(`Model preload skipped: ${url}`);
+      console.warn(`Model preload skipped for ${type}:`, error);
     }
   });
 }
@@ -774,12 +768,8 @@ function AvatarModel({
   const lastDebugTime = useRef<number>(0);
   
   // GLBファイル読み込み（Suspenseと連携）
-  // URLエラー対策：Blob StorageのURLをプロキシ経由で使用
-  const proxyPath = modelPath.startsWith('https://') 
-    ? `/api/proxy-model?url=${encodeURIComponent(modelPath)}`
-    : modelPath;
-  
-  const gltf = useGLTF(proxyPath);
+  // modelPathは既にmodelPaths.tsでクリーニング済み
+  const gltf = useGLTF(modelPath);
   const scene = gltf.scene;
   
   useEffect(() => {
@@ -2207,10 +2197,3 @@ export default function FinalLipSyncAvatar({
   );
 }
 
-// Preload models with error handling
-try {
-  useGLTF.preload('/models/成人男性.glb');
-  useGLTF.preload('/models/少年アバター.glb');
-} catch (error) {
-  console.warn('Failed to preload models:', error);
-}

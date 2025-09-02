@@ -1,22 +1,31 @@
 // モデルパスの管理
 // 環境変数が設定されている場合はCDNから、そうでない場合はローカルから読み込む
 
+// URLから改行や余分な空白を削除する関数
+const cleanUrl = (url: string | undefined): string | undefined => {
+  if (!url) return undefined;
+  // 改行文字とその前後の空白を完全に削除（URLの一部として結合）
+  // これにより "vercel\n  -storage" が "vercel-storage" になる
+  return url.replace(/[\r\n\t]+\s*/g, '').replace(/\s*[\r\n\t]+/g, '').trim();
+};
+
 export const getModelPath = (modelType: 'adult' | 'adult_improved' | 'boy' | 'boy_improved' | 'female'): string => {
-  // 環境変数からCDN URLを取得
-  const cdnBase = process.env.NEXT_PUBLIC_MODEL_CDN_BASE;
+  // 環境変数からCDN URLを取得（クリーニング済み）
+  const cdnBase = cleanUrl(process.env.NEXT_PUBLIC_MODEL_CDN_BASE);
   const useCdn = process.env.NEXT_PUBLIC_USE_CDN_MODELS === 'true';
   
-  // 個別の環境変数からモデルURLを取得（優先）
+  // 個別の環境変数からモデルURLを取得（優先）- すべてクリーニング
   const envUrls = {
-    adult: process.env.NEXT_PUBLIC_MODEL_ADULT,
-    adult_improved: process.env.NEXT_PUBLIC_MODEL_ADULT_IMPROVED,
-    boy: process.env.NEXT_PUBLIC_MODEL_BOY,
-    boy_improved: process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED,
-    female: process.env.NEXT_PUBLIC_MODEL_FEMALE
+    adult: cleanUrl(process.env.NEXT_PUBLIC_MODEL_ADULT),
+    adult_improved: cleanUrl(process.env.NEXT_PUBLIC_MODEL_ADULT_IMPROVED),
+    boy: cleanUrl(process.env.NEXT_PUBLIC_MODEL_BOY),
+    boy_improved: cleanUrl(process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED),
+    female: cleanUrl(process.env.NEXT_PUBLIC_MODEL_FEMALE)
   };
   
   // 環境変数が設定されている場合はそれを使用
   if (envUrls[modelType]) {
+    console.log(`Using cleaned model URL for ${modelType}:`, envUrls[modelType]);
     return envUrls[modelType]!;
   }
   

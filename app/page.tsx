@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useAutoVoiceDetection } from '@/hooks/useAutoVoiceDetection';
 import { useElevenLabsSpeech } from '@/hooks/useElevenLabsSpeech';
+import { getModelPath } from '@/lib/modelPaths';
 
 // リップシンクアバターを動的インポート（SSRを無効化）
 const FinalLipSyncAvatar = dynamic(
@@ -387,15 +388,7 @@ export default function Home() {
                     audioLevel={audioLevel}
                     currentPhoneme={currentPhoneme}
                     speechProgress={speechProgress}
-                    modelPath={
-                      selectedAvatar === 'adult' 
-                        ? (process.env.NEXT_PUBLIC_MODEL_ADULT?.trim() || '/models/成人男性.glb')
-                        : selectedAvatar === 'boy'
-                        ? (process.env.NEXT_PUBLIC_MODEL_BOY?.trim() || '/models/少年アバター.glb')
-                        : selectedAvatar === 'boy_improved'
-                        ? (process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED?.trim() || '/models/少年改アバター.glb')
-                        : (process.env.NEXT_PUBLIC_MODEL_FEMALE?.trim() || '/models/Hayden_059d-NO-GUI.glb')
-                    }
+                    modelPath={getModelPath(selectedAvatar)}
                     selectedAvatar={selectedAvatar}
                     onLoaded={handleAvatarLoaded}
                   />
