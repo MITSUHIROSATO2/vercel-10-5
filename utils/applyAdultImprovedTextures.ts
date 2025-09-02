@@ -11,9 +11,8 @@ export async function applyAdultImprovedTextures(scene: THREE.Object3D) {
   textureLoader.setCrossOrigin('anonymous'); // CORS設定を追加
   
   // Blob Storageのベースパスを使用（環境変数から取得）
-  const basePath = process.env.NEXT_PUBLIC_TEXTURE_BASE_URL 
-    ? `${process.env.NEXT_PUBLIC_TEXTURE_BASE_URL}/成人男性textures/Man_Grey_Suit_01_Blender/Man_Grey_Suit_01_Blender/CC_Base_Body/`
-    : '/models/成人男性textures/Man_Grey_Suit_01_Blender/Man_Grey_Suit_01_Blender/CC_Base_Body/';
+  // Vercelの本番環境では一時的にローカルパスを使用
+  const basePath = '/models/成人男性textures/Man_Grey_Suit_01_Blender/Man_Grey_Suit_01_Blender/CC_Base_Body/';
   
   // 統計情報
   const stats = {

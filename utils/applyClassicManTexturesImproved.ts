@@ -11,9 +11,8 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
   textureLoader.setCrossOrigin('anonymous'); // CORS設定を追加
   
   // Blob Storageのベースパスを使用（環境変数から取得）
-  const basePath = process.env.NEXT_PUBLIC_TEXTURE_BASE_URL 
-    ? `${process.env.NEXT_PUBLIC_TEXTURE_BASE_URL}/`
-    : '/models/ClassicMan.fbm/';
+  // Vercelの本番環境では一時的にローカルパスを使用
+  const basePath = '/models/ClassicMan.fbm/';
   
   // 統計情報
   const stats = {
@@ -33,8 +32,9 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
     }
     
     return new Promise((resolve, reject) => {
+      const url = basePath + filename;
       textureLoader.load(
-        basePath + filename,
+        url,
         (texture) => {
           if (filename.includes('Diffuse')) {
             texture.colorSpace = THREE.SRGBColorSpace;

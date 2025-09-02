@@ -12,9 +12,8 @@ export async function applyFemaleAvatarTextures(scene: THREE.Object3D, enableLog
   textureLoader.setCrossOrigin('anonymous'); // CORS設定を追加
   
   // Blob Storageのベースパスを使用（環境変数から取得）
-  const basePath = process.env.NEXT_PUBLIC_FEMALE_TEXTURE_BASE_URL 
-    ? `${process.env.NEXT_PUBLIC_FEMALE_TEXTURE_BASE_URL}/`
-    : '/models/textures/';
+  // Vercelの本番環境では一時的にローカルパスを使用
+  const basePath = '/models/textures/';
   
   // テクスチャキャッシュ
   const textureCache: { [key: string]: THREE.Texture } = {};
@@ -26,8 +25,9 @@ export async function applyFemaleAvatarTextures(scene: THREE.Object3D, enableLog
     }
     
     return new Promise((resolve, reject) => {
+      const url = basePath + filename;
       textureLoader.load(
-        basePath + filename,
+        url,
         (texture) => {
           if (filename.includes('diffuse') || filename.includes('alb')) {
             texture.colorSpace = THREE.SRGBColorSpace;
