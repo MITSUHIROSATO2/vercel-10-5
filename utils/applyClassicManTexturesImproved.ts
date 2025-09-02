@@ -10,8 +10,10 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
   const textureLoader = new THREE.TextureLoader();
   textureLoader.setCrossOrigin('anonymous'); // CORS設定を追加
   
-  // 本番環境では一時的にローカルパスを使用（Blob Storageの設定が必要）
-  const basePath = '/models/ClassicMan.fbm/';
+  // Blob Storageのベースパスを使用（環境変数から取得）
+  const basePath = process.env.NEXT_PUBLIC_TEXTURE_BASE_URL 
+    ? `${process.env.NEXT_PUBLIC_TEXTURE_BASE_URL}/`
+    : '/models/ClassicMan.fbm/';
   
   // 統計情報
   const stats = {
