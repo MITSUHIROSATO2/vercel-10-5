@@ -8,7 +8,7 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 
 // モデルURLをプリロード（クライアントサイドのみ）
 if (typeof window !== 'undefined') {
-  const modelUrls = [
+  const modelUrls: string[] = [
     process.env.NEXT_PUBLIC_MODEL_ADULT,
     process.env.NEXT_PUBLIC_MODEL_BOY,
     process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED,
@@ -17,7 +17,7 @@ if (typeof window !== 'undefined') {
     '/models/少年アバター.glb',
     '/models/少年改アバター.glb',
     '/models/Hayden_059d-NO-GUI.glb'
-  ].filter(url => url && typeof url === 'string');
+  ].filter((url): url is string => url !== undefined && typeof url === 'string');
   
   modelUrls.forEach(url => {
     try {
