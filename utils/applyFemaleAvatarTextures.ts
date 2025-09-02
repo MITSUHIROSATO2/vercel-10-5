@@ -9,11 +9,10 @@ export async function applyFemaleAvatarTextures(scene: THREE.Object3D, enableLog
   }
   
   const textureLoader = new THREE.TextureLoader();
-  // Blob StorageのベースURL - 環境に応じて切り替え
-  const isProduction = process.env.NODE_ENV === 'production';
-  const basePath = isProduction 
-    ? 'https://ayyxiwfdxbwzwqa7.public.blob.vercel-storage.com/textures/'
-    : '/models/textures/';
+  textureLoader.setCrossOrigin('anonymous'); // CORS設定を追加
+  
+  // 本番環境では一時的にローカルパスを使用（Blob Storageの設定が必要）
+  const basePath = '/models/textures/';
   
   // テクスチャキャッシュ
   const textureCache: { [key: string]: THREE.Texture } = {};
