@@ -10,9 +10,24 @@ const cleanUrl = (url: string | undefined): string | undefined => {
 };
 
 export const getModelPath = (modelType: 'adult' | 'adult_improved' | 'boy' | 'boy_improved' | 'female'): string => {
+  // 開発環境でローカルモデルを使用するオプション
+  const useLocalInDev = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_LOCAL_MODELS === 'true';
+  
   // 環境変数からCDN URLを取得（クリーニング済み）
   const cdnBase = cleanUrl(process.env.NEXT_PUBLIC_MODEL_CDN_BASE);
   const useCdn = process.env.NEXT_PUBLIC_USE_CDN_MODELS === 'true';
+  
+  // ローカル開発でローカルモデルを使用する場合
+  if (useLocalInDev) {
+    const localPaths = {
+      adult: '/models/成人男性.glb',
+      adult_improved: '/models/成人男性改アバター.glb',
+      boy: '/models/少年アバター.glb',
+      boy_improved: '/models/少年改アバター.glb',
+      female: '/models/Hayden_059d-NO-GUI.glb'
+    };
+    return localPaths[modelType];
+  }
   
   // 個別の環境変数からモデルURLを取得（優先）- すべてクリーニング
   const envUrls = {
@@ -25,7 +40,7 @@ export const getModelPath = (modelType: 'adult' | 'adult_improved' | 'boy' | 'bo
   
   // 環境変数が設定されている場合はそれを使用
   if (envUrls[modelType]) {
-    console.log(`Using cleaned model URL for ${modelType}:`, envUrls[modelType]);
+    // console.log(`Using cleaned model URL for ${modelType}:`, envUrls[modelType]);
     return envUrls[modelType]!;
   }
   

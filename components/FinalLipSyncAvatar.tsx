@@ -15,7 +15,7 @@ if (typeof window !== 'undefined') {
     try {
       const modelPath = getModelPath(type);
       useGLTF.preload(modelPath);
-      console.log(`Preloading model ${type}: ${modelPath}`);
+      // console.log(`Preloading model ${type}: ${modelPath}`);
     } catch (error) {
       console.warn(`Model preload skipped for ${type}:`, error);
     }
@@ -766,6 +766,7 @@ function AvatarModel({
   const peakDetectionThreshold = useRef<number>(0.3);
   const lastPeakTime = useRef<number>(0);
   const lastDebugTime = useRef<number>(0);
+  const frameCounter = useRef<number>(0);
   
   // GLBファイル読み込み（Suspenseと連携）
   // modelPathは既にmodelPaths.tsでクリーニング済み
@@ -1003,11 +1004,16 @@ function AvatarModel({
   useFrame((state, delta) => {
     if (!group.current) return;
     
-    animationTime.current += delta;
-    microExpressionTimer.current += delta;
+    // パフォーマンス最適化: 60FPSではなく30FPSで処理
+    const frameSkip = 2;
+    frameCounter.current = (frameCounter.current || 0) + 1;
+    if (frameCounter.current % frameSkip !== 0) return;
+    
+    animationTime.current += delta * frameSkip;
+    microExpressionTimer.current += delta * frameSkip;
     
     // 瞬きアニメーション（より自然に）
-    blinkTimer.current += delta;
+    blinkTimer.current += delta * frameSkip;
     if (blinkTimer.current >= nextBlinkTime.current) {
       isBlinking.current = true;
       blinkTimer.current = 0;
@@ -1036,7 +1042,7 @@ function AvatarModel({
           // デバッグ：瞬きの値をログ出力（10秒に1回）
           const currentTime = Date.now();
           if (currentTime - lastDebugTime.current > 10000 && blinkValue > 0.5) {
-            console.log(`[${selectedAvatar}] Blinking - Progress: ${blinkProgress.toFixed(2)}, Value: ${blinkValue.toFixed(2)}`);
+            // console.log(`[${selectedAvatar}] Blinking - Progress: ${blinkProgress.toFixed(2)}, Value: ${blinkValue.toFixed(2)}`);
             lastDebugTime.current = currentTime;
           }
         } else {
@@ -1682,10 +1688,10 @@ function AvatarModel({
         if (now - lastDebugTime.current > 10000) { // 10秒ごとに1回だけ出力
           lastDebugTime.current = now;
           if (teeth02Bone.current) {
-            console.log('ボーン制御 Y:', teeth02Bone.current.position.y.toFixed(3));
+            // console.log('ボーン制御 Y:', teeth02Bone.current.position.y.toFixed(3));
           }
           if (nugLowerTeethMesh.current) {
-            console.log('メッシュ制御 Y:', nugLowerTeethMesh.current.position.y.toFixed(3));
+            // console.log('メッシュ制御 Y:', nugLowerTeethMesh.current.position.y.toFixed(3));
           }
         }
         
@@ -1800,12 +1806,12 @@ function AvatarModel({
           
           // デバッグ：適用されたモーフターゲットを確認（一度だけ）
           if (blinkValue > 0.9 && !(window as any).blinkDebugLogged) {
-            console.log(`[boy_improved] Applying blink morphs:
+            /* console.log(`[boy_improved] Applying blink morphs:
               A14/A15: ${(blinkValue * 1.2).toFixed(2)}
               Eye_Blink_L/R: ${blinkValue.toFixed(2)}
               Eyes_Blink: ${(blinkValue * 0.8).toFixed(2)}
               EO morphs: ${(blinkValue * 0.3).toFixed(2)}
-              Cheek/Brow: ${(blinkValue * 0.25).toFixed(2)} / ${(blinkValue * 0.1).toFixed(2)}`);
+              Cheek/Brow: ${(blinkValue * 0.25).toFixed(2)} / ${(blinkValue * 0.1).toFixed(2)}`); */
             (window as any).blinkDebugLogged = true;
           }
         } else {
