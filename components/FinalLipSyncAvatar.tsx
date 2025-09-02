@@ -1004,16 +1004,17 @@ function AvatarModel({
   useFrame((state, delta) => {
     if (!group.current) return;
     
-    // パフォーマンス最適化: 60FPSではなく30FPSで処理
-    const frameSkip = 2;
+    // リップシンク中はフレームスキップしない（滑らかな動きのため）
+    const frameSkip = isSpeaking ? 1 : 2;
     frameCounter.current = (frameCounter.current || 0) + 1;
     if (frameCounter.current % frameSkip !== 0) return;
     
-    animationTime.current += delta * frameSkip;
-    microExpressionTimer.current += delta * frameSkip;
+    const adjustedDelta = delta * frameSkip;
+    animationTime.current += adjustedDelta;
+    microExpressionTimer.current += adjustedDelta;
     
     // 瞬きアニメーション（より自然に）
-    blinkTimer.current += delta * frameSkip;
+    blinkTimer.current += adjustedDelta;
     if (blinkTimer.current >= nextBlinkTime.current) {
       isBlinking.current = true;
       blinkTimer.current = 0;
