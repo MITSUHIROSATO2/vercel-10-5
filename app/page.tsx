@@ -389,12 +389,12 @@ export default function Home() {
                     speechProgress={speechProgress}
                     modelPath={
                       selectedAvatar === 'adult' 
-                        ? (process.env.NEXT_PUBLIC_MODEL_ADULT || '/models/成人男性.glb')
+                        ? (process.env.NEXT_PUBLIC_MODEL_ADULT?.trim() || '/models/成人男性.glb')
                         : selectedAvatar === 'boy'
-                        ? (process.env.NEXT_PUBLIC_MODEL_BOY || '/models/少年アバター.glb')
+                        ? (process.env.NEXT_PUBLIC_MODEL_BOY?.trim() || '/models/少年アバター.glb')
                         : selectedAvatar === 'boy_improved'
-                        ? (process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED || '/models/少年改アバター.glb')
-                        : (process.env.NEXT_PUBLIC_MODEL_FEMALE || '/models/Hayden_059d-NO-GUI.glb')
+                        ? (process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED?.trim() || '/models/少年改アバター.glb')
+                        : (process.env.NEXT_PUBLIC_MODEL_FEMALE?.trim() || '/models/Hayden_059d-NO-GUI.glb')
                     }
                     selectedAvatar={selectedAvatar}
                     onLoaded={handleAvatarLoaded}
