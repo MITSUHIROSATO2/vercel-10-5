@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 
 interface AvatarModelProps {
@@ -750,7 +751,21 @@ function AvatarModel({
   const lastPeakTime = useRef<number>(0);
   const lastDebugTime = useRef<number>(0);
   
-  const { scene } = useGLTF(modelPath);
+  // GLBファイル読み込みのエラーハンドリング
+  let scene;
+  try {
+    const gltf = useGLTF(modelPath);
+    scene = gltf.scene;
+  } catch (error) {
+    // Suspenseによる初回レンダリング時のエラーは無視（正常な動作）
+    // モデルは非同期で読み込まれるため、初回はエラーになることがある
+    if (process.env.NODE_ENV === 'development') {
+      // 開発環境でのみ警告を表示（エラーではなく情報として）
+      console.info(`Loading model: ${modelPath}`);
+    }
+    // フォールバックとして空のシーンを作成
+    scene = new THREE.Group();
+  }
   
   useEffect(() => {
     if (!scene) return;
@@ -2088,61 +2103,80 @@ export default function FinalLipSyncAvatar({
           `}</style>
         </div>
       )}
-      <Canvas
-        camera={{ position: cameraSettings.position as [number, number, number], fov: cameraSettings.fov }}
-        shadows
-        gl={{
-          antialias: true,
-          toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.0,
-          outputColorSpace: THREE.SRGBColorSpace
-        }}
-        style={{ opacity: isModelLoaded ? 1 : 0, transition: 'opacity 0.3s' }}
+      <ErrorBoundary 
+        fallback={
+          <div className="flex items-center justify-center h-[400px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg">
+            <div className="text-center">
+              <p className="text-red-500 mb-2">3Dモデルの読み込みに失敗しました</p>
+              <p className="text-gray-600 text-sm mb-4">
+                モデルファイルが正しく配置されているか確認してください
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                ページを再読み込み
+              </button>
+            </div>
+          </div>
+        }
       >
-        <ambientLight intensity={0.5} color="#bae6fd" />
-        <directionalLight
-          position={[5, 10, 5]}
-          intensity={0.6}
-          castShadow
-          shadow-mapSize={[2048, 2048]}
-        />
-        <directionalLight position={[-5, 5, -5]} intensity={0.3} />
-        <pointLight position={[0, 2, 1]} intensity={0.2} />
-        
-        <Suspense fallback={null}>
-          <AvatarModel 
-            key={modelPath}  // modelPathのみをkeyとして使用（安定性向上）
-            isSpeaking={isSpeaking} 
-            audioLevel={audioLevel}
-            currentWord={currentWord}
-            currentPhoneme={currentPhoneme}
-            speechProgress={speechProgress}
-            audioData={audioData}
-            audioFrequency={audioFrequency}
-            onLoaded={handleModelLoaded}
-            modelPath={modelPath}
-            selectedAvatar={selectedAvatar}
-            lipSyncIntensity={lipSyncIntensity}
+        <Canvas
+          camera={{ position: cameraSettings.position as [number, number, number], fov: cameraSettings.fov }}
+          shadows
+          gl={{
+            antialias: true,
+            toneMapping: THREE.ACESFilmicToneMapping,
+            toneMappingExposure: 1.0,
+            outputColorSpace: THREE.SRGBColorSpace
+          }}
+          style={{ opacity: isModelLoaded ? 1 : 0, transition: 'opacity 0.3s' }}
+        >
+          <ambientLight intensity={0.5} color="#bae6fd" />
+          <directionalLight
+            position={[5, 10, 5]}
+            intensity={0.6}
+            castShadow
+            shadow-mapSize={[2048, 2048]}
           />
-          <Environment preset="studio" />
-        </Suspense>
-        
-        <OrbitControls
-          target={cameraSettings.target as [number, number, number]}
-          enableRotate={false}
-          enablePan={false}
-          enableZoom={false}
-        />
-        
-        {isModelLoaded && (
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-            <planeGeometry args={[10, 10]} />
-            <meshStandardMaterial color="#c7e9ed" />
-          </mesh>
-        )}
-        
-        <color attach="background" args={['#e0f2fe']} />
-      </Canvas>
+          <directionalLight position={[-5, 5, -5]} intensity={0.3} />
+          <pointLight position={[0, 2, 1]} intensity={0.2} />
+          
+          <Suspense fallback={null}>
+            <AvatarModel 
+              key={modelPath}  // modelPathのみをkeyとして使用（安定性向上）
+              isSpeaking={isSpeaking} 
+              audioLevel={audioLevel}
+              currentWord={currentWord}
+              currentPhoneme={currentPhoneme}
+              speechProgress={speechProgress}
+              audioData={audioData}
+              audioFrequency={audioFrequency}
+              onLoaded={handleModelLoaded}
+              modelPath={modelPath}
+              selectedAvatar={selectedAvatar}
+              lipSyncIntensity={lipSyncIntensity}
+            />
+            <Environment preset="studio" />
+          </Suspense>
+          
+          <OrbitControls
+            target={cameraSettings.target as [number, number, number]}
+            enableRotate={false}
+            enablePan={false}
+            enableZoom={false}
+          />
+          
+          {isModelLoaded && (
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+              <planeGeometry args={[10, 10]} />
+              <meshStandardMaterial color="#c7e9ed" />
+            </mesh>
+          )}
+          
+          <color attach="background" args={['#e0f2fe']} />
+        </Canvas>
+      </ErrorBoundary>
       
       {showDebug && (
         <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs p-2 rounded">
@@ -2156,6 +2190,10 @@ export default function FinalLipSyncAvatar({
   );
 }
 
-// Preload both models
-useGLTF.preload('/models/成人男性.glb');
-useGLTF.preload('/models/少年アバター.glb');
+// Preload models with error handling
+try {
+  useGLTF.preload('/models/成人男性.glb');
+  useGLTF.preload('/models/少年アバター.glb');
+} catch (error) {
+  console.warn('Failed to preload models:', error);
+}

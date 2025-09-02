@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check-lfs": "node scripts/check-git-lfs.js",
+    "vercel-build": "git lfs pull && npm run build",
+    "upload-models": "node scripts/upload-models-to-blob.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +24,7 @@
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19.1.5",
     "@types/three": "^0.176.0",
+    "@vercel/blob": "^1.1.1",
     "axios": "^1.9.0",
     "elevenlabs": "^1.59.0",
     "kuromoji": "^0.1.2",
