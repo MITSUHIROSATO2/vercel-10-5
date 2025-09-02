@@ -1234,12 +1234,8 @@ function AvatarModel({
       }
     }
     
-    // スムーズな補間（音声に即座に反応）
+    // ダイレクトな値の適用（補間なし）
     Object.entries(targetMorphs).forEach(([morphName, targetValue]) => {
-      const currentValue = currentMorphValues.current[morphName] || 0;
-      // 音声波形に即座に反応するため補間速度を最大化
-      const lerpSpeed = isSpeaking ? 0.95 : 0.6;
-      
       // モデル別の係数を適用
       let adjustedValue = targetValue;
       if (morphName.includes('Jaw')) {
@@ -1259,7 +1255,14 @@ function AvatarModel({
       // 最大値を制限（自然な動きのため）
       adjustedValue = Math.min(adjustedValue, maxLimit);
       
-      currentMorphValues.current[morphName] = currentValue + (adjustedValue - currentValue) * lerpSpeed;
+      // 直接値を設定（補間なし）
+      if (isSpeaking) {
+        currentMorphValues.current[morphName] = adjustedValue;
+      } else {
+        // 話していない時は少し補間
+        const currentValue = currentMorphValues.current[morphName] || 0;
+        currentMorphValues.current[morphName] = currentValue + (adjustedValue - currentValue) * 0.8;
+      }
     });
     
     // 使用されなくなったモーフを徐々に0に戻す
@@ -1346,8 +1349,8 @@ function AvatarModel({
       const amplification = Math.min((smoothedAudioLevel.current || audioLevel || 0.5) * 1.5, 1.2);
       
       
-      // 現在の回転値を取得（スムーズな補間のため）
-      const lerpSpeed = 0.8; // 補間速度を最大限に上げて即座に反応
+      // 直接適用（補間なし）
+      const lerpSpeed = 1.0; // 補間なしで即座に適用
       
       // ボーン制御は使用しない - モーフターゲットのみで制御
       /*
@@ -1487,8 +1490,8 @@ function AvatarModel({
         const teethMovementY = -(combinedLipValue * 0.015 + jawOpen * 0.008 + mouthOpen * 0.005);
         const teethRotationX = -(combinedLipValue * 0.4 + jawOpen * 0.3 + mouthOpen * 0.2);
         
-        // スムーズな補間
-        const lerpSpeed = 0.8;
+        // 直接適用
+        const lerpSpeed = 1.0;
         teeth01Bone.current.position.y += (teethMovementY - teeth01Bone.current.position.y) * lerpSpeed;
         teeth01Bone.current.rotation.x += (teethRotationX - teeth01Bone.current.rotation.x) * lerpSpeed;
         
@@ -1532,8 +1535,8 @@ function AvatarModel({
         const teethMovementY = -(combinedLipValue * 0.015 + jawOpen * 0.008 + mouthOpen * 0.005);
         const teethRotationX = -(combinedLipValue * 0.4 + jawOpen * 0.3 + mouthOpen * 0.2);
         
-        // スムーズな補間
-        const lerpSpeed = 0.8;
+        // 直接適用
+        const lerpSpeed = 1.0;
         teeth02Bone.current.position.y += (teethMovementY - teeth02Bone.current.position.y) * lerpSpeed;
         teeth02Bone.current.rotation.x += (teethRotationX - teeth02Bone.current.rotation.x) * lerpSpeed;
         
@@ -1594,8 +1597,8 @@ function AvatarModel({
         const targetRotX = -(lipMovement * 0.5 + combinedValue * 0.3);
         const targetZ = -(combinedValue * 0.015);
         
-        // スムーズな補間で動かす
-        const lerpSpeed = 0.85;
+        // 直接適用で動かす
+        const lerpSpeed = 1.0;
         lowerTeethMesh.current.position.y += (targetY - lowerTeethMesh.current.position.y) * lerpSpeed;
         lowerTeethMesh.current.rotation.x += (targetRotX - lowerTeethMesh.current.rotation.x) * lerpSpeed;
         lowerTeethMesh.current.position.z += (targetZ - lowerTeethMesh.current.position.z) * lerpSpeed;

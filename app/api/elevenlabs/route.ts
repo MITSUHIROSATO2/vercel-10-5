@@ -397,8 +397,10 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           text: processedText,  // 感情処理済みテキストを使用
-          model_id: 'eleven_multilingual_v2',
-          voice_settings: voiceSettings
+          model_id: 'eleven_turbo_v2_5',  // Turbo v2.5モデルで高速化
+          voice_settings: voiceSettings,
+          optimize_streaming_latency: 3,  // 最速のストリーミング最適化
+          output_format: 'mp3_44100_128'  // 高品質設定
         })
       }
     );
