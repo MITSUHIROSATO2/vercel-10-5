@@ -6,6 +6,28 @@ import { OrbitControls, useGLTF, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
+// モデルURLをプリロード（クライアントサイドのみ）
+if (typeof window !== 'undefined') {
+  const modelUrls = [
+    process.env.NEXT_PUBLIC_MODEL_ADULT,
+    process.env.NEXT_PUBLIC_MODEL_BOY,
+    process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED,
+    process.env.NEXT_PUBLIC_MODEL_FEMALE,
+    '/models/成人男性.glb',
+    '/models/少年アバター.glb',
+    '/models/少年改アバター.glb',
+    '/models/Hayden_059d-NO-GUI.glb'
+  ].filter(url => url && typeof url === 'string');
+  
+  modelUrls.forEach(url => {
+    try {
+      useGLTF.preload(url);
+    } catch (error) {
+      console.warn(`Model preload skipped: ${url}`);
+    }
+  });
+}
+
 
 interface AvatarModelProps {
   isSpeaking: boolean;
@@ -752,6 +774,7 @@ function AvatarModel({
   const lastDebugTime = useRef<number>(0);
   
   // GLBファイル読み込み（Suspenseと連携）
+  // URLエラー対策：Blob StorageのURLを直接使用
   const gltf = useGLTF(modelPath);
   const scene = gltf.scene;
   
