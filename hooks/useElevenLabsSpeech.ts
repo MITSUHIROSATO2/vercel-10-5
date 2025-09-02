@@ -208,14 +208,10 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         setIsLoading(false); // 念のため再度falseに
       };
 
-      // 再生開始
-      audio.onplay = () => {
-        setIsCurrentlySpeaking(true);
-        
-        // 音声解析の開始（最高頻度で更新）
-        let lastUpdateTime = 0;
-        const analyzeAudio = (timestamp?: number) => {
-          if (!analyserRef.current || !audio.paused) {
+      // 音声解析の準備
+      let lastUpdateTime = 0;
+      const analyzeAudio = (timestamp?: number) => {
+        if (!analyserRef.current || !audio.paused) {
             // 毎フレーム更新（最高精度でリップシンク）
             const dataArray = new Uint8Array(analyserRef.current!.frequencyBinCount);
             analyserRef.current!.getByteFrequencyData(dataArray);
@@ -352,6 +348,11 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
           }
         };
         
+        animationRef.current = requestAnimationFrame(analyzeAudio);
+      };
+      
+      // 再生開始時の処理
+      audio.onplay = () => {
         analyzeAudio();
       };
 
@@ -411,6 +412,12 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         // 音声要素の設定
         audio.muted = false;
         audio.volume = 0.8;
+        
+        // リップシンクを先行させるため、先にスピーキング状態を設定
+        setIsCurrentlySpeaking(true);
+        
+        // 音声再生を50ms遅延（リップシンクを先行させる）
+        await new Promise(resolve => setTimeout(resolve, 50));
         
         // 再生を試みる（シンプルに）
         const playPromise = audio.play();
