@@ -754,8 +754,10 @@ function AvatarModel({
   // GLBファイル読み込みのエラーハンドリング
   let scene;
   try {
+    console.log('[Model] Loading from path:', modelPath);
     const gltf = useGLTF(modelPath);
     scene = gltf.scene;
+    console.log('[Model] Successfully loaded');
   } catch (error) {
     // Suspenseによる初回レンダリング時のエラーは無視（正常な動作）
     // モデルは非同期で読み込まれるため、初回はエラーになることがある
@@ -1988,6 +1990,10 @@ export default function FinalLipSyncAvatar({
   // モデルパスまたはアバタータイプが変更されたらローディング状態をリセット
   useEffect(() => {
     if (modelPath !== currentModelPath) {
+      console.log('[FinalLipSyncAvatar] Model path changed:');
+      console.log('- Previous:', currentModelPath);
+      console.log('- New:', modelPath);
+      console.log('- Is URL:', modelPath.startsWith('http'));
       setIsModelLoaded(false);
       setCurrentModelPath(modelPath);
     }

@@ -18,11 +18,16 @@ export async function POST(request: NextRequest) {
 
     // Check if API key is configured
     const apiKey = process.env.OPENAI_API_KEY;
-    console.log('API Key exists:', !!apiKey);
-    console.log('API Key length:', apiKey?.length);
+    console.log('Environment check:');
+    console.log('- NODE_ENV:', process.env.NODE_ENV);
+    console.log('- API Key exists:', !!apiKey);
+    console.log('- API Key length:', apiKey?.length);
+    console.log('- API Key starts with:', apiKey?.substring(0, 7) + '...');
+    console.log('- Is dummy key:', apiKey === 'dummy-key-for-build');
     
     if (!apiKey || apiKey === 'your_openai_api_key_here' || apiKey === 'dummy-key-for-build') {
       console.log('No valid API key found, using mock response');
+      console.log('Reason: ', !apiKey ? 'No key' : apiKey === 'dummy-key-for-build' ? 'Dummy key' : 'Placeholder key');
       const mockResponse = getRandomMockResponse();
       return NextResponse.json({ response: mockResponse });
     }

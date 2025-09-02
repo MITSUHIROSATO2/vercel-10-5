@@ -371,12 +371,12 @@ export default function Home() {
                   speechProgress={speechProgress}
                   modelPath={
                     selectedAvatar === 'adult' 
-                      ? '/models/成人男性.glb'
+                      ? (process.env.NEXT_PUBLIC_MODEL_ADULT || '/models/成人男性.glb')
                       : selectedAvatar === 'boy'
-                      ? '/models/少年アバター.glb'
+                      ? (process.env.NEXT_PUBLIC_MODEL_BOY || '/models/少年アバター.glb')
                       : selectedAvatar === 'boy_improved'
-                      ? '/models/少年改アバター.glb'
-                      : '/models/Hayden_059d-NO-GUI.glb'
+                      ? (process.env.NEXT_PUBLIC_MODEL_BOY_IMPROVED || '/models/少年改アバター.glb')
+                      : (process.env.NEXT_PUBLIC_MODEL_FEMALE || '/models/Hayden_059d-NO-GUI.glb')
                   }
                   selectedAvatar={selectedAvatar}
                   onLoaded={() => setIsAvatarLoaded(true)}

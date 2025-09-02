@@ -19,7 +19,11 @@ export async function POST(request: NextRequest) {
     }
 
     if (!ELEVENLABS_API_KEY || !ELEVENLABS_VOICE_ID) {
-      console.error('ElevenLabs API key or Voice ID is missing');
+      console.error('ElevenLabs configuration check:');
+      console.error('- API Key exists:', !!ELEVENLABS_API_KEY);
+      console.error('- API Key length:', ELEVENLABS_API_KEY?.length);
+      console.error('- Voice ID exists:', !!ELEVENLABS_VOICE_ID);
+      console.error('- Voice ID:', ELEVENLABS_VOICE_ID);
       return NextResponse.json(
         { error: 'ElevenLabs APIが設定されていません' },
         { status: 500 }
