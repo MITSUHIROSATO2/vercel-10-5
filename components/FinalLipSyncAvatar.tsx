@@ -774,8 +774,12 @@ function AvatarModel({
   const lastDebugTime = useRef<number>(0);
   
   // GLBファイル読み込み（Suspenseと連携）
-  // URLエラー対策：Blob StorageのURLを直接使用
-  const gltf = useGLTF(modelPath);
+  // URLエラー対策：Blob StorageのURLをプロキシ経由で使用
+  const proxyPath = modelPath.startsWith('https://') 
+    ? `/api/proxy-model?url=${encodeURIComponent(modelPath)}`
+    : modelPath;
+  
+  const gltf = useGLTF(proxyPath);
   const scene = gltf.scene;
   
   useEffect(() => {
