@@ -766,7 +766,6 @@ function AvatarModel({
   const peakDetectionThreshold = useRef<number>(0.3);
   const lastPeakTime = useRef<number>(0);
   const lastDebugTime = useRef<number>(0);
-  const frameCounter = useRef<number>(0);
   
   // GLBファイル読み込み（Suspenseと連携）
   // modelPathは既にmodelPaths.tsでクリーニング済み
@@ -1004,17 +1003,11 @@ function AvatarModel({
   useFrame((state, delta) => {
     if (!group.current) return;
     
-    // リップシンク中はフレームスキップしない（滑らかな動きのため）
-    const frameSkip = isSpeaking ? 1 : 2;
-    frameCounter.current = (frameCounter.current || 0) + 1;
-    if (frameCounter.current % frameSkip !== 0) return;
-    
-    const adjustedDelta = delta * frameSkip;
-    animationTime.current += adjustedDelta;
-    microExpressionTimer.current += adjustedDelta;
+    animationTime.current += delta;
+    microExpressionTimer.current += delta;
     
     // 瞬きアニメーション（より自然に）
-    blinkTimer.current += adjustedDelta;
+    blinkTimer.current += delta;
     if (blinkTimer.current >= nextBlinkTime.current) {
       isBlinking.current = true;
       blinkTimer.current = 0;
@@ -1246,7 +1239,7 @@ function AvatarModel({
     Object.entries(targetMorphs).forEach(([morphName, targetValue]) => {
       const currentValue = currentMorphValues.current[morphName] || 0;
       // 音声波形に即座に反応するため補間速度を最大化
-      const lerpSpeed = isSpeaking ? 0.75 : 0.4;
+      const lerpSpeed = isSpeaking ? 0.85 : 0.5;
       
       // モデル別の係数を適用
       let adjustedValue = targetValue;
