@@ -1245,8 +1245,8 @@ function AvatarModel({
     // スムーズな補間（音声に即座に反応）
     Object.entries(targetMorphs).forEach(([morphName, targetValue]) => {
       const currentValue = currentMorphValues.current[morphName] || 0;
-      // 音声波形に即座に反応するため補間速度を最大化（0.5）
-      const lerpSpeed = isSpeaking ? 0.5 : 0.35;
+      // 音声波形に即座に反応するため補間速度を最大化
+      const lerpSpeed = isSpeaking ? 0.75 : 0.4;
       
       // モデル別の係数を適用
       let adjustedValue = targetValue;
@@ -1355,7 +1355,7 @@ function AvatarModel({
       
       
       // 現在の回転値を取得（スムーズな補間のため）
-      const lerpSpeed = 0.3; // 補間速度
+      const lerpSpeed = 0.5; // 補間速度を上げて反応を速く
       
       // ボーン制御は使用しない - モーフターゲットのみで制御
       /*
@@ -1496,7 +1496,7 @@ function AvatarModel({
         const teethRotationX = -(combinedLipValue * 0.4 + jawOpen * 0.3 + mouthOpen * 0.2);
         
         // スムーズな補間
-        const lerpSpeed = 0.3;
+        const lerpSpeed = 0.5;
         teeth01Bone.current.position.y += (teethMovementY - teeth01Bone.current.position.y) * lerpSpeed;
         teeth01Bone.current.rotation.x += (teethRotationX - teeth01Bone.current.rotation.x) * lerpSpeed;
         
@@ -1541,7 +1541,7 @@ function AvatarModel({
         const teethRotationX = -(combinedLipValue * 0.4 + jawOpen * 0.3 + mouthOpen * 0.2);
         
         // スムーズな補間
-        const lerpSpeed = 0.3;
+        const lerpSpeed = 0.5;
         teeth02Bone.current.position.y += (teethMovementY - teeth02Bone.current.position.y) * lerpSpeed;
         teeth02Bone.current.rotation.x += (teethRotationX - teeth02Bone.current.rotation.x) * lerpSpeed;
         
@@ -1603,7 +1603,7 @@ function AvatarModel({
         const targetZ = -(combinedValue * 0.015);
         
         // スムーズな補間で動かす
-        const lerpSpeed = 0.35;
+        const lerpSpeed = 0.6;
         lowerTeethMesh.current.position.y += (targetY - lowerTeethMesh.current.position.y) * lerpSpeed;
         lowerTeethMesh.current.rotation.x += (targetRotX - lowerTeethMesh.current.rotation.x) * lerpSpeed;
         lowerTeethMesh.current.position.z += (targetZ - lowerTeethMesh.current.position.z) * lerpSpeed;
