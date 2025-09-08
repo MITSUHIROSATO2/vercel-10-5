@@ -729,7 +729,7 @@ function AvatarModel({
     jawMultiplier: isFemaleModel ? 0.85 : (isBoyImprovedModel ? 0.9 : (isBoyModel ? 0.9 : 1.0)),  // 少年アバターを少年改と同じに
     mouthMultiplier: isFemaleModel ? 0.9 : (isBoyImprovedModel ? 0.95 : (isBoyModel ? 0.95 : 1.0)), // 少年アバターを少年改と同じに
     tongueMultiplier: isBoyModel ? 1.0 : 1.0, // 舌の動きは変更なし
-    blinkInterval: isFemaleModel ? 3 : (isBoyImprovedModel ? 3.5 : (isBoyModel ? 3.5 : 3)), // 少年アバターを少年改と同じに
+    blinkInterval: isFemaleModel ? 3 : (isBoyImprovedModel ? 3.5 : (isBoyModel ? 3 : 3)), // 男性1（青年）の瞬き頻度
   };
   const group = useRef<THREE.Group>(null);
   const [morphTargets, setMorphTargets] = useState<any[]>([]);
@@ -783,7 +783,9 @@ function AvatarModel({
     
     if (modelPath.includes('少年アバター') || modelPath.includes('%E5%B0%91%E5%B9%B4%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC')) {
       // 少年アバター - 同期的に色を設定（リップシンクを保持）
-      console.log('[AvatarModel] 少年アバターの色を同期的に設定（morphTargets保持）');
+      // 初回のみログ出力（音声認識時の重複処理を防ぐ）
+      if (!scene.userData.texturesApplied) {
+        console.log('[AvatarModel] 少年アバターの色を同期的に設定（morphTargets保持）');
         
         // 全体のマテリアルを収集して変更
         const materialsToUpdate: Set<THREE.Material> = new Set();
@@ -793,8 +795,6 @@ function AvatarModel({
         
         const meshName = child.name;
         const lowerMeshName = meshName.toLowerCase();
-        
-        console.log(`処理中のメッシュ: ${meshName}`);
         
         // 不要なメッシュを非表示
         if (lowerMeshName.includes('beard') || 
@@ -883,36 +883,68 @@ function AvatarModel({
             
           case 'nug_eye_r':
             // 右目に茶色の虹彩テクスチャを適用（Cornea_R使用）
-            const textureLoaderR = new THREE.TextureLoader();
-            const irisTextureR = textureLoaderR.load('/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg');
-            irisTextureR.colorSpace = THREE.SRGBColorSpace;
-            mat.map = irisTextureR;
-            mat.color = new THREE.Color(0xffffff);  // 白色ベース
-            mat.emissive = new THREE.Color(0x000000);  // エミッシブなし
+            // まずフォールバック色を設定（テクスチャが読み込まれるまで）
+            mat.color = new THREE.Color(0x8b6f47);  // 茶色
+            mat.emissive = new THREE.Color(0x443322);  // わずかな茶色のエミッシブ
+            mat.emissiveIntensity = 0.15;  // エミッシブ強度を上げて暗くならないように
             mat.transparent = false;
             mat.opacity = 1.0;
             mat.roughness = 0.3;
             mat.metalness = 0.0;
             mat.depthWrite = true;
             mat.side = THREE.FrontSide;
-            console.log(`  -> 右目: 茶色虹彩テクスチャ（Cornea）適用`);
+            
+            // テクスチャを非同期で読み込み
+            const textureLoaderR = new THREE.TextureLoader();
+            textureLoaderR.load(
+              '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
+              (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                mat.map = texture;
+                mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
+                mat.needsUpdate = true;
+                console.log(`  -> 右目: テクスチャ読み込み完了`);
+              },
+              undefined,
+              (error) => {
+                console.error(`  -> 右目: テクスチャ読み込みエラー`, error);
+                // エラー時はフォールバック色のまま
+              }
+            );
+            console.log(`  -> 右目: 茶色虹彩（フォールバック色設定）`);
             break;
             
           case 'nug_eye_l':
             // 左目に茶色の虹彩テクスチャを適用（Cornea_R使用 - 両目同じ）
-            const textureLoaderL = new THREE.TextureLoader();
-            const irisTextureL = textureLoaderL.load('/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg');
-            irisTextureL.colorSpace = THREE.SRGBColorSpace;
-            mat.map = irisTextureL;
-            mat.color = new THREE.Color(0xffffff);  // 白色ベース
-            mat.emissive = new THREE.Color(0x000000);  // エミッシブなし
+            // まずフォールバック色を設定（テクスチャが読み込まれるまで）
+            mat.color = new THREE.Color(0x8b6f47);  // 茶色
+            mat.emissive = new THREE.Color(0x443322);  // わずかな茶色のエミッシブ
+            mat.emissiveIntensity = 0.15;  // エミッシブ強度を上げて暗くならないように
             mat.transparent = false;
             mat.opacity = 1.0;
             mat.roughness = 0.3;
             mat.metalness = 0.0;
             mat.depthWrite = true;
             mat.side = THREE.FrontSide;
-            console.log(`  -> 左目: 茶色虹彩テクスチャ（Cornea）適用`);
+            
+            // テクスチャを非同期で読み込み
+            const textureLoaderL = new THREE.TextureLoader();
+            textureLoaderL.load(
+              '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
+              (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                mat.map = texture;
+                mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
+                mat.needsUpdate = true;
+                console.log(`  -> 左目: テクスチャ読み込み完了`);
+              },
+              undefined,
+              (error) => {
+                console.error(`  -> 左目: テクスチャ読み込みエラー`, error);
+                // エラー時はフォールバック色のまま
+              }
+            );
+            console.log(`  -> 左目: 茶色虹彩（フォールバック色設定）`);
             break;
             
           case 'nug_cornea_r':
@@ -954,9 +986,14 @@ function AvatarModel({
             
           case 'nug_tongue':
             mat.color = new THREE.Color(0xff6b6b);
+            // エミッシブを追加して舌の色を確実に表示
+            if (mat.emissive) {
+              mat.emissive = new THREE.Color(0xff6b6b);
+              mat.emissiveIntensity = 0.25;  // 舌のエミッシブを強めに
+            }
             mat.roughness = 0.4;
             mat.metalness = 0.0;
-            console.log(`  -> 舌: ピンク`);
+            console.log(`  -> 舌: ピンク（エミッシブ付き）`);
             break;
             
           case 'nug_nails':
@@ -1068,11 +1105,15 @@ function AvatarModel({
       
       console.log('[AvatarModel] 少年アバターの色設定完了');
       
+      // 処理完了フラグを設定（重複処理を防ぐ）
+      scene.userData.texturesApplied = true;
+      
       if (onLoaded) {
         setTimeout(() => {
           onLoaded();
         }, 100);
       }
+    }
     } else if (modelPath.includes('少年改') || modelPath.includes('%E5%B0%91%E5%B9%B4%E6%94%B9') || decodedPath.includes('少年改') || isBoyImprovedModel) {
       // 少年改アバターのテクスチャ適用を一時的にスキップ
       console.log('[AvatarModel] 少年改アバターのテクスチャ適用を一時的にスキップ');
@@ -1468,15 +1509,7 @@ function AvatarModel({
           }
         });
         
-        // 次の音素への準備（音声のピークを検出した場合により強く）
-        if (nextChar) {
-          const peakInfluence = (animationTime.current - lastPeakTime.current < 0.05) ? 0.4 : 0.2;
-          const nextMapping = getPhonemeMapping(nextChar, selectedAvatar);
-          Object.entries(nextMapping).forEach(([morphName, value]) => {
-            const currentValue = targetMorphs[morphName] || 0;
-            targetMorphs[morphName] = currentValue * (1 - peakInfluence) + value * baseLevel * peakInfluence;
-          });
-        }
+        // 次の音素への準備は削除（予備動作なし）
         
         // 音声レベルによる追加の口の開き（リアルタイム同期）
         const additionalOpen = realAudioLevel * 0.3;
@@ -1489,21 +1522,7 @@ function AvatarModel({
         targetMorphs['Mouth_Open'] = 0.2 * baseLevel;
       }
       
-      // 音声の立ち上がりと立ち下がりを検出して先行動作
-      if (audioHistory.current.length >= 2) {
-        const trend = audioHistory.current[audioHistory.current.length - 1] - audioHistory.current[audioHistory.current.length - 2];
-        if (trend > 0.05) {
-          // 音が大きくなっている：口を開ける準備
-          Object.keys(targetMorphs).forEach(morphName => {
-            targetMorphs[morphName] *= 1.1;
-          });
-        } else if (trend < -0.05) {
-          // 音が小さくなっている：口を閉じる準備
-          Object.keys(targetMorphs).forEach(morphName => {
-            targetMorphs[morphName] *= 0.9;
-          });
-        }
-      }
+      // 音声の立ち上がり・立ち下がり検出は削除（予備動作なし）
     }
     
     // ダイレクトな値の適用（補間なし）
@@ -1547,18 +1566,17 @@ function AvatarModel({
       }
     });
     
-    // 先行動作もクリア
-    Object.keys(anticipationMorphs.current).forEach(morphName => {
-      anticipationMorphs.current[morphName] *= 0.9;
-      if (anticipationMorphs.current[morphName] < 0.01) {
-        delete anticipationMorphs.current[morphName];
-      }
-    });
+    // 先行動作は使用しない
     
-    // 頭の微細な動き（控えめ）
-    group.current.rotation.y = Math.sin(animationTime.current * 0.3) * 0.003;
-    group.current.rotation.x = Math.sin(animationTime.current * 0.5) * 0.002;
-    group.current.position.y = Math.sin(animationTime.current * 0.8) * 0.001;
+    // 頭の微細な動き（自然な呼吸と体の揺れ）
+    if (group.current) {
+      // 左右の首振り（ゆっくり）
+      group.current.rotation.y = Math.sin(animationTime.current * 0.3) * 0.005;  // 控えめに
+      // 上下の頷き（呼吸のリズム）
+      group.current.rotation.x = Math.sin(animationTime.current * 0.5) * 0.003;  // 控えめに
+      // 上下の位置移動（呼吸による体の上下）
+      group.current.position.y = Math.sin(animationTime.current * 0.8) * 0.002;  // 控えめに
+    }
     
     // 舌の位置と回転の変数（スコープ外でも使用するため）
     const tongueRotation = { x: 0, y: 0, z: 0 };

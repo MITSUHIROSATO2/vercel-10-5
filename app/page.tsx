@@ -46,8 +46,13 @@ export default function Home() {
   const [evaluations, setEvaluations] = useState<EvaluationType[]>([]);
   const [editingEvaluation, setEditingEvaluation] = useState<EvaluationType | null>(null);
   const [latestResponse, setLatestResponse] = useState<string>('');
-  const [selectedAvatar, setSelectedAvatar] = useState<'adult' | 'boy' | 'boy_improved' | 'female'>('boy_improved');
+  const [selectedAvatar, setSelectedAvatar] = useState<'adult' | 'boy' | 'boy_improved' | 'female'>('boy');
   const [isAvatarLoaded, setIsAvatarLoaded] = useState(false);
+  
+  // タイマー関連の状態
+  const [interviewTime, setInterviewTime] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
   
   // アバター変更時にローディング状態をリセット
   const handleAvatarChange = (avatar: 'adult' | 'boy' | 'boy_improved' | 'female') => {
@@ -63,6 +68,33 @@ export default function Home() {
   }, []);
 
   const isConversationActiveRef = useRef(false);
+  
+  // タイマーの管理
+  useEffect(() => {
+    if (isTimerRunning) {
+      timerIntervalRef.current = setInterval(() => {
+        setInterviewTime(prev => prev + 1);
+      }, 1000);
+    } else {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    }
+    
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
+  }, [isTimerRunning]);
+  
+  // 時間をフォーマットする関数
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
   
   const { 
     transcript, 
@@ -87,6 +119,12 @@ export default function Home() {
     try {
       // 音声認識を開始
       isConversationActiveRef.current = true;
+      
+      // タイマーを開始（初回のみ）
+      if (!isTimerRunning && interviewTime === 0) {
+        setIsTimerRunning(true);
+      }
+      
       startConversation((finalTranscript) => {
         if (finalTranscript.trim() && isConversationActiveRef.current) {
           // console.log('音声認識結果:', finalTranscript);
@@ -334,16 +372,6 @@ export default function Home() {
               {isAvatarLoaded && (
                 <div className="absolute top-4 right-4 z-10 flex gap-2">
                   <button
-                    onClick={() => handleAvatarChange('boy_improved')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      selectedAvatar === 'boy_improved'
-                        ? 'bg-cyan-600 text-white shadow-lg'
-                        : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-                    }`}
-                  >
-                    青年改
-                  </button>
-                  <button
                     onClick={() => handleAvatarChange('boy')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       selectedAvatar === 'boy'
@@ -351,7 +379,7 @@ export default function Home() {
                         : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
                     }`}
                   >
-                    青年
+                    男性1
                   </button>
                   <button
                     onClick={() => handleAvatarChange('adult')}
@@ -361,7 +389,7 @@ export default function Home() {
                         : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
                     }`}
                   >
-                    成人男性
+                    男性2
                   </button>
                   <button
                     onClick={() => handleAvatarChange('female')}
@@ -372,6 +400,16 @@ export default function Home() {
                     }`}
                   >
                     女性
+                  </button>
+                  <button
+                    onClick={() => handleAvatarChange('boy_improved')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      selectedAvatar === 'boy_improved'
+                        ? 'bg-cyan-600 text-white shadow-lg'
+                        : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                    }`}
+                  >
+                    青年改
                   </button>
                 </div>
               )}
@@ -533,6 +571,38 @@ export default function Home() {
               <h2 className="text-lg font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                 医療面接
               </h2>
+              
+              {/* タイマー表示 */}
+              {(isTimerRunning || interviewTime > 0) && (
+                <div className="flex items-center gap-3">
+                  <div className="glass-effect px-3 py-1 rounded-lg border border-cyan-500/30 flex items-center gap-2">
+                    <span className="text-cyan-400">⏱️</span>
+                    <span className="text-cyan-300 font-mono text-lg">
+                      {formatTime(interviewTime)}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setIsTimerRunning(!isTimerRunning);
+                    }}
+                    className="p-1 hover:bg-white/10 rounded transition-colors"
+                    title={isTimerRunning ? '一時停止' : '再開'}
+                  >
+                    {isTimerRunning ? '⏸️' : '▶️'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsTimerRunning(false);
+                      setInterviewTime(0);
+                    }}
+                    className="p-1 hover:bg-white/10 rounded transition-colors"
+                    title="リセット"
+                  >
+                    🔄
+                  </button>
+                </div>
+              )}
+              
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowCriteriaEditor(true)}
