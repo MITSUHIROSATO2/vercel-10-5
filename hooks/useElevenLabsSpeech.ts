@@ -211,10 +211,10 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       // 音声解析の準備
       let lastUpdateTime = 0;
       const analyzeAudio = (timestamp?: number) => {
-        if (!analyserRef.current || !audio.paused) {
+        if (analyserRef.current && !audio.paused) {
             // 毎フレーム更新（最高精度でリップシンク）
-            const dataArray = new Uint8Array(analyserRef.current!.frequencyBinCount);
-            analyserRef.current!.getByteFrequencyData(dataArray);
+            const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+            analyserRef.current.getByteFrequencyData(dataArray);
             
             // より精度の高い音声レベル計算
             // 低周波数帯域（声の基本周波数）に焦点を当てる
@@ -345,10 +345,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
             }
             
             animationRef.current = requestAnimationFrame(analyzeAudio);
-          }
-        };
-        
-        animationRef.current = requestAnimationFrame(analyzeAudio);
+        }
       };
       
       // 再生開始時の処理

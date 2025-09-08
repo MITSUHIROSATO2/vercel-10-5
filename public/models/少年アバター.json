@@ -2292,8 +2292,8 @@
         }
       ]
     },
-    {
-      "name": "NUG_Base_Teeth_1",
+    {"
+      "name": "NUG_Base_Teeth_1,
       "type": "SkinnedMesh",
       "shapeKeys": [
         "V_None"

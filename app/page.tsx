@@ -20,13 +20,14 @@ const FinalLipSyncAvatar = dynamic(
 );
 import { patientScenarios, formatScenarioForAI } from '@/lib/scenarios';
 import type { PatientScenario } from '@/lib/scenarioTypes';
+import { PatientMessage } from '@/lib/openai';
+import type { InterviewEvaluation as EvaluationType } from '@/lib/evaluationTypes';
+import AIEvaluationResult from '@/components/AIEvaluationResult';
+import EvaluationCriteriaEditor from '@/components/EvaluationCriteriaEditor';
+import EvaluationList from '@/components/EvaluationList';
+import InterviewEvaluation from '@/components/InterviewEvaluation';
 import ScenarioEditor from '@/components/ScenarioEditor';
 import ScenarioGenerator from '@/components/ScenarioGenerator';
-import { PatientMessage } from '@/lib/openai';
-import AIEvaluationResult from '@/components/AIEvaluationResult';
-import EvaluationList from '@/components/EvaluationList';
-import EvaluationCriteriaEditor from '@/components/EvaluationCriteriaEditor';
-import type { InterviewEvaluation as EvaluationType } from '@/lib/evaluationTypes';
 
 export default function Home() {
   const [messages, setMessages] = useState<PatientMessage[]>([]);

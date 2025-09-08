@@ -2,7 +2,6 @@ import * as THREE from 'three';
 
 /**
  * 少年アバター用のテクスチャ適用
- * 少年改アバターと同じロジックを使用
  */
 export async function applyBoyAvatarTextures(scene: THREE.Object3D, enableLogging: boolean = true) {
   if (enableLogging) {
@@ -325,14 +324,14 @@ export async function applyBoyAvatarTextures(scene: THREE.Object3D, enableLoggin
                 newMat.metalness = 0.0;
                 break;
               case 'skin_head':
-                // 顔には色のみ設定（テクスチャを使わない）
-                newMat.color = new THREE.Color(0xc08870);
-                newMat.roughness = 0.45;
+                // 顔のテクスチャ適用を一時的にスキップ
+                // newMat.color = new THREE.Color(0xc08870);
+                // newMat.roughness = 0.45;
                 break;
               case 'skin':
-                // 肌には色のみ設定（テクスチャを使わない）
-                newMat.color = new THREE.Color(0xc08870);
-                newMat.roughness = 0.5;
+                // 肌のテクスチャ適用を一時的にスキップ
+                // newMat.color = new THREE.Color(0xc08870);
+                // newMat.roughness = 0.5;
                 break;
               case 'teeth':
                 // 歯を真っ白にする

@@ -5,8 +5,6 @@ import * as THREE from 'three';
  * JSONの分析に基づいた正確なマッピング
  */
 export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
-  // console.log('=== ClassicMan改良版 テクスチャ適用開始 ===');
-  
   const textureLoader = new THREE.TextureLoader();
   textureLoader.setCrossOrigin('anonymous'); // CORS設定を追加
   
@@ -40,12 +38,12 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
             texture.colorSpace = THREE.SRGBColorSpace;
           }
           textureCache[filename] = texture;
-          // console.log(`✓ テクスチャ読み込み: ${filename}`);
+          // テクスチャ読み込み成功
           resolve(texture);
         },
         undefined,
         (error) => {
-          console.error(`✗ テクスチャ読み込み失敗: ${filename}`, error);
+          // テクスチャ読み込み失敗
           stats.errors++;
           reject(error);
         }
@@ -206,7 +204,7 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
     stats.totalMeshes++;
     const meshName = child.name;
     const lowerMeshName = meshName.toLowerCase();
-    // console.log(`\n処理中: ${meshName}`);
+    // 処理中: ${meshName}
     
     // ヒゲを非表示
     if (lowerMeshName.includes('beard') || 
@@ -214,7 +212,7 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
         lowerMeshName.includes('goatee') ||
         lowerMeshName.includes('stubble')) {
       child.visible = false;
-      // console.log(`非表示: ${meshName}`);
+      // 非表示: ${meshName}
       return;
     }
     
@@ -222,18 +220,18 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
     if (lowerMeshName.includes('eyelash') || lowerMeshName.includes('lash') ||
         lowerMeshName.includes('tearline') || lowerMeshName.includes('tear')) {
       child.visible = false;
-      // console.log(`非表示: ${meshName}`);
+      // 非表示: ${meshName}
       return;
     }
     
     // 髪の特別処理
     if (lowerMeshName.includes('hair') && !lowerMeshName.includes('eyelash') && !lowerMeshName.includes('eyebrow')) {
-      // console.log(`髪を検出: ${meshName} - 茶色を適用`);
+      // 髪を検出: ${meshName} - 茶色を適用
     }
     
     // 目関連のメッシュをデバッグ
     if (lowerMeshName.includes('eye') || lowerMeshName.includes('cornea')) {
-      // console.log(`👁️ 目関連メッシュ: ${meshName}`);
+      // 目関連メッシュ: ${meshName}
     }
     
     // マテリアルの配列化
@@ -243,13 +241,13 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
       if (!material) return;
       
       const matName = material.name || '';
-      // console.log(`  マテリアル: ${matName}`);
+      // マテリアル: ${matName}
       
       // テクスチャマッピングを取得
       const mapping = getTextureForMesh(meshName, matName);
       
       if (mapping) {
-        // console.log(`    → タイプ: ${mapping.type}`);
+        // → タイプ: ${mapping.type}
         
         if (mapping.type === 'hide') {
           child.visible = false;
@@ -361,7 +359,7 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
             stats.processedMeshes++;
             
           } catch (error) {
-            console.error(`    エラー: ${error}`);
+            // エラー: ${error}
             stats.errors++;
             // フォールバック
             newMat.color = new THREE.Color(0xc08870);
@@ -415,12 +413,9 @@ export async function applyClassicManTexturesImproved(scene: THREE.Object3D) {
   // すべての処理を待つ
   await Promise.all(processPromises);
   
-  // 統計情報を出力
-  // console.log('\n=== 適用結果 ===');
-  // console.log(`総メッシュ数: ${stats.totalMeshes}`);
-  // console.log(`処理済み: ${stats.processedMeshes}`);
-  // console.log(`テクスチャ適用: ${stats.texturesApplied}`);
-  // console.log(`エラー: ${stats.errors}`);
-  // 
-  // console.log('=== ClassicMan改良版 テクスチャ適用完了 ===');
+  // 統計情報
+  // 総メッシュ数: ${stats.totalMeshes}
+  // 処理済み: ${stats.processedMeshes}
+  // テクスチャ適用: ${stats.texturesApplied}
+  // エラー: ${stats.errors}
 }

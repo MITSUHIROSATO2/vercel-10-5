@@ -1,50 +1,67 @@
 import * as THREE from 'three';
 
 /**
- * 女性アバター（Hayden）のテクスチャ適用
+ * 女性アバター（Hayden）のテクスチャ適用（リップシンク互換版）
+ * Material置き換えを避け、morphTargets/needsUpdateを使用しない
  */
-export async function applyFemaleAvatarTextures(scene: THREE.Object3D, enableLogging: boolean = true) {
+export async function applyFemaleAvatarTexturesLipSyncFixed(scene: THREE.Object3D, enableLogging: boolean = true) {
   if (enableLogging) {
-    console.log('=== 女性アバター テクスチャ適用開始 ===');
+    console.log('=== 女性アバター テクスチャ適用開始（リップシンク互換版） ===');
   }
   
   const textureLoader = new THREE.TextureLoader();
-  textureLoader.setCrossOrigin('anonymous'); // CORS設定を追加
+  textureLoader.setCrossOrigin('anonymous');
   
-  // Blob Storageのベースパスを使用（環境変数から取得）
-  // Vercelの本番環境では一時的にローカルパスを使用
   const basePath = '/models/textures/';
+  
+  // 統計情報
+  const stats = {
+    totalMeshes: 0,
+    processedMeshes: 0,
+    texturesApplied: 0,
+    errors: 0
+  };
   
   // テクスチャキャッシュ
   const textureCache: { [key: string]: THREE.Texture } = {};
   
   // テクスチャを読み込み（キャッシュ付き）
-  const loadTexture = async (filename: string): Promise<THREE.Texture> => {
+  const loadTexture = async (filename: string): Promise<THREE.Texture | null> => {
     if (textureCache[filename]) {
       return textureCache[filename];
     }
     
-    return new Promise((resolve, reject) => {
-      const url = basePath + filename;
-      textureLoader.load(
-        url,
-        (texture) => {
-          if (filename.includes('diffuse') || filename.includes('alb')) {
-            texture.colorSpace = THREE.SRGBColorSpace;
+    try {
+      return new Promise((resolve) => {
+        textureLoader.load(
+          basePath + filename,
+          (texture) => {
+            if (filename.includes('diffuse') || filename.includes('alb')) {
+              texture.colorSpace = THREE.SRGBColorSpace;
+            }
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.flipY = false;
+            
+            textureCache[filename] = texture;
+            stats.texturesApplied++;
+            if (enableLogging) {
+              console.log(`  ✓ テクスチャ読み込み: ${filename}`);
+            }
+            resolve(texture);
+          },
+          undefined,
+          (error) => {
+            console.warn(`  ⚠️ テクスチャ読み込み失敗: ${filename}`);
+            stats.errors++;
+            resolve(null);
           }
-          textureCache[filename] = texture;
-          if (enableLogging) {
-            console.log(`✓ テクスチャ読み込み: ${filename}`);
-          }
-          resolve(texture);
-        },
-        undefined,
-        (error) => {
-          console.error(`✗ テクスチャ読み込み失敗: ${filename}`, error);
-          reject(error);
-        }
-      );
-    });
+        );
+      });
+    } catch (error) {
+      stats.errors++;
+      return null;
+    }
   };
   
   // マテリアル設定
@@ -96,14 +113,16 @@ export async function applyFemaleAvatarTextures(scene: THREE.Object3D, enableLog
     // 歯
     'teeth': {
       map: 'Teeth04.png',
-      roughness: 0.2,
-      metalness: 0.0
+      color: new THREE.Color(0xffffff),
+      roughness: 0.1,
+      metalness: 0.05
     },
     // 舌
     'tongue': {
       map: 'tongue001.png',
       normalMap: 'tongue001bump.png',
-      roughness: 0.8,
+      color: new THREE.Color(0xff6b6b),
+      roughness: 0.4,
       metalness: 0.0
     },
     // 服（Tシャツ）
@@ -140,17 +159,18 @@ export async function applyFemaleAvatarTextures(scene: THREE.Object3D, enableLog
     }
   };
   
-  // メッシュを処理
-  const processPromises: Promise<void>[] = [];
+  // 処理用のプロミス配列
+  const promises: Promise<void>[] = [];
   
   scene.traverse((child: any) => {
     if (!child.isMesh) return;
     
+    stats.totalMeshes++;
     const meshName = child.name.toLowerCase();
     const materialName = child.material?.name || '';
     
     if (enableLogging) {
-      console.log(`処理中: ${child.name} (Material: ${child.material?.name})`);
+      console.log(`処理中: ${child.name} (Material: ${materialName})`);
     }
     
     // 眉毛を非表示
@@ -197,46 +217,41 @@ export async function applyFemaleAvatarTextures(scene: THREE.Object3D, enableLog
           materialConfig = materials.shoes;
         }
         
-        // メッシュ名でのフォールバック（マテリアル名が不明な場合のみ）
-        if (!materialConfig && !matName) {
-          if (meshName.includes('body') || meshName.includes('skin')) {
-            materialConfig = materials.body;
-          } else if (meshName.includes('hair') && !meshName.includes('lash')) {
-            materialConfig = materials.hair;
-          } else if (meshName.includes('teeth') || meshName.includes('tooth')) {
-            materialConfig = materials.teeth;
-          } else if (meshName.includes('tongue')) {
-            materialConfig = materials.tongue;
-          }
-        }
-        
         if (materialConfig) {
           const promise = (async () => {
             try {
               // ディフューズマップ
               if (materialConfig.map) {
                 const texture = await loadTexture(materialConfig.map);
-                material.map = texture;
+                if (texture) {
+                  material.map = texture;
+                }
               }
               
               // ノーマルマップ
               if (materialConfig.normalMap) {
                 const normalMap = await loadTexture(materialConfig.normalMap);
-                material.normalMap = normalMap;
+                if (normalMap) {
+                  material.normalMap = normalMap;
+                }
               }
               
               // ラフネスマップ
               if (materialConfig.roughnessMap) {
                 const roughnessMap = await loadTexture(materialConfig.roughnessMap);
-                material.roughnessMap = roughnessMap;
+                if (roughnessMap) {
+                  material.roughnessMap = roughnessMap;
+                }
               }
               
               // アルファマップ
               if (materialConfig.alphaMap) {
                 const alphaMap = await loadTexture(materialConfig.alphaMap);
-                material.alphaMap = alphaMap;
-                material.transparent = true;
-                material.alphaTest = materialConfig.alphaTest || 0.1;
+                if (alphaMap) {
+                  material.alphaMap = alphaMap;
+                  material.transparent = true;
+                  material.alphaTest = materialConfig.alphaTest || 0.1;
+                }
               }
               
               // その他のプロパティ（直接設定）
@@ -267,29 +282,36 @@ export async function applyFemaleAvatarTextures(scene: THREE.Object3D, enableLog
               // needsUpdateは使用しない
               // material.needsUpdate = true; // 使用しない
               
+              stats.processedMeshes++;
               if (enableLogging) {
                 console.log(`  ✓ テクスチャ適用: ${matName}`);
               }
               
             } catch (error) {
-              console.error(`エラー処理中: ${child.name}`, error);
-              // フォールバック：色のみ設定
-              material.color = new THREE.Color(0xfdbcb4);
-              material.roughness = 0.5;
-              material.metalness = 0.0;
+              if (enableLogging) {
+                console.error('  マテリアル処理エラー:', error);
+              }
+              stats.errors++;
             }
           })();
           
-          processPromises.push(promise);
+          promises.push(promise);
         }
       }
     });
   });
   
-  // すべての処理を待つ
-  await Promise.all(processPromises);
+  // すべてのテクスチャ読み込みを待つ
+  await Promise.all(promises);
   
+  // 統計情報を出力
   if (enableLogging) {
-    console.log('=== 女性アバター テクスチャ適用完了 ===');
+    console.log('=== テクスチャ適用結果 ===');
+    console.log(`  総メッシュ数: ${stats.totalMeshes}`);
+    console.log(`  処理済み: ${stats.processedMeshes}`);
+    console.log(`  テクスチャ適用: ${stats.texturesApplied}`);
+    console.log(`  エラー: ${stats.errors}`);
   }
+  
+  return Promise.resolve();
 }

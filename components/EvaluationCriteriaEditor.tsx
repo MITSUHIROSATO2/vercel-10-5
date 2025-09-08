@@ -15,44 +15,44 @@ interface EvaluationCriteriaEditorProps {
 }
 
 const defaultCriteria: EvaluationCriteria[] = [
-  // コミュニケーション
-  { category: 'communication', subcategory: 'verbal', item: '明瞭で聞き取りやすい話し方', priority: 'high' },
-  { category: 'communication', subcategory: 'verbal', item: '適切な音量と速度', priority: 'medium' },
-  { category: 'communication', subcategory: 'verbal', item: '専門用語を避けた説明', priority: 'high' },
-  { category: 'communication', subcategory: 'overall', item: '患者の不安への配慮', priority: 'high' },
-  { category: 'communication', subcategory: 'overall', item: '共感的な態度', priority: 'high' },
+  // （１）対人関係能力：患者との良好な関係の構築
+  { category: 'interpersonal', item: '言語的コミュニケーションを適切に行う', priority: 'high' },
   
-  // 導入
-  { category: 'introduction', item: '挨拶と自己紹介', priority: 'high' },
-  { category: 'introduction', item: '本人確認（氏名・生年月日）', priority: 'high' },
-  { category: 'introduction', item: '診察の目的説明', priority: 'medium' },
+  // （２）全体をとおして
+  { category: 'overall', item: '順序立った面接を行う', priority: 'high' },
+  { category: 'overall', item: '話題を変えるときには、唐突でなく適切な声かけをする', priority: 'high' },
   
-  // 医学的情報
-  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '主訴の聴取', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '開放型質問の使用', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '症状の詳細確認', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'history', item: '現病歴の聴取', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'history', item: '既往歴の確認', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'history', item: 'アレルギー歴の確認', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'history', item: '服薬歴の確認', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'lifestyle', item: '喫煙歴の確認', priority: 'medium' },
-  { category: 'medicalInfo', subcategory: 'lifestyle', item: '飲酒歴の確認', priority: 'medium' },
-  { category: 'medicalInfo', subcategory: 'lifestyle', item: '食生活の確認', priority: 'low' },
+  // （３）導入部分：オープニング
+  { category: 'opening', item: '挨拶を行う', priority: 'high' },
+  { category: 'opening', item: '本人確認と自己紹介を適切に行う', priority: 'high' },
+  { category: 'opening', item: '面接の概要説明と同意を取得する', priority: 'high' },
   
-  // 心理社会的側面
-  { category: 'psychosocial', item: '患者の心配事の聴取', priority: 'high' },
-  { category: 'psychosocial', item: '治療への希望確認', priority: 'high' },
-  { category: 'psychosocial', item: '生活への影響確認', priority: 'medium' },
+  // （４）患者に聞く：歯科医学的情報
+  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '主訴を聞く', priority: 'high' },
+  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '主訴の現病歴を聞く', priority: 'high' },
+  { category: 'medicalInfo', subcategory: 'history', item: '歯科的既往歴を聞く', priority: 'high' },
+  { category: 'medicalInfo', subcategory: 'history', item: '全身的既往歴を聞く', priority: 'high' },
+  { category: 'medicalInfo', subcategory: 'lifestyle', item: '口腔衛生習慣(歯磨きの頻度など)を聞く', priority: 'low' },
+  { category: 'medicalInfo', subcategory: 'lifestyle', item: '患者の食習慣や嗜好を聞く', priority: 'low' },
+  { category: 'medicalInfo', subcategory: 'lifestyle', item: '患者の家族歴や社会歴を聞く', priority: 'low' },
   
-  // 締めくくり
-  { category: 'closing', item: '患者の質問への対応', priority: 'high' },
-  { category: 'closing', item: '情報の要約・確認', priority: 'high' },
-  { category: 'closing', item: '今後の方針説明', priority: 'high' },
+  // （５）患者に聞く：心理・社会的情報
+  { category: 'psychosocial', item: '解釈モデルを聞く', priority: 'high' },
+  { category: 'psychosocial', item: '来院動機を聞く', priority: 'low' },
+  { category: 'psychosocial', item: '心理的状況を聞く', priority: 'low' },
+  { category: 'psychosocial', item: '検査や治療に関する要望を聞く', priority: 'low' },
+  { category: 'psychosocial', item: '患者背景に関わる通院条件、健康･受療行動、生活･社会･心理的背景などを聞く', priority: 'low' },
+  
+  // （６）締めくくり部分：クロージング
+  { category: 'closing', item: '要約と確認を行う', priority: 'high' },
+  { category: 'closing', item: '言い忘れの確認を行う', priority: 'high' },
+  { category: 'closing', item: '面接終了後、患者が次にどうしたら良いかを適切に伝える', priority: 'high' },
 ];
 
 const categoryLabels: { [key: string]: string } = {
-  communication: 'コミュニケーション',
-  introduction: '導入',
+  interpersonal: '対人関係能力',
+  overall: '全体',
+  opening: '導入',
   medicalInfo: '医学的情報',
   psychosocial: '心理社会的側面',
   closing: '締めくくり'

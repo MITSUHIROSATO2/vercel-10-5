@@ -180,30 +180,169 @@ function AvatarModel({
       onMorphListUpdate(Array.from(allMorphNames).sort());
     }
     
-    // 少年アバターのテクスチャ適用
+    // 少年アバターの詳細分析（目のメッシュに特化）
+    if (modelPath.includes('少年アバター') && !modelPath.includes('少年改')) {
+      console.log('=== 少年アバター 目のメッシュ詳細分析 ===');
+      const boyAvatarAnalysis: any = {
+        timestamp: new Date().toISOString(),
+        modelPath: modelPath,
+        eyeMeshes: [],  // 目関連のメッシュ専用
+        allMeshes: [],
+        materials: [],
+        eyeMaterials: [], // 目関連のマテリアル専用
+        summary: {
+          totalMeshes: 0,
+          totalMaterials: 0,
+          visibleMeshes: 0,
+          hiddenMeshes: 0,
+          meshesWithVertexColors: 0,
+          eyeRelatedMeshes: 0,
+          eyeRelatedMaterials: 0
+        }
+      };
+      
+      const processedMaterials = new Set<string>();
+      
+      // 目関連のキーワード
+      const eyeKeywords = ['eye', 'cornea', 'iris', 'pupil', 'sclera', 'tearline', 'eyelash', 'occlusion', 'onuglusion'];
+      
+      scene.traverse((child: any) => {
+        if (child.isMesh) {
+          const lowerName = child.name.toLowerCase();
+          const isEyeRelated = eyeKeywords.some(keyword => lowerName.includes(keyword));
+          
+          const meshData: any = {
+            name: child.name,
+            visible: child.visible,
+            hasVertexColors: false,
+            isEyeRelated: isEyeRelated,
+            position: child.position ? { x: child.position.x, y: child.position.y, z: child.position.z } : null,
+            geometry: {
+              verticesCount: child.geometry?.attributes?.position?.count || 0,
+              hasUV: !!child.geometry?.attributes?.uv,
+              hasMorphTargets: !!child.morphTargetInfluences
+            },
+            materials: []
+          };
+          
+          // マテリアル情報を詳細に収集
+          const materials = Array.isArray(child.material) ? child.material : [child.material];
+          materials.forEach((mat: any) => {
+            if (mat) {
+              const matData = {
+                name: mat.name || 'unnamed',
+                type: mat.type,
+                color: mat.color ? `#${mat.color.getHexString()}` : null,
+                emissive: mat.emissive ? `#${mat.emissive.getHexString()}` : null,
+                emissiveIntensity: mat.emissiveIntensity,
+                vertexColors: mat.vertexColors,
+                transparent: mat.transparent,
+                opacity: mat.opacity,
+                depthWrite: mat.depthWrite,
+                renderOrder: mat.renderOrder,
+                side: mat.side,
+                map: !!mat.map,
+                normalMap: !!mat.normalMap,
+                aoMap: !!mat.aoMap,
+                emissiveMap: !!mat.emissiveMap,
+                roughness: mat.roughness,
+                metalness: mat.metalness
+              };
+              
+              meshData.materials.push(matData);
+              
+              if (mat.vertexColors) {
+                meshData.hasVertexColors = true;
+                boyAvatarAnalysis.summary.meshesWithVertexColors++;
+              }
+              
+              // ユニークなマテリアルを記録
+              const matKey = `${mat.name}_${mat.uuid}`;
+              if (!processedMaterials.has(matKey)) {
+                processedMaterials.add(matKey);
+                boyAvatarAnalysis.materials.push({
+                  ...matData,
+                  uuid: mat.uuid,
+                  usedInMeshes: [child.name]
+                });
+                
+                // 目関連のマテリアルを別途記録
+                if (isEyeRelated) {
+                  boyAvatarAnalysis.eyeMaterials.push({
+                    ...matData,
+                    meshName: child.name
+                  });
+                  boyAvatarAnalysis.summary.eyeRelatedMaterials++;
+                }
+              }
+            }
+          });
+          
+          // メッシュをカテゴリごとに保存
+          boyAvatarAnalysis.allMeshes.push(meshData);
+          if (isEyeRelated) {
+            boyAvatarAnalysis.eyeMeshes.push(meshData);
+            boyAvatarAnalysis.summary.eyeRelatedMeshes++;
+          }
+          
+          boyAvatarAnalysis.summary.totalMeshes++;
+          if (child.visible) {
+            boyAvatarAnalysis.summary.visibleMeshes++;
+          } else {
+            boyAvatarAnalysis.summary.hiddenMeshes++;
+          }
+        }
+      });
+      
+      boyAvatarAnalysis.summary.totalMaterials = boyAvatarAnalysis.materials.length;
+      
+      // 目関連メッシュを詳細表示
+      console.log('=== 👁️ 目関連メッシュ詳細 ===');
+      boyAvatarAnalysis.eyeMeshes.forEach((mesh: any) => {
+        console.log(`\n📍 ${mesh.name}`);
+        console.log(`  表示: ${mesh.visible ? '✅' : '❌'}`);
+        console.log(`  頂点数: ${mesh.geometry.verticesCount}`);
+        console.log(`  マテリアル:`, mesh.materials);
+      });
+      
+      console.log('\n=== 📊 分析サマリー ===');
+      console.log(JSON.stringify(boyAvatarAnalysis.summary, null, 2));
+      
+      // グローバル変数に保存（JSON出力用）
+      (window as any).boyAvatarAnalysis = boyAvatarAnalysis;
+      
+      // JSON出力関数を追加
+      (window as any).downloadEyeAnalysis = () => {
+        const blob = new Blob([JSON.stringify(boyAvatarAnalysis, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `boy_avatar_eye_analysis_${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        console.log('✅ JSONファイルをダウンロードしました');
+      };
+      
+      console.log('\n💡 使用方法:');
+      console.log('  コンソールで以下を実行:');
+      console.log('  - boyAvatarAnalysis で分析結果を確認');
+      console.log('  - downloadEyeAnalysis() でJSONファイルをダウンロード');
+    }
+    
+    // 少年アバターのテクスチャ適用（分析のみモードでスキップ）
     const textureAppliedKey = `texture_applied_${modelPath}`;
     if (modelPath.includes('少年アバター') && !scene.userData[textureAppliedKey]) {
       scene.userData[textureAppliedKey] = true;
-      import('@/utils/applyBoyAvatarTextures').then(async ({ applyBoyAvatarTextures }) => {
-        // Avatar analyzer ではログを無効化（分析用途のため）
-        await applyBoyAvatarTextures(scene, false);
-      });
+      // 分析モードではテクスチャ適用をスキップ（色が変わると分析が困難になるため）
+      console.log('avatar-analyzer: 少年アバターのテクスチャ適用をスキップ（分析モード）');
     } else if (modelPath.includes('少年改') && !scene.userData[textureAppliedKey]) {
       scene.userData[textureAppliedKey] = true;
-      import('@/utils/applyClassicManTexturesImproved').then(async ({ applyClassicManTexturesImproved }) => {
-        await applyClassicManTexturesImproved(scene);
-        console.log('avatar-analyzer: 少年改アバターのテクスチャを適用しました');
-      });
+      // 少年改アバターはテクスチャ適用をスキップ（FinalLipSyncAvatarで専用処理）
+      console.log('avatar-analyzer: 少年改アバターのテクスチャ適用をスキップ');
     } else if (modelPath.includes('Hayden') && !scene.userData[textureAppliedKey]) {
       scene.userData[textureAppliedKey] = true;
       // テクスチャ適用を一時的に無効化
       console.log('avatar-analyzer: 女性アバターのテクスチャ適用をスキップ（デバッグ用）');
-      /*
-      import('@/utils/applyFemaleAvatarTextures').then(async ({ applyFemaleAvatarTextures }) => {
-        await applyFemaleAvatarTextures(scene, true);
-        console.log('avatar-analyzer: 女性アバターのテクスチャを適用しました');
-      });
-      */
     }
   }, [scene, modelPath]);
 
@@ -364,6 +503,26 @@ export default function FacialExpressionAnalyzer() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const exportBoyAvatarAnalysis = () => {
+    const boyAnalysis = (window as any).boyAvatarAnalysis;
+    if (!boyAnalysis) {
+      alert('少年アバターを選択してメッシュ情報を読み込んでください');
+      return;
+    }
+
+    const blob = new Blob([JSON.stringify(boyAnalysis, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `boy_avatar_analysis_${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    console.log('少年アバター分析データをダウンロードしました');
   };
 
   // 全ての表情とモーフターゲット情報を一括出力
@@ -549,6 +708,17 @@ export default function FacialExpressionAnalyzer() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
                     </svg>
                     メッシュ情報
+                  </button>
+                )}
+                {selectedAvatar === 'boy' && (
+                  <button
+                    onClick={exportBoyAvatarAnalysis}
+                    className="px-3 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg flex items-center gap-2 text-sm"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    構造分析
                   </button>
                 )}
               </div>
