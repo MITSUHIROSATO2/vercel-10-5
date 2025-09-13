@@ -1,0 +1,682 @@
+{
+  "timestamp": "2025-09-08T09:34:39.885Z",
+  "modelPath": "/models/少年アバター.glb",
+  "meshes": [
+    {
+      "name": "Beard_Base",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "Beard_Base_Transparency",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "Boat_Shoes",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "Boat_Shoes",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "Eyebrow_Male",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "Eyebrow_Transparency",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "Fit_shirts",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "Fit_shirts",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "Hair",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "Hair_Transparency",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_1",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Skin_Head",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_2",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Skin_Body",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_3",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Skin_Arm",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_4",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Skin_Leg",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_5",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Nails",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_6",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Eyelash",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Eye_1",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Eye_R",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Eye_2",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Cornea_R",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Eye_3",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Eye_L",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Eye_4",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Cornea_L",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_EyeONUGlusion_1",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Eye_ONUGlusion_R",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": false,
+          "roughness": 1,
+          "metalness": 0
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_EyeONUGlusion_2",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Eye_ONUGlusion_L",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": false,
+          "roughness": 1,
+          "metalness": 0
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_TearLine_1",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Tearline_R",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": false,
+          "roughness": 1,
+          "metalness": 0
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_TearLine_2",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Tearline_L",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": false,
+          "roughness": 1,
+          "metalness": 0
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Teeth_1",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Upper_Teeth",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Teeth_2",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Lower_Teeth",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Tongue",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "NUG_Tongue",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "Pants",
+      "visible": true,
+      "hasVertexColors": false,
+      "materials": [
+        {
+          "name": "Pants",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "vertexColors": false,
+          "map": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "Beard_Base_Transparency",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "9c7bd2fe-be4c-4509-8a44-1519b6668b6e",
+      "usedInMeshes": [
+        "Beard_Base"
+      ]
+    },
+    {
+      "name": "Boat_Shoes",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "02704672-41aa-40e3-ac0d-2471b38b9530",
+      "usedInMeshes": [
+        "Boat_Shoes"
+      ]
+    },
+    {
+      "name": "Eyebrow_Transparency",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "efbabefa-632c-4bd7-9f4f-9a280b7cfddc",
+      "usedInMeshes": [
+        "Eyebrow_Male"
+      ]
+    },
+    {
+      "name": "Fit_shirts",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "e378d85b-9d54-44f2-88c6-6f0e7c7b2469",
+      "usedInMeshes": [
+        "Fit_shirts"
+      ]
+    },
+    {
+      "name": "Hair_Transparency",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "14489db0-fb65-4b7f-b711-994fba5e19a5",
+      "usedInMeshes": [
+        "Hair"
+      ]
+    },
+    {
+      "name": "NUG_Skin_Head",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "7e3ea41e-5747-4532-b2a3-09caa4d442f3",
+      "usedInMeshes": [
+        "NUG_Base_Body_1"
+      ]
+    },
+    {
+      "name": "NUG_Skin_Body",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "d44e20b5-d6c4-4b51-81c4-7788d4b35e25",
+      "usedInMeshes": [
+        "NUG_Base_Body_2"
+      ]
+    },
+    {
+      "name": "NUG_Skin_Arm",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "a2f4e82f-6c38-447f-9be7-98fd80097679",
+      "usedInMeshes": [
+        "NUG_Base_Body_3"
+      ]
+    },
+    {
+      "name": "NUG_Skin_Leg",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "be109cad-0c6d-4cb5-9819-a3581850e8d4",
+      "usedInMeshes": [
+        "NUG_Base_Body_4"
+      ]
+    },
+    {
+      "name": "NUG_Nails",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "219d10e2-8ca8-47d3-bf6c-380297774de5",
+      "usedInMeshes": [
+        "NUG_Base_Body_5"
+      ]
+    },
+    {
+      "name": "NUG_Eyelash",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "2e0576d5-5880-423d-a629-bb804d57a099",
+      "usedInMeshes": [
+        "NUG_Base_Body_6"
+      ]
+    },
+    {
+      "name": "NUG_Eye_R",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "7bdfbf9d-6a3b-40f2-af1f-22546abab159",
+      "usedInMeshes": [
+        "NUG_Base_Eye_1"
+      ]
+    },
+    {
+      "name": "NUG_Cornea_R",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "8d490a9e-a6c7-45db-ad03-4183fc4c697c",
+      "usedInMeshes": [
+        "NUG_Base_Eye_2"
+      ]
+    },
+    {
+      "name": "NUG_Eye_L",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "bc52ef20-2268-49d6-ac32-f4f232a54d1e",
+      "usedInMeshes": [
+        "NUG_Base_Eye_3"
+      ]
+    },
+    {
+      "name": "NUG_Cornea_L",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "056c88a9-781e-4c20-8c5d-7d7ae95d1b96",
+      "usedInMeshes": [
+        "NUG_Base_Eye_4"
+      ]
+    },
+    {
+      "name": "NUG_Eye_ONUGlusion_R",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": false,
+      "roughness": 1,
+      "metalness": 0,
+      "uuid": "e89f6368-479d-4348-bc36-7cc329d2119e",
+      "usedInMeshes": [
+        "NUG_Base_EyeONUGlusion_1"
+      ]
+    },
+    {
+      "name": "NUG_Eye_ONUGlusion_L",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": false,
+      "roughness": 1,
+      "metalness": 0,
+      "uuid": "9648ba13-3f61-4b77-8915-aaae2767a256",
+      "usedInMeshes": [
+        "NUG_Base_EyeONUGlusion_2"
+      ]
+    },
+    {
+      "name": "NUG_Tearline_R",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": false,
+      "roughness": 1,
+      "metalness": 0,
+      "uuid": "3f040ff5-7a5e-4c7a-b22d-0965847d212c",
+      "usedInMeshes": [
+        "NUG_Base_TearLine_1"
+      ]
+    },
+    {
+      "name": "NUG_Tearline_L",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": false,
+      "roughness": 1,
+      "metalness": 0,
+      "uuid": "44da1504-fc08-447c-977c-a45d4625ae60",
+      "usedInMeshes": [
+        "NUG_Base_TearLine_2"
+      ]
+    },
+    {
+      "name": "NUG_Upper_Teeth",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "8da1c232-a3e2-44ec-b356-a3d4165b2a91",
+      "usedInMeshes": [
+        "NUG_Base_Teeth_1"
+      ]
+    },
+    {
+      "name": "NUG_Lower_Teeth",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "f52a4c0f-f6b4-4802-8a02-b2d9ddcffb52",
+      "usedInMeshes": [
+        "NUG_Base_Teeth_2"
+      ]
+    },
+    {
+      "name": "NUG_Tongue",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "86f99f78-3edc-4cc9-abea-251418c7962d",
+      "usedInMeshes": [
+        "NUG_Base_Tongue"
+      ]
+    },
+    {
+      "name": "Pants",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "vertexColors": false,
+      "map": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "d6d4e3f4-56d1-439a-8702-8ed3e81e9a2c",
+      "usedInMeshes": [
+        "Pants"
+      ]
+    }
+  ],
+  "summary": {
+    "totalMeshes": 23,
+    "totalMaterials": 23,
+    "visibleMeshes": 23,
+    "hiddenMeshes": 0,
+    "meshesWithVertexColors": 0
+  }
+}

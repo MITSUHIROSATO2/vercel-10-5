@@ -1279,7 +1279,6 @@ function AvatarModel({
       }
     });
     
-    
     // 初期化時にすべてのモーフターゲットを0にリセット
     morphMeshes.forEach(mesh => {
       if (mesh.morphTargetInfluences) {

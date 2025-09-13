@@ -4,7 +4,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useAutoVoiceDetection } from '@/hooks/useAutoVoiceDetection';
 import { useElevenLabsSpeech } from '@/hooks/useElevenLabsSpeech';
+import { useDemoElevenLabsSpeech } from '@/hooks/useDemoElevenLabsSpeech';
 import { getModelPath } from '@/lib/modelPaths';
+import { audioService } from '@/lib/audioService';
 
 // リップシンクアバターを動的インポート（SSRを無効化）
 const FinalLipSyncAvatar = dynamic(
@@ -28,6 +30,7 @@ import EvaluationList from '@/components/EvaluationList';
 import InterviewEvaluation from '@/components/InterviewEvaluation';
 import ScenarioEditor from '@/components/ScenarioEditor';
 import ScenarioGenerator from '@/components/ScenarioGenerator';
+import { demoDialogues, shortDemoDialogues, DemoDialogue } from '@/lib/demoDialogues';
 
 export default function Home() {
   const [messages, setMessages] = useState<PatientMessage[]>([]);
@@ -54,6 +57,24 @@ export default function Home() {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
   
+  // 会話ログの自動スクロール用ref
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  
+  // デモンストレーション関連の状態
+  const [isDemoPlaying, setIsDemoPlaying] = useState(false);
+  const [currentDemoIndex, setCurrentDemoIndex] = useState(0);
+  const [demoType, setDemoType] = useState<'full' | 'short'>('short');
+  const demoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // デモ用の音声フック
+  const {
+    playDemoAudio,
+    stopAudio: stopDemoAudio,
+    currentWord: demoCurrentWord,
+    audioLevel: demoAudioLevel,
+    isPlaying: isDemoAudioPlaying
+  } = useDemoElevenLabsSpeech();
+  
   // アバター変更時にローディング状態をリセット
   const handleAvatarChange = (avatar: 'adult' | 'boy' | 'boy_improved' | 'female') => {
     if (avatar !== selectedAvatar) {
@@ -65,6 +86,255 @@ export default function Home() {
   // onLoaded コールバックをメモ化
   const handleAvatarLoaded = React.useCallback(() => {
     setIsAvatarLoaded(true);
+  }, []);
+
+  // デモが再生中かどうかを追跡するためのref
+  const isDemoPlayingRef = useRef(false);
+
+  // stopDemo関数を先に定義（playNextDemoDialogueから参照されるため）
+  const stopDemo = () => {
+    setIsDemoPlaying(false);
+    isDemoPlayingRef.current = false;
+    setCurrentDemoIndex(0);
+    setIsSpeaking(false);
+    setLatestResponse('');
+    
+    if (demoTimeoutRef.current) {
+      clearTimeout(demoTimeoutRef.current);
+      demoTimeoutRef.current = null;
+    }
+    
+    // 音声を停止
+    stop(); // ElevenLabsの音声を停止
+    stopDemoAudio(); // デモ音声も停止
+    
+    // Web Speech APIの音声も停止
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
+  // クリーンアップ処理
+  useEffect(() => {
+    return () => {
+      audioService.cleanup();
+      stopDemoAudio();
+    };
+  }, [stopDemoAudio]);
+
+  // デモンストレーション機能
+  const playNextDemoDialogue = async (index: number, type: 'full' | 'short') => {
+    const dialogues = type === 'full' ? demoDialogues : shortDemoDialogues;
+    
+    if (index >= dialogues.length) {
+      // デモ終了
+      stopDemo();
+      return;
+    }
+
+    const dialogue = dialogues[index];
+    const nextIndex = index + 1;
+
+    // メッセージを追加
+    const role = dialogue.speaker === 'doctor' ? 'user' : 'assistant';
+    const newMessage: PatientMessage = { role, content: dialogue.text };
+    setMessages(prev => [...prev, newMessage]);
+
+    // 次の発話に進む関数
+    const proceedToNext = () => {
+      const delay = dialogue.delay || 1500;
+      
+      if (isDemoPlayingRef.current && nextIndex < dialogues.length) {
+        demoTimeoutRef.current = setTimeout(() => {
+          setCurrentDemoIndex(nextIndex);
+          playNextDemoDialogue(nextIndex, type);
+        }, delay);
+      } else if (nextIndex >= dialogues.length) {
+        stopDemo();
+      }
+    };
+
+    // 患者の発話の場合のみアバターを動かす
+    if (dialogue.speaker === 'patient') {
+      console.log('🎭 デモ: 患者の発話を再生開始:', dialogue.text);
+      // 最新の応答を保存（アバターのリップシンク用）
+      setLatestResponse(dialogue.text);
+      
+      const patientVoiceId = 'j9jfwdrw7BRfcR43Qohk'; // AI患者用のElevenLabs voice ID
+      
+      try {
+        // リップシンクを開始
+        setIsSpeaking(true);
+        
+        // ElevenLabs APIを呼び出す（患者用voice ID）
+        console.log('🔊 ElevenLabs APIを呼び出し中...');
+        const response = await fetch('/api/elevenlabs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: dialogue.text,
+            voiceId: patientVoiceId,
+            emotion: 'neutral' // デモでは感情をニュートラルに設定
+          })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('✅ ElevenLabs API応答受信:', data.audio ? '音声データあり' : '音声データなし');
+          if (data.audio) {
+            // Base64音声データを再生しながらリップシンクを継続
+            try {
+              console.log('🎵 音声再生を開始...');
+              
+              // デモ専用の高品質リップシンクフックを使用（本番と同等の品質）
+              setIsSpeaking(true);
+              
+              try {
+                console.log('🎵 playDemoAudio呼び出し中...');
+                // useDemoElevenLabsSpeechフックを使用して本番と同じ品質のリップシンクを実現
+                await playDemoAudio(data.audio, dialogue.text);
+                console.log('✅ playDemoAudio完了');
+              } catch (playError) {
+                console.error('❌ playDemoAudioエラー:', playError);
+              }
+              
+              // 音声再生完了後のクリーンアップ
+              setIsSpeaking(false);
+              setLatestResponse('');
+              
+              console.log('✅ 音声再生処理完了');
+              
+              proceedToNext();
+              return; // 処理完了
+            } catch (error) {
+              console.warn('❌ 音声再生エラー、フォールバック使用:', error);
+              setIsSpeaking(false);
+            }
+          } else {
+            console.warn('⚠️ 音声データが含まれていません');
+            setIsSpeaking(false);
+          }
+        } else {
+          console.warn('❌ ElevenLabs APIエラー:', response.status);
+          setIsSpeaking(false);
+        }
+      } catch (error) {
+        console.warn('患者の音声生成エラー、フォールバック使用:', error);
+        setIsSpeaking(false);
+      }
+      
+      // フォールバックまたは正常完了後の処理
+      if (!isDemoPlayingRef.current) {
+        setIsSpeaking(false);
+        return;
+      }
+      
+      // フォールバック: Web Speech APIを使用
+      if ('speechSynthesis' in window) {
+        setIsSpeaking(true);
+        speak(dialogue.text, 
+          () => {
+            setIsSpeaking(false);
+            proceedToNext();
+          },
+          (progress) => {}
+        );
+      } else {
+        setIsSpeaking(false);
+        proceedToNext();
+      }
+    } else {
+      // 医師の発話の場合は、アバターを動かさない
+      const doctorVoiceId = 'j210dv0vWm7fCknyQpbA'; // 医師用のElevenLabs voice ID
+      
+      let audioPlayed = false;
+      
+      try {
+        // ElevenLabs APIを呼び出す
+        const response = await fetch('/api/elevenlabs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: dialogue.text,
+            voiceId: doctorVoiceId,
+            emotion: 'neutral' // 医師も感情をニュートラルに
+          })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.audio) {
+            // 統一された音声サービスを使用（医師の音声はリップシンクなし）
+            try {
+              await audioService.playAudio({
+                text: dialogue.text,
+                base64Audio: data.audio,
+                enableRealTimeAnalysis: false,
+                onEnd: () => {
+                  audioPlayed = true;
+                  proceedToNext();
+                }
+              });
+            } catch (error) {
+              console.warn('音声再生エラー:', error);
+              proceedToNext();
+            }
+          } else {
+            console.warn('音声データが含まれていません');
+          }
+        } else {
+          console.warn('ElevenLabs APIエラー:', response.status);
+        }
+      } catch (error) {
+        console.warn('医師の音声生成エラー:', error);
+      }
+      
+      // デモが停止されていない場合は次に進む
+      if (!isDemoPlayingRef.current) {
+        return;
+      }
+      
+      // 音声が再生されていても、されていなくても次に進む
+      // (音声再生が成功した場合は、onendedイベントで自動的に次に進む)
+      if (audioPlayed) {
+        // 音声再生が成功した場合、proceedToNextはonendedで呼ばれる
+        // ここでは何もしない
+      } else {
+        // 音声なしで次に進む（デフォルトの遅延を使用）
+        proceedToNext();
+      }
+    }
+  };
+
+  // startDemo関数を追加
+  const startDemo = (type: 'full' | 'short') => {
+    setDemoType(type);
+    setIsDemoPlaying(true);
+    isDemoPlayingRef.current = true;
+    setCurrentDemoIndex(0);
+    setMessages([]); // チャット履歴をクリア
+    
+    // タイマーを開始
+    if (!isTimerRunning) {
+      setIsTimerRunning(true);
+      setInterviewTime(0);
+    }
+    
+    // 最初の発話を開始
+    playNextDemoDialogue(0, type);
+  };
+
+  // デモ停止時のクリーンアップ
+  useEffect(() => {
+    return () => {
+      if (demoTimeoutRef.current) {
+        clearTimeout(demoTimeoutRef.current);
+      }
+    };
   }, []);
 
   const isConversationActiveRef = useRef(false);
@@ -170,6 +440,17 @@ export default function Home() {
   useEffect(() => {
     setSpeakingState(isCurrentlySpeaking || isSpeaking);
   }, [isCurrentlySpeaking, isSpeaking, setSpeakingState]);
+  
+  // 会話ログの自動スクロール
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      // スムーズにスクロール
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  }, [messages]);
 
   const handleSendMessage = async (text: string) => {
     if (!text.trim()) return;
@@ -422,9 +703,9 @@ export default function Home() {
                 }>
                   <FinalLipSyncAvatar 
                     key={selectedAvatar} // アバター変更時に完全に再マウント
-                    isSpeaking={isSpeaking || isCurrentlySpeaking} 
-                    currentWord={currentWord}
-                    audioLevel={audioLevel}
+                    isSpeaking={isSpeaking || isCurrentlySpeaking || isDemoAudioPlaying} 
+                    currentWord={isDemoAudioPlaying ? demoCurrentWord : currentWord}
+                    audioLevel={isDemoAudioPlaying ? demoAudioLevel : audioLevel}
                     currentPhoneme={currentPhoneme}
                     speechProgress={speechProgress}
                     modelPath={getModelPath(selectedAvatar)}
@@ -446,6 +727,13 @@ export default function Home() {
                   シナリオ選択
                 </h2>
                 <div className="flex gap-2">
+                  <button
+                    onClick={() => isDemoPlaying ? stopDemo() : startDemo('full')}
+                    className="px-3 py-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all flex items-center gap-2"
+                  >
+                    <span>{isDemoPlaying ? '⏸️' : '▶️'}</span>
+                    {isDemoPlaying ? 'デモ停止' : 'デモ'}
+                  </button>
                   <button
                     onClick={() => setIsGeneratingScenario(true)}
                     className="px-3 py-1 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-sm rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all flex items-center gap-2"
@@ -621,7 +909,7 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="flex-1 overflow-y-auto mb-3 p-3 bg-gray-900/50 rounded-xl space-y-3 custom-scrollbar">
+            <div ref={chatContainerRef} className="flex-1 overflow-y-auto mb-3 p-3 bg-gray-900/50 rounded-xl space-y-3 custom-scrollbar">
               {messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-gray-500 text-center">

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-// Kuromoji変換は一時的に無効化（イントネーション問題のため）
-// import { convertTextForSpeech } from '@/lib/kuromojiConverter';
+// 包括的な医療辞書を使用
+import { medicalDictionary } from '@/lib/medicalDictionary';
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID;
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   console.log('ElevenLabs API called');
   
   try {
-    const { text, emotion = 'neutral' } = await request.json();
+    const { text, emotion = 'neutral', voiceId } = await request.json();
     
     if (!text) {
       return NextResponse.json(
@@ -18,28 +18,56 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!ELEVENLABS_API_KEY || !ELEVENLABS_VOICE_ID) {
+    // voiceIdが指定されていればそれを使用、なければ環境変数から取得
+    const selectedVoiceId = voiceId || ELEVENLABS_VOICE_ID;
+
+    if (!ELEVENLABS_API_KEY || !selectedVoiceId) {
       console.error('ElevenLabs configuration check:');
       console.error('- API Key exists:', !!ELEVENLABS_API_KEY);
       console.error('- API Key length:', ELEVENLABS_API_KEY?.length);
-      console.error('- Voice ID exists:', !!ELEVENLABS_VOICE_ID);
-      console.error('- Voice ID:', ELEVENLABS_VOICE_ID);
+      console.error('- Voice ID exists:', !!selectedVoiceId);
+      console.error('- Voice ID:', selectedVoiceId);
       return NextResponse.json(
         { error: 'ElevenLabs APIが設定されていません' },
         { status: 500 }
       );
     }
 
-    // ElevenLabsが日本語をより正確に読むためのテキスト処理
+    // 辞書ベースでテキストを音声用に変換
     let processedTextForTTS: string = text;
     
     // テキストの正規化（不要なスペースを削除）
     processedTextForTTS = processedTextForTTS.trim().replace(/　+/g, ' ').replace(/ +/g, ' ');
     
-    // 日本語のイントネーションを改善するための処理
-    // 1. 漢字とひらがなを混在させる（ElevenLabsは漢字も読める）
-    // 2. 重要な単語のみひらがな化
+    // 包括的な医療辞書を使用して変換
+    // 長い単語から優先的に処理
+    const sortedWords = Object.entries(medicalDictionary)
+      .sort((a, b) => b[0].length - a[0].length);
     
+    // 生年月日の変換をデバッグ
+    if (processedTextForTTS.includes('生年月日')) {
+      console.log('生年月日 found in text before conversion');
+    }
+    
+    for (const [kanji, hiragana] of sortedWords) {
+      // 特殊文字をエスケープ
+      const escapedKanji = kanji.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const beforeReplace = processedTextForTTS;
+      processedTextForTTS = processedTextForTTS.replace(new RegExp(escapedKanji, 'g'), hiragana);
+      
+      // 生年月日の変換をログ
+      if (kanji === '生年月日' && beforeReplace !== processedTextForTTS) {
+        console.log(`Successfully replaced '生年月日' with 'せいねんがっぴ'`);
+      }
+    }
+    
+    // 変換後の生年月日を確認
+    if (processedTextForTTS.includes('せいねんがっぴ')) {
+      console.log('せいねんがっぴ found in text after conversion');
+    }
+    
+    // 以下は古い辞書（コメントアウト済み）
+    /*
     // 特定の読み間違いやすい単語のみ変換（最小限に抑える）
     const difficultWords: { [key: string]: string } = {
       // より長いフレーズを最優先
@@ -72,6 +100,10 @@ export async function POST(request: NextRequest) {
       '抜歯の': 'ばっしの',
       '抜歯': 'ばっし',
       // 歯科関連の重要単語（より長いフレーズを優先）
+      '歯科医師': 'しかいし',  // 「歯科医師」を「しかいし」に
+      '歯科医院': 'しかいいん',  // 「歯科医院」を「しかいいん」に
+      '歯科医': 'しかい',  // 「歯科医」を「しかい」に
+      '歯科': 'しか',  // 「歯科」を「しか」に
       '歯が痛くて': 'はがいたくて',  // フレーズ全体で変換
       '歯が痛い': 'はがいたい',
       '歯が痛む': 'はがいたむ',
@@ -109,6 +141,11 @@ export async function POST(request: NextRequest) {
       '治す': 'なおす',
       '治して': 'なおして',
       // その他の読み間違いやすい漢字
+      '医師': 'いし',  // 「医師」を「いし」に
+      '医者': 'いしゃ',  // 「医者」を「いしゃ」に
+      '医院': 'いいん',  // 「医院」を「いいん」に
+      '病院': 'びょういん',  // 「病院」を「びょういん」に
+      '患者': 'かんじゃ',  // 「患者」を「かんじゃ」に
       '痛み止め': 'いたみどめ',
       '腫れ': 'はれ',
       '腫れて': 'はれて',
@@ -218,7 +255,10 @@ export async function POST(request: NextRequest) {
     for (const [kanji, hiragana] of sortedWords) {
       processedTextForTTS = processedTextForTTS.replace(new RegExp(kanji, 'g'), hiragana);
     }
+    */
     
+    // Kuromoji.js使用時は数字変換も不要
+    /*
     // 数字の処理（より詳細な変換）
     // 基本的な数字を日本語に変換
     const numberToJapanese: { [key: string]: string } = {
@@ -286,9 +326,10 @@ export async function POST(request: NextRequest) {
         return `${num}ふん`;
       })
       .replace(/(\d+)秒/g, '$1びょう');
+    */
     
-    console.log('Original text:', text.substring(0, 50) + '...');
-    console.log('Processed for TTS:', processedTextForTTS.substring(0, 50) + '...');
+    console.log('Original text:', text);
+    console.log('Processed for TTS (Dictionary):', processedTextForTTS);
 
     // 感情に応じたvoice_settingsを設定（日本語用に最適化）
     let voiceSettings: any = {
@@ -382,12 +423,11 @@ export async function POST(request: NextRequest) {
 
     console.log(`Generating speech with emotion: ${emotion}`);
     console.log('Voice settings:', JSON.stringify(voiceSettings, null, 2));
-    console.log('Original text:', text.substring(0, 100));
-    console.log('Processed text:', processedText.substring(0, 100));
+    console.log('Final text to ElevenLabs:', processedText);
 
     // ElevenLabs API呼び出し（ひらがなテキストを使用）
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}`,
       {
         method: 'POST',
         headers: {
