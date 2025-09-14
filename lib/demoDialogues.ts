@@ -12,7 +12,7 @@ export const demoDialogues: DemoDialogue[] = [
   { speaker: 'patient', text: 'こんにちは。よろしくお願いします。', delay: 2000 },
   { speaker: 'doctor', text: 'お名前を確認させていただけますか？', delay: 2000 },
   { speaker: 'patient', text: '山田太郎です。', delay: 2000 },
-  { speaker: 'doctor', text: '生年月日も教えていただけますか？', delay: 2000 },
+  { speaker: 'doctor', text: '生年月日を教えていただけますか？', delay: 2000 },
   { speaker: 'patient', text: '1990年5月15日生まれです。', delay: 2500 },
   
   // 主訴

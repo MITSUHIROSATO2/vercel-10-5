@@ -30,7 +30,8 @@ import EvaluationList from '@/components/EvaluationList';
 import InterviewEvaluation from '@/components/InterviewEvaluation';
 import ScenarioEditor from '@/components/ScenarioEditor';
 import ScenarioGenerator from '@/components/ScenarioGenerator';
-import { demoDialogues, shortDemoDialogues, DemoDialogue } from '@/lib/demoDialogues';
+import { demoDialogues, shortDemoDialogues } from '@/lib/demoDialogues';
+import { improvedDemoDialogues, shortImprovedDemoDialogues, DemoDialogue } from '@/lib/improvedDemoDialogues';
 
 export default function Home() {
   const [messages, setMessages] = useState<PatientMessage[]>([]);
@@ -64,6 +65,7 @@ export default function Home() {
   const [isDemoPlaying, setIsDemoPlaying] = useState(false);
   const [currentDemoIndex, setCurrentDemoIndex] = useState(0);
   const [demoType, setDemoType] = useState<'full' | 'short'>('short');
+  const [useImprovedDemo, setUseImprovedDemo] = useState(false); // 改善版を使うかどうか
   const demoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // デモ用の音声フック
@@ -124,7 +126,9 @@ export default function Home() {
 
   // デモンストレーション機能
   const playNextDemoDialogue = async (index: number, type: 'full' | 'short') => {
-    const dialogues = type === 'full' ? demoDialogues : shortDemoDialogues;
+    const dialogues = useImprovedDemo
+      ? (type === 'full' ? improvedDemoDialogues : shortImprovedDemoDialogues)
+      : (type === 'full' ? demoDialogues : shortDemoDialogues);
     
     if (index >= dialogues.length) {
       // デモ終了
@@ -168,16 +172,19 @@ export default function Home() {
         
         // ElevenLabs APIを呼び出す（患者用voice ID）
         console.log('🔊 ElevenLabs APIを呼び出し中...');
+        const requestBody = {
+          text: dialogue.text,
+          voiceId: patientVoiceId,
+          emotion: 'neutral' // デモでは感情をニュートラルに設定
+        };
+        console.log('📤 ElevenLabs APIリクエスト:', requestBody);
+
         const response = await fetch('/api/elevenlabs', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            text: dialogue.text,
-            voiceId: patientVoiceId,
-            emotion: 'neutral' // デモでは感情をニュートラルに設定
-          })
+          body: JSON.stringify(requestBody)
         });
         
         if (response.ok) {
@@ -217,7 +224,12 @@ export default function Home() {
             setIsSpeaking(false);
           }
         } else {
-          console.warn('❌ ElevenLabs APIエラー:', response.status);
+          const errorText = await response.text();
+          console.error('❌ ElevenLabs APIエラー:', {
+            status: response.status,
+            statusText: response.statusText,
+            error: errorText
+          });
           setIsSpeaking(false);
         }
       } catch (error) {
@@ -247,7 +259,7 @@ export default function Home() {
       }
     } else {
       // 医師の発話の場合は、アバターを動かさない
-      const doctorVoiceId = 'j210dv0vWm7fCknyQpbA'; // 医師用のElevenLabs voice ID
+      const doctorVoiceId = 'PmgfHCGeS5b7sH90BOOJ'; // 医師用のElevenLabs voice ID
       
       let audioPlayed = false;
       
@@ -728,11 +740,24 @@ export default function Home() {
                 </h2>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => isDemoPlaying ? stopDemo() : startDemo('full')}
+                    onClick={() => {
+                      setUseImprovedDemo(false);
+                      isDemoPlaying ? stopDemo() : startDemo('full');
+                    }}
                     className="px-3 py-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all flex items-center gap-2"
                   >
-                    <span>{isDemoPlaying ? '⏸️' : '▶️'}</span>
-                    {isDemoPlaying ? 'デモ停止' : 'デモ'}
+                    <span>{isDemoPlaying && !useImprovedDemo ? '⏸️' : '▶️'}</span>
+                    {isDemoPlaying && !useImprovedDemo ? '停止' : 'デモ'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setUseImprovedDemo(true);
+                      isDemoPlaying ? stopDemo() : startDemo('full');
+                    }}
+                    className="px-3 py-1 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white text-sm rounded-lg hover:from-cyan-700 hover:to-cyan-800 transition-all flex items-center gap-2"
+                  >
+                    <span>{isDemoPlaying && useImprovedDemo ? '⏸️' : '▶️'}</span>
+                    {isDemoPlaying && useImprovedDemo ? '停止' : 'フルデモ'}
                   </button>
                   <button
                     onClick={() => setIsGeneratingScenario(true)}
