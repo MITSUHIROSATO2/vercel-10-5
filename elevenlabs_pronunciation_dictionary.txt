@@ -1,0 +1,244 @@
+# ElevenLabs Pronunciation Dictionary for Japanese Medical/Dental Terms
+# Format: word phonemes
+# IPA notation for Japanese pronunciation
+
+# 基本的な挨拶
+こんにちは konnichiwa
+よろしくお願いします joɾoʃikɯ oneɡai ʃimasɯ
+ありがとうございます aɾiɡatoː ɡozaimasɯ
+失礼します ʃitsɯɾeː ʃimasɯ
+お大事に odaidʒi ni
+
+# 医療・歯科用語
+歯 ha
+歯科 ʃika
+歯医者 haiʃa
+虫歯 mɯʃiba
+歯周病 ʃiʃɯːbjoː
+歯茎 haɡɯki
+歯肉 ʃinikɯ
+親知らず ojaʃiɾazɯ
+抜歯 bassi
+神経 ʃinkeː
+麻酔 masɯi
+治療 tʃiɾjoː
+診察 ʃinsatsɯ
+診断 ʃindan
+検査 kensa
+レントゲン ɾentoɡen
+インプラント inpɯɾanto
+ブリッジ bɯɾiddʒi
+入れ歯 iɾeba
+差し歯 saʃiba
+詰め物 tsɯmemono
+被せ物 kabɯsemono
+クラウン kɯɾaɯn
+セラミック seɾamikkɯ
+フッ素 fɯsso
+歯石 ʃiseki
+プラーク pɯɾaːkɯ
+歯垢 ʃikoː
+歯磨き hamigaki
+うがい ɯɡai
+消毒 ʃoːdokɯ
+炎症 enʃoː
+腫れ haɾe
+出血 ʃɯkketsɯ
+膿 ɯmi
+口内炎 koːnaien
+顎 aɡo
+顎関節症 ɡakɯkansetsɯʃoː
+噛み合わせ kamiawase
+矯正 kjoːseː
+ホワイトニング howaitoninɡɯ
+
+# 症状関連
+痛い itai
+痛み itami
+痛む itamɯ
+しみる ʃimiɾɯ
+ズキズキ zɯkizɯki
+ジンジン dʒindʒin
+腫れる haɾeɾɯ
+血が出る tʃi ɡa deɾɯ
+噛めない kamenai
+噛むと痛い kamɯ to itai
+冷たいものがしみる tsɯmetai mono ɡa ʃimiɾɯ
+熱いものがしみる atsɯi mono ɡa ʃimiɾɯ
+
+# 身体部位
+口 kɯtʃi
+舌 ʃita
+唇 kɯtʃibiɾɯ
+頬 hoho
+喉 nodo
+顔 kao
+頭 atama
+首 kɯbi
+
+# 薬品名（カタカナ）
+ロキソニン ɾokisonin
+ボルタレン boɾɯtaɾen
+カロナール kaɾonaːɾɯ
+イブプロフェン ibɯpɯɾofen
+アセトアミノフェン asetoaminofen
+リドカイン ɾidokain
+キシロカイン kiʃiɾokain
+ペニシリン peniʃiɾin
+アモキシシリン amokiʃiʃiɾin
+クラビット kɯɾabitto
+ジスロマック dʒisɯɾomakkɯ
+
+# 時間・頻度
+今日 kjoː
+昨日 kinoː
+明日 aʃita
+今週 konʃɯː
+先週 senʃɯː
+来週 ɾaiʃɯː
+今月 konɡetsɯ
+先月 senɡetsɯ
+来月 ɾaiɡetsɯ
+毎日 mainit͡ʃi
+時々 tokidoki
+いつも itsɯmo
+最近 saikin
+しばらく ʃibaɾakɯ
+
+# 数字関連
+一日 it͡ʃinit͡ʃi
+二日 fɯtsɯka
+三日 mikka
+四日 jokka
+五日 itsɯka
+六日 mɯika
+七日 nanoka
+八日 joːka
+九日 kokonoka
+十日 toːka
+一週間 isʃɯːkan
+二週間 niʃɯːkan
+一ヶ月 ikkaɡetsɯ
+二ヶ月 nikaɡetsɯ
+三ヶ月 sankaɡetsɯ
+半年 hantoʃi
+一年 it͡ʃinen
+
+# 日常生活
+食事 ʃokɯdʒi
+食べ物 tabemono
+飲み物 nomimono
+仕事 ʃiɡoto
+睡眠 sɯimin
+運動 ɯndoː
+ストレス sɯtoɾesɯ
+疲れ tsɯkaɾe
+体調 tait͡ʃoː
+健康 kenkoː
+
+# 患者の訴えでよく使われる表現
+困っています komatte imasɯ
+心配です ʃimpai desɯ
+不安です fɯan desɯ
+大丈夫ですか daidʒoːbɯ desɯ ka
+どうしたらいいですか doː ʃitaɾa iː desɯ ka
+いつから itsɯ kaɾa
+どのくらい dono kɯɾai
+どんな感じ donna kandʒi
+なんとなく nantona kɯ
+急に kʲɯː ni
+だんだん dandan
+ずっと zɯtto
+時々 tokidoki
+たまに tama ni
+
+# 指示・説明でよく使われる表現
+開けてください akete kɯdasai
+閉じてください todʒite kɯdasai
+噛んでください kande kɯdasai
+うがいしてください ɯɡai ʃite kɯdasai
+力を抜いてください t͡ʃikaɾa o nɯite kɯdasai
+リラックスしてください ɾiɾakkɯsɯ ʃite kɯdasai
+少し待ってください sɯkoʃi matte kɯdasai
+大きく開けてください oːkikɯ akete kɯdasai
+
+# 敬語・丁寧語
+申し訳ございません moːʃiwake ɡozaimasen
+恐れ入りますが osoɾe iɾimasɯ ɡa
+お待たせしました omatase ʃimaʃita
+ご協力ください ɡo kjoːɾʲokɯ kɯdasai
+ご質問はありますか ɡo ʃitsɯmon wa aɾimasɯ ka
+
+# 特殊な読み方をする漢字
+生年月日 seːnenɡappi
+保険証 hokenshoː
+初診 ʃoshin
+再診 saiʃin
+予約 jojaku
+受付 ɯketsɯke
+会計 kaikei
+薬局 jakkʲokɯ
+処方箋 ʃohoːsen
+
+# 頻出する助詞・接続詞（正確な発音のため）
+です desɯ
+ます masɯ
+でしょう deʃoː
+だろう daɾoː
+かもしれません kamo ʃiɾemasen
+と思います to omoimasɯ
+のような no joː na
+みたいな mitai na
+など nado
+とか toka
+
+# 医療現場でよく聞き間違えられる単語
+腫瘍 ʃɯjoː
+腫れ haɾe
+神経 ʃinkeː
+心配 ʃimpai
+歯茎 haɡɯki
+歯肉 ʃinikɯ
+抜歯 bassi
+抜く nɯkɯ
+詰める tsɯmeɾɯ
+埋める ɯmeɾɯ
+
+# 痛みの表現（オノマトペ）
+ズキズキ zɯkizɯki
+ジンジン dʒindʒin
+ガンガン ɡanɡan
+チクチク t͡ʃikɯt͡ʃikɯ
+ヒリヒリ hiɾihiɾi
+ジーン dʒiːn
+ズーン zɯːn
+キリキリ kiɾikiɾi
+
+# 感情・状態
+怖い kowai
+痛い itai
+辛い tsɯɾai
+苦しい kɯɾɯʃiː
+楽 ɾakɯ
+楽になった ɾakɯ ni natta
+良くなった jokɯ natta
+悪くなった waɾɯkɯ natta
+変わらない kawaɾanai
+同じ onadʒi
+
+# よく使う動詞の活用形
+食べる tabeɾɯ
+食べられる tabeɾaɾeɾɯ
+食べられない tabeɾaɾenai
+飲む nomɯ
+飲める nomeɾɯ
+飲めない nomenai
+噛む kamɯ
+噛める kameɾɯ
+噛めない kamenai
+痛む itamɯ
+痛んでいる itande iɾɯ
+痛くない itakɯnai
+腫れる haɾeɾɯ
+腫れている haɾete iɾɯ
+腫れていない haɾete inai
