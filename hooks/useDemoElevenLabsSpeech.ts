@@ -34,6 +34,8 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
     setIsPlaying(false);
     setCurrentWord('');
     setAudioLevel(0);
+    // audioLevelRefをリセットして次回の再生を初期状態から開始
+    audioLevelRef.current = 0;
   }, []);
 
   const playDemoAudio = useCallback((base64Audio: string, text: string) => {
@@ -41,6 +43,10 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
       try {
         // 既存の音声を停止
         stopAudio();
+
+        // 初回と2回目以降で同じ動作を保証するため、refをリセット
+        audioLevelRef.current = 0;
+        wordsRef.current = [];
 
         // オーディオ要素を作成
         const audio = new Audio();
@@ -122,7 +128,7 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
                 
                 // 母音の詳細な開口度
                 const vowelMap: { [key: string]: number } = {
-                  'あ': 0.85, 'ア': 0.85, 'a': 0.85,
+                  'あ': 0.7, 'ア': 0.7, 'a': 0.7,
                   'か': 0.7, 'が': 0.7, 'カ': 0.7, 'ガ': 0.7,
                   'さ': 0.65, 'ざ': 0.65, 'サ': 0.65, 'ザ': 0.65,
                   'た': 0.7, 'だ': 0.7, 'タ': 0.7, 'ダ': 0.7,
@@ -179,8 +185,10 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
                 // 文字に対応する音声レベルを取得
                 targetLevel = vowelMap[currentChar] || 0.3;
                 
-                // ランダムな変動を追加（より自然に）
-                const variation = (Math.random() - 0.5) * 0.05;
+                // ランダムな変動を追加（テキストと文字位置でシード化して一貫性を保つ）
+                const seed = text.length + currentCharIndex;
+                const pseudoRandom = Math.sin(seed * 12.9898) * 43758.5453;
+                const variation = ((pseudoRandom - Math.floor(pseudoRandom)) - 0.5) * 0.05;
                 targetLevel = Math.max(0.1, Math.min(1, targetLevel + variation));
                 
                 // スムーズな遷移（本番と同じ）
@@ -188,9 +196,9 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
                 const smoothingFactor = 0.1; // より速い反応
                 const smoothedLevel = currentLevel * (1 - smoothingFactor) + targetLevel * smoothingFactor;
                 
-                // 微細な振動
-                const time = Date.now() / 40;
-                const vibration = Math.sin(time) * 0.015 + Math.sin(time * 2.3) * 0.01;
+                // 微細な振動（プログレスベースで一貫性を保つ）
+                const progressTime = progress * 100;
+                const vibration = Math.sin(progressTime) * 0.015 + Math.sin(progressTime * 2.3) * 0.01;
                 
                 const finalLevel = Math.max(0.15, Math.min(1, smoothedLevel + vibration));
                 
