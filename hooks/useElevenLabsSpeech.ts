@@ -110,11 +110,11 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         audioRef.current.src = '';
       }
 
-      // console.log('Requesting ElevenLabs speech synthesis...');
+      console.log('Requesting ElevenLabs speech synthesis...');
 
       // テキストから感情を検出
       const emotion = detectEmotion(text);
-      // console.log(`Detected emotion: ${emotion} for text: "${text.substring(0, 50)}..."`)
+      console.log(`Detected emotion: ${emotion} for text: "${text.substring(0, 50)}..."`)
 
       // ElevenLabs APIを呼び出し（感情パラメータ付き）
       const response = await fetch('/api/elevenlabs', {
@@ -126,12 +126,114 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       });
 
       if (!response.ok) {
+        console.warn(`ElevenLabs API error: ${response.status}. Falling back to Web Speech API.`);
+        console.log('Web Speech API available:', typeof window !== 'undefined' && window.speechSynthesis);
+        setIsLoading(false); // ローディングを終了
+        // 401 (Unauthorized/Quota exceeded) or other errors: Use Web Speech API
+        if (typeof window !== 'undefined' && window.speechSynthesis) {
+          console.log('Using Web Speech API for fallback...');
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'ja-JP';
+          utterance.rate = 1.0;
+          utterance.pitch = 1.0;
+          utterance.volume = 0.8;
+
+          utterance.onstart = () => {
+            setIsCurrentlySpeaking(true);
+            setIsLoading(false);
+          };
+
+          utterance.onend = () => {
+            setIsCurrentlySpeaking(false);
+            setCurrentWord('');
+            setSpeechProgress(100);
+            setAudioLevel(0);
+            setCurrentPhoneme('');
+            if (onEnd) onEnd();
+          };
+
+          utterance.onerror = (error) => {
+            console.error('Web Speech API error:', error);
+            setIsCurrentlySpeaking(false);
+            setIsLoading(false);
+            if (onEnd) onEnd();
+          };
+
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(utterance);
+
+          // Simple progress update
+          const duration = text.length * 100;
+          const startTime = Date.now();
+
+          const updateProgress = () => {
+            if (window.speechSynthesis.speaking) {
+              const elapsed = Date.now() - startTime;
+              const progress = Math.min((elapsed / duration) * 100, 100);
+              setSpeechProgress(progress);
+              if (onProgress) onProgress(progress);
+              requestAnimationFrame(updateProgress);
+            }
+          };
+          updateProgress();
+          return;
+        }
         throw new Error(`音声生成エラー: ${response.status}`);
       }
 
       const data = await response.json();
-      
+
       if (data.error) {
+        console.warn(`ElevenLabs API returned error: ${data.error}. Falling back to Web Speech API.`);
+        setIsLoading(false); // ローディングを終了
+        // Use Web Speech API as fallback
+        if (typeof window !== 'undefined' && window.speechSynthesis) {
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'ja-JP';
+          utterance.rate = 1.0;
+          utterance.pitch = 1.0;
+          utterance.volume = 0.8;
+
+          utterance.onstart = () => {
+            setIsCurrentlySpeaking(true);
+            setIsLoading(false);
+          };
+
+          utterance.onend = () => {
+            setIsCurrentlySpeaking(false);
+            setCurrentWord('');
+            setSpeechProgress(100);
+            setAudioLevel(0);
+            setCurrentPhoneme('');
+            if (onEnd) onEnd();
+          };
+
+          utterance.onerror = (error) => {
+            console.error('Web Speech API error:', error);
+            setIsCurrentlySpeaking(false);
+            setIsLoading(false);
+            if (onEnd) onEnd();
+          };
+
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(utterance);
+
+          // Simple progress update
+          const duration = text.length * 100;
+          const startTime = Date.now();
+
+          const updateProgress = () => {
+            if (window.speechSynthesis.speaking) {
+              const elapsed = Date.now() - startTime;
+              const progress = Math.min((elapsed / duration) * 100, 100);
+              setSpeechProgress(progress);
+              if (onProgress) onProgress(progress);
+              requestAnimationFrame(updateProgress);
+            }
+          };
+          updateProgress();
+          return;
+        }
         throw new Error(data.error);
       }
 
@@ -151,7 +253,10 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         }
         const blob = new Blob([byteArray], { type: 'audio/mpeg' });
         const audioUrl = URL.createObjectURL(blob);
-        
+
+        console.log('Audio blob size:', blob.size, 'bytes');
+        console.log('Audio URL created:', audioUrl);
+
         audio.src = audioUrl;
         audioRef.current = audio;
         
@@ -163,8 +268,8 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         // 音声を即座にロード開始
         audio.load();
       } catch (error) {
-        // console.error('Audio creation error:', error);
-        // console.error('音声の作成に失敗しました');
+        console.error('Audio creation error:', error);
+        console.error('音声の作成に失敗しました');
         setIsLoading(false);
         return;
       }
@@ -350,11 +455,17 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       
       // 再生開始時の処理
       audio.onplay = () => {
+        console.log('Audio actually playing, duration:', audio.duration, 'seconds');
+        console.log('Audio currentTime:', audio.currentTime);
+        console.log('Audio paused:', audio.paused);
+        console.log('Audio readyState:', audio.readyState);
         analyzeAudio();
       };
 
       // 再生終了
       audio.onended = () => {
+        console.log('Audio playback ended');
+        console.log('Final duration was:', audio.duration, 'seconds');
         setIsCurrentlySpeaking(false);
         setCurrentWord('');
         setSpeechProgress(100);
@@ -376,7 +487,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
 
       // エラーハンドリング
       audio.onerror = (error) => {
-        // console.error('Audio playback error:', error);
+        console.error('Audio playback error:', error);
         setIsCurrentlySpeaking(false);
         setIsLoading(false);
         if (intervalRef.current) {
@@ -406,22 +517,36 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
           // console.log('Audio not initialized yet, but will try to play anyway');
         }
         
+        // Safari対応: ブラウザ検出
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
         // 音声要素の設定
         audio.muted = false;
-        audio.volume = 0.8;
-        
+        audio.volume = 1.0;  // 音量を最大に設定
+
+        // Safari対応: playsinlineとcontrolsを設定
+        if (isSafari) {
+          audio.setAttribute('playsinline', 'true');
+          // Safariで音声を強制的に有効化
+          audio.load();
+        }
+
+        console.log('Audio volume set to:', audio.volume);
+        console.log('Audio muted status:', audio.muted);
+        console.log('Browser detected:', isSafari ? 'Safari' : 'Other');
+
         // リップシンクを先行させるため、先にスピーキング状態を設定
         setIsCurrentlySpeaking(true);
-        
+
         // 音声再生を50ms遅延（リップシンクを先行させる）
         await new Promise(resolve => setTimeout(resolve, 50));
-        
-        // 再生を試みる（シンプルに）
+
         const playPromise = audio.play();
         if (playPromise !== undefined) {
           await playPromise
             .then(() => {
-              // console.log('ElevenLabs audio playback started');
+              console.log('ElevenLabs audio playback started');
+              console.log('Browser:', isSafari ? 'Safari' : 'Other');
               audioInitializedRef.current = true;
             })
             .catch((playError) => {
@@ -430,11 +555,11 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
             });
         }
       } catch (playError: any) {
-        // console.error('ElevenLabs playback error:', playError);
-        
+        console.error('ElevenLabs playback error:', playError);
+
         // NotAllowedErrorの場合は、フォールバックとしてWeb Speech APIを使用
         if (playError.name === 'NotAllowedError') {
-          // console.warn('⚠️ 音声再生がブロックされました。Web Speech APIにフォールバックします。');
+          console.warn('⚠️ 音声再生がブロックされました。Web Speech APIにフォールバックします。');
           
           // Web Speech APIを使用してフォールバック
           if (typeof window !== 'undefined' && window.speechSynthesis) {
