@@ -58,14 +58,13 @@ const PhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
     'A39_Mouth_Smile_Right': 0.2,
     'Mouth_Widen': 0.3
   },
-  'う': { 
-    'A25_Jaw_Open': 0.2,
-    'A30_Mouth_Pucker': 0.5,
-    'A29_Mouth_Funnel': 0.3,
-    'V_Tight_O': 0.4,
-    'Mouth_Pucker': 0.4,
-    'A33_Mouth_Roll_Upper': 0.1,
-    'A34_Mouth_Roll_Lower': 0.1
+  'う': {
+    'A25_Jaw_Open': 0.25,
+    // Mouth_Puckerを完全に削除
+    'A29_Mouth_Funnel': 0.25,  // 唇を前に出す動き
+    'V_Tight_O': 0.25,         // 「お」と同じ値
+    'A33_Mouth_Roll_Upper': 0.1,  // 「お」と同じ値に増加
+    'A34_Mouth_Roll_Lower': 0.1   // 「お」と同じ値に増加
   },
   'え': { 
     'A25_Jaw_Open': 0.35,
@@ -105,12 +104,13 @@ const PhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
     'A38_Mouth_Smile_Left': 0.2,
     'A39_Mouth_Smile_Right': 0.2
   },
-  'ウ': { 
-    'A25_Jaw_Open': 0.2,
-    'A30_Mouth_Pucker': 0.5,
-    'A29_Mouth_Funnel': 0.3,
-    'V_Tight_O': 0.4,
-    'Mouth_Pucker': 0.4
+  'ウ': {
+    'A25_Jaw_Open': 0.25,
+    // Mouth_Puckerを完全に削除
+    'A29_Mouth_Funnel': 0.25,  // 唇を前に出す動き
+    'V_Tight_O': 0.25,         // 「オ」と同じ値
+    'A33_Mouth_Roll_Upper': 0.1,  // 「オ」と同じ値
+    'A34_Mouth_Roll_Lower': 0.1   // 「オ」と同じ値
   },
   'エ': { 
     'A25_Jaw_Open': 0.35,
