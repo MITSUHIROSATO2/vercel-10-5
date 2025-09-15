@@ -403,6 +403,49 @@ const singleKanjiMap: { [key: string]: string } = {
   '北': 'きた、ほく',
 };
 
+// 数字の読み方を取得するヘルパー関数
+function getNumberReading(num: number): string {
+  const readings: { [key: number]: string } = {
+    1: 'いち', 2: 'に', 3: 'さん', 4: 'よん', 5: 'ご',
+    6: 'ろく', 7: 'なな', 8: 'はち', 9: 'きゅう', 10: 'じゅう',
+    11: 'じゅういち', 12: 'じゅうに', 13: 'じゅうさん', 14: 'じゅうよん', 15: 'じゅうご',
+    16: 'じゅうろく', 17: 'じゅうなな', 18: 'じゅうはち', 19: 'じゅうきゅう', 20: 'にじゅう',
+    30: 'さんじゅう', 40: 'よんじゅう', 50: 'ごじゅう', 60: 'ろくじゅう', 70: 'ななじゅう',
+    80: 'はちじゅう', 90: 'きゅうじゅう', 100: 'ひゃく'
+  };
+
+  if (readings[num]) {
+    return readings[num];
+  }
+
+  // 2桁の数字を処理
+  if (num > 20 && num < 100) {
+    const tens = Math.floor(num / 10) * 10;
+    const ones = num % 10;
+    if (ones === 0) {
+      return readings[tens];
+    }
+    return readings[tens] + readings[ones];
+  }
+
+  // それ以外はそのまま返す
+  return num.toString();
+}
+
+// 半角数字を日本語の読みに変換するヘルパー関数
+function convertHalfWidthNumbers(text: string): string {
+  // 単独の半角数字を変換（単位がついていないもの）
+  text = text.replace(/\b(\d+)\b(?![年月日時分秒歳円人個本枚回度番階丁目])/g, (match, p1) => {
+    const num = parseInt(p1);
+    if (num >= 0 && num <= 100) {
+      return getNumberReading(num);
+    }
+    return match;
+  });
+
+  return text;
+}
+
 // 自然な音声のための追加処理
 function addNaturalPauses(text: string): string {
   // 句読点の後に短いポーズを追加
@@ -425,7 +468,49 @@ function addNaturalPauses(text: string): string {
 
 // 数字の読み方を処理
 function convertNumbers(text: string): string {
-  // 特殊な読み方
+  // 「〜日前から」のパターンを最初に処理
+  text = text.replace(/(\d+)日前から/g, (match, p1) => {
+    const num = parseInt(p1);
+    // 1-10日は特殊な読み方
+    const dayReadings: { [key: number]: string } = {
+      1: 'いちにち', 2: 'ふつか', 3: 'みっか', 4: 'よっか', 5: 'いつか',
+      6: 'むいか', 7: 'なのか', 8: 'ようか', 9: 'ここのか', 10: 'とおか'
+    };
+    const reading = dayReadings[num] || `${getNumberReading(num)}にち`;
+    return `${reading}まえから`;
+  });
+
+  // 「〜日前」「〜日後」などの複合パターンを先に処理
+  text = text.replace(/(\d+)日前/g, (match, p1) => {
+    const num = parseInt(p1);
+    // 1-10日は特殊な読み方
+    const dayReadings: { [key: number]: string } = {
+      1: 'いちにち', 2: 'ふつか', 3: 'みっか', 4: 'よっか', 5: 'いつか',
+      6: 'むいか', 7: 'なのか', 8: 'ようか', 9: 'ここのか', 10: 'とおか'
+    };
+    const reading = dayReadings[num] || `${getNumberReading(num)}にち`;
+    return `${reading}まえ`;
+  });
+  text = text.replace(/(\d+)日後/g, (match, p1) => {
+    const num = parseInt(p1);
+    const dayReadings: { [key: number]: string } = {
+      1: 'いちにち', 2: 'ふつか', 3: 'みっか', 4: 'よっか', 5: 'いつか',
+      6: 'むいか', 7: 'なのか', 8: 'ようか', 9: 'ここのか', 10: 'とおか'
+    };
+    const reading = dayReadings[num] || `${getNumberReading(num)}にち`;
+    return `${reading}ご`;
+  });
+  text = text.replace(/(\d+)日間/g, (match, p1) => {
+    const num = parseInt(p1);
+    const dayReadings: { [key: number]: string } = {
+      1: 'いちにち', 2: 'ふつか', 3: 'みっか', 4: 'よっか', 5: 'いつか',
+      6: 'むいか', 7: 'なのか', 8: 'ようか', 9: 'ここのか', 10: 'とおか'
+    };
+    const reading = dayReadings[num] || `${getNumberReading(num)}にち`;
+    return `${reading}かん`;
+  });
+
+  // 特殊な読み方（日付として）
   text = text.replace(/1日/g, 'ついたち');
   text = text.replace(/2日/g, 'ふつか');
   text = text.replace(/3日/g, 'みっか');
@@ -499,11 +584,14 @@ export function convertKanjiToHiragana(text: string): string {
   
   // 4. 数字の特殊な読み方を処理
   convertedText = convertNumbers(convertedText);
-  
-  // 5. 自然な音声のためのポーズを追加
+
+  // 5. 半角数字の読み方を処理
+  convertedText = convertHalfWidthNumbers(convertedText);
+
+  // 6. 自然な音声のためのポーズを追加
   convertedText = addNaturalPauses(convertedText);
-  
-  // 6. 不要な空白を整理
+
+  // 7. 不要な空白を整理
   convertedText = convertedText.replace(/　+/g, '　');
   convertedText = convertedText.trim();
   

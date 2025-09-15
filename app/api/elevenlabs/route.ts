@@ -38,7 +38,12 @@ export async function POST(request: NextRequest) {
     
     // テキストの正規化（不要なスペースを削除）
     processedTextForTTS = processedTextForTTS.trim().replace(/　+/g, ' ').replace(/ +/g, ' ');
-    
+
+    // 3日前の変換前のテキストを確認
+    if (processedTextForTTS.includes('3日')) {
+      console.log(`Text before conversion contains '3日': "${processedTextForTTS}"`);
+    }
+
     // 包括的な医療辞書を使用して変換
     // 長い単語から優先的に処理
     const sortedWords = Object.entries(medicalDictionary)
@@ -54,16 +59,26 @@ export async function POST(request: NextRequest) {
       const escapedKanji = kanji.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const beforeReplace = processedTextForTTS;
       processedTextForTTS = processedTextForTTS.replace(new RegExp(escapedKanji, 'g'), hiragana);
-      
+
       // 生年月日の変換をログ
       if (kanji === '生年月日' && beforeReplace !== processedTextForTTS) {
         console.log(`Successfully replaced '生年月日' with 'せいねんがっぴ'`);
+      }
+
+      // 3日前の変換をデバッグ
+      if ((kanji.includes('3日') || kanji === '3日') && beforeReplace !== processedTextForTTS) {
+        console.log(`Replaced '${kanji}' with '${hiragana}' - Before: "${beforeReplace}" After: "${processedTextForTTS}"`);
       }
     }
     
     // 変換後の生年月日を確認
     if (processedTextForTTS.includes('せいねんがっぴ')) {
       console.log('せいねんがっぴ found in text after conversion');
+    }
+
+    // 変換後の3日の最終結果を確認
+    if (text.includes('3日')) {
+      console.log(`Final converted text for ElevenLabs: "${processedTextForTTS}"`);
     }
     
     // 以下は古い辞書（コメントアウト済み）

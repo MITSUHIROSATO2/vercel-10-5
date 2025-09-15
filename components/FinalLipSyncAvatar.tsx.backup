@@ -145,6 +145,7 @@ const PhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
   },
   'む': { 
     'A37_Mouth_Close': 0.25,
+    'A30_Mouth_Pucker': 0.2,
     'A25_Jaw_Open': 0.1,
     'A48_Mouth_Press_Left': 0.15,
     'A49_Mouth_Press_Right': 0.15
@@ -165,7 +166,7 @@ const PhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
   // ば行・ぱ行（破裂音）
   'ば': { 'V_Explosive': 0.4, 'A25_Jaw_Open': 0.5, 'V_Open': 0.3 },
   'び': { 'V_Explosive': 0.3, 'A25_Jaw_Open': 0.15, 'V_Wide': 0.3 },
-  'ぶ': { 'V_Explosive': 0.3, 'A25_Jaw_Open': 0.2 },
+  'ぶ': { 'V_Explosive': 0.3, 'A25_Jaw_Open': 0.2, 'A30_Mouth_Pucker': 0.3 },
   'べ': { 'V_Explosive': 0.3, 'A25_Jaw_Open': 0.3, 'V_Wide': 0.2 },
   'ぼ': { 'V_Explosive': 0.3, 'A25_Jaw_Open': 0.4, 'A29_Mouth_Funnel': 0.3 },
   
@@ -179,7 +180,7 @@ const PhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
   // さ行（摩擦音）
   'さ': { 'V_Tight': 0.2, 'A25_Jaw_Open': 0.4, 'V_Open': 0.2, 'V_Dental_Lip': 0.1 },
   'し': { 'V_Tight': 0.3, 'A25_Jaw_Open': 0.1, 'V_Wide': 0.2, 'V_Affricate': 0.2 },
-  'す': { 'V_Tight': 0.3, 'A25_Jaw_Open': 0.15, 'V_Tight_O': 0.2 },
+  'す': { 'V_Tight': 0.3, 'A25_Jaw_Open': 0.15, 'V_Tight_O': 0.2, 'A30_Mouth_Pucker': 0.1 },
   'せ': { 'V_Tight': 0.2, 'A25_Jaw_Open': 0.25, 'V_Wide': 0.15 },
   'そ': { 'V_Tight': 0.2, 'A25_Jaw_Open': 0.35, 'V_Tight_O': 0.15 },
   
@@ -348,7 +349,9 @@ const BoyPhonemeMap: { [key: string]: { [morphName: string]: number } } = {
   },
   'う': { 
     'Move_Jaw_Down': 0.15,
+    'Mouth_Pucker': 0.55,
     'V_Tight_O': 0.45,
+    'Mouth_Pucker_Open': 0.3,
     'V_Tight': 0.35,
     'Mouth_Blow': 0.2
   },
@@ -365,6 +368,7 @@ const BoyPhonemeMap: { [key: string]: { [morphName: string]: number } } = {
     'V_Open': 0.3,
     'V_Tight_O': 0.35,
     'Mouth_Open': 0.25,
+    'Mouth_Pucker': 0.2,
     'Mouth_Blow': 0.15
   },
   // カタカナも同様
@@ -388,7 +392,9 @@ const BoyPhonemeMap: { [key: string]: { [morphName: string]: number } } = {
   },
   'ウ': { 
     'Move_Jaw_Down': 0.15,
+    'Mouth_Pucker': 0.55,
     'V_Tight_O': 0.45,
+    'Mouth_Pucker_Open': 0.3,
     'V_Tight': 0.35,
     'Mouth_Blow': 0.2
   },
@@ -405,6 +411,7 @@ const BoyPhonemeMap: { [key: string]: { [morphName: string]: number } } = {
     'V_Open': 0.3,
     'V_Tight_O': 0.35,
     'Mouth_Open': 0.25,
+    'Mouth_Pucker': 0.2,
     'Mouth_Blow': 0.15
   }
 };
@@ -438,9 +445,11 @@ const BoyImprovedPhonemeMap: { [key: string]: { [morphName: string]: number } } 
   'う': { 
     'A25_Jaw_Open': 0.12,
     'A29_Mouth_Funnel': 0.35,
+    'A30_Mouth_Pucker': 0.45,
     'A33_Mouth_Roll_Upper': 0.08,
     'A34_Mouth_Roll_Lower': 0.08,
     'V_Tight_O': 0.4,
+    'Mouth_Pucker_Open': 0.25,
     'Mouth_Blow': 0.15,
     'T04_Tongue_Right': 0.05,  // 舌を少し後退
     'T08_Tongue_Width': -0.1  // 舌を細く
@@ -459,6 +468,7 @@ const BoyImprovedPhonemeMap: { [key: string]: { [morphName: string]: number } } 
   'お': { 
     'A25_Jaw_Open': 0.25,
     'A29_Mouth_Funnel': 0.3,
+    'A30_Mouth_Pucker': 0.25,
     'A33_Mouth_Roll_Upper': 0.08,
     'A34_Mouth_Roll_Lower': 0.08,
     'V_Open': 0.25,
@@ -493,9 +503,11 @@ const BoyImprovedPhonemeMap: { [key: string]: { [morphName: string]: number } } 
   'ウ': { 
     'A25_Jaw_Open': 0.12,
     'A29_Mouth_Funnel': 0.35,
+    'A30_Mouth_Pucker': 0.45,
     'A33_Mouth_Roll_Upper': 0.08,
     'A34_Mouth_Roll_Lower': 0.08,
     'V_Tight_O': 0.4,
+    'Mouth_Pucker_Open': 0.25,
     'Mouth_Blow': 0.15,
     'T04_Tongue_Right': 0.05,
     'T08_Tongue_Width': -0.1
@@ -514,6 +526,7 @@ const BoyImprovedPhonemeMap: { [key: string]: { [morphName: string]: number } } 
   'オ': { 
     'A25_Jaw_Open': 0.25,
     'A29_Mouth_Funnel': 0.3,
+    'A30_Mouth_Pucker': 0.25,
     'A33_Mouth_Roll_Upper': 0.08,
     'A34_Mouth_Roll_Lower': 0.08,
     'V_Open': 0.25,
@@ -549,10 +562,13 @@ const AdultImprovedPhonemeMap: { [key: string]: { [morphName: string]: number } 
   },
   'う': { 
     'A25_Jaw_Open': 0.12,
+    'A30_Mouth_Pucker': 0.6,
     'A29_Mouth_Funnel': 0.4,
     'V_Tight_O': 0.5,
+    'Mouth_Pucker': 0.5,
     'A33_Mouth_Roll_Upper': 0.18,
     'A34_Mouth_Roll_Lower': 0.18,
+    'Mouth_Pucker_Open': 0.3
   },
   'え': { 
     'A25_Jaw_Open': 0.28,
@@ -598,10 +614,13 @@ const AdultImprovedPhonemeMap: { [key: string]: { [morphName: string]: number } 
   },
   'ウ': { 
     'A25_Jaw_Open': 0.12,
+    'A30_Mouth_Pucker': 0.6,
     'A29_Mouth_Funnel': 0.4,
     'V_Tight_O': 0.5,
+    'Mouth_Pucker': 0.5,
     'A33_Mouth_Roll_Upper': 0.18,
     'A34_Mouth_Roll_Lower': 0.18,
+    'Mouth_Pucker_Open': 0.3
   },
   'エ': { 
     'A25_Jaw_Open': 0.28,
@@ -2166,7 +2185,7 @@ function AvatarModel({
               });
               
               // 詳細な口の形状
-              const mouthMorphs = ['Mouth_Blow',
+              const mouthMorphs = ['Mouth_Blow', 'Mouth_Pucker', 'Mouth_Pucker_Open',
                                   'Mouth_Widen', 'Mouth_Widen_Sides', 'Mouth_Plosive',
                                   'Mouth_Lips_Tight', 'Mouth_Lips_Tuck', 'Mouth_Lips_Part',
                                   'Mouth_Bottom_Lip_Under', 'Mouth_Top_Lip_Under',
