@@ -12,6 +12,7 @@ interface EvaluationCriteria {
 interface EvaluationCriteriaEditorProps {
   onClose: () => void;
   onSave?: () => void;
+  language?: 'ja' | 'en';
 }
 
 const defaultCriteria: EvaluationCriteria[] = [
@@ -49,24 +50,24 @@ const defaultCriteria: EvaluationCriteria[] = [
   { category: 'closing', item: '面接終了後、患者が次にどうしたら良いかを適切に伝える', priority: 'high' },
 ];
 
-const categoryLabels: { [key: string]: string } = {
-  interpersonal: '対人関係能力',
-  overall: '全体',
-  opening: '導入',
-  medicalInfo: '医学的情報',
-  psychosocial: '心理社会的側面',
-  closing: '締めくくり'
+const categoryLabels: { [key: string]: { ja: string; en: string } } = {
+  interpersonal: { ja: '対人関係能力', en: 'Interpersonal Skills' },
+  overall: { ja: '全体', en: 'Overall' },
+  opening: { ja: '導入', en: 'Opening' },
+  medicalInfo: { ja: '医学的情報', en: 'Medical Information' },
+  psychosocial: { ja: '心理社会的側面', en: 'Psychosocial Aspects' },
+  closing: { ja: '締めくくり', en: 'Closing' }
 };
 
-const subcategoryLabels: { [key: string]: string } = {
-  verbal: '言語的',
-  overall: '全般',
-  chiefComplaint: '主訴',
-  history: '病歴',
-  lifestyle: '生活習慣'
+const subcategoryLabels: { [key: string]: { ja: string; en: string } } = {
+  verbal: { ja: '言語的', en: 'Verbal' },
+  overall: { ja: '全般', en: 'General' },
+  chiefComplaint: { ja: '主訴', en: 'Chief Complaint' },
+  history: { ja: '病歴', en: 'Medical History' },
+  lifestyle: { ja: '生活習慣', en: 'Lifestyle' }
 };
 
-export default function EvaluationCriteriaEditor({ onClose, onSave }: EvaluationCriteriaEditorProps) {
+export default function EvaluationCriteriaEditor({ onClose, onSave, language = 'ja' }: EvaluationCriteriaEditorProps) {
   const [criteria, setCriteria] = useState<EvaluationCriteria[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -95,14 +96,14 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
   };
 
   const handleReset = () => {
-    if (window.confirm('デフォルトの評価項目に戻しますか？')) {
+    if (window.confirm(language === 'ja' ? 'デフォルトの評価項目に戻しますか？' : 'Reset to default evaluation criteria?')) {
       setCriteria(defaultCriteria);
       localStorage.removeItem('evaluationCriteria');
     }
   };
 
   const handleDelete = (index: number) => {
-    if (window.confirm('この評価項目を削除しますか？')) {
+    if (window.confirm(language === 'ja' ? 'この評価項目を削除しますか？' : 'Delete this evaluation criterion?')) {
       const newCriteria = [...criteria];
       newCriteria.splice(index, 1);
       setCriteria(newCriteria);
@@ -121,7 +122,7 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
 
   const handleAdd = () => {
     if (!newItem.item.trim()) {
-      alert('評価項目を入力してください');
+      alert(language === 'ja' ? '評価項目を入力してください' : 'Please enter an evaluation criterion');
       return;
     }
     setCriteria([...criteria, newItem]);
@@ -147,9 +148,9 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
   };
 
   const priorityLabels = {
-    high: '高',
-    medium: '中',
-    low: '低'
+    high: language === 'ja' ? '高' : 'High',
+    medium: language === 'ja' ? '中' : 'Medium',
+    low: language === 'ja' ? '低' : 'Low'
   };
 
   return (
@@ -159,7 +160,7 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
         <div className="bg-gradient-to-r from-cyan-600 to-blue-600 p-4 flex justify-between items-center">
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
             <span>⚙️</span>
-            評価項目編集
+            {language === 'ja' ? '評価項目編集' : 'Edit Evaluation Criteria'}
           </h2>
           <button
             onClick={onClose}
@@ -179,7 +180,7 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
             }`}
           >
-            すべて
+            {language === 'ja' ? 'すべて' : 'All'}
           </button>
           {Object.entries(categoryLabels).map(([key, label]) => (
             <button
@@ -191,7 +192,7 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
-              {label}
+              {label[language]}
             </button>
           ))}
         </div>
@@ -218,15 +219,15 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
                         onChange={(e) => handleUpdate(index, 'priority', e.target.value)}
                         className="p-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-cyan-400 focus:outline-none"
                       >
-                        <option value="high">優先度: 高</option>
-                        <option value="medium">優先度: 中</option>
-                        <option value="low">優先度: 低</option>
+                        <option value="high">{language === 'ja' ? '優先度: 高' : 'Priority: High'}</option>
+                        <option value="medium">{language === 'ja' ? '優先度: 中' : 'Priority: Medium'}</option>
+                        <option value="low">{language === 'ja' ? '優先度: 低' : 'Priority: Low'}</option>
                       </select>
                       <button
                         onClick={() => setEditingIndex(null)}
                         className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 transition-colors"
                       >
-                        完了
+                        {language === 'ja' ? '完了' : 'Done'}
                       </button>
                     </div>
                   </div>
@@ -235,8 +236,8 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-xs text-cyan-400">
-                          {categoryLabels[item.category]}
-                          {item.subcategory && ` / ${subcategoryLabels[item.subcategory]}`}
+                          {categoryLabels[item.category]?.[language] || item.category}
+                          {item.subcategory && ` / ${subcategoryLabels[item.subcategory]?.[language] || item.subcategory}`}
                         </span>
                         <span className={`text-xs px-2 py-1 rounded ${getPriorityColor(item.priority)}`}>
                           {priorityLabels[item.priority as keyof typeof priorityLabels]}
@@ -267,7 +268,7 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
           {/* 新規追加フォーム */}
           {showAddForm && (
             <div className="mt-4 bg-gray-800/50 border border-cyan-500/50 rounded-lg p-4 space-y-3">
-              <h3 className="text-cyan-400 font-semibold">新規評価項目を追加</h3>
+              <h3 className="text-cyan-400 font-semibold">{language === 'ja' ? '新規評価項目を追加' : 'Add New Evaluation Criterion'}</h3>
               <div className="space-y-2">
                 <select
                   value={newItem.category}
@@ -275,12 +276,12 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
                   className="w-full p-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-cyan-400 focus:outline-none"
                 >
                   {Object.entries(categoryLabels).map(([key, label]) => (
-                    <option key={key} value={key}>{label}</option>
+                    <option key={key} value={key}>{label[language]}</option>
                   ))}
                 </select>
                 <input
                   type="text"
-                  placeholder="評価項目を入力"
+                  placeholder={language === 'ja' ? '評価項目を入力' : 'Enter evaluation criterion'}
                   value={newItem.item}
                   onChange={(e) => setNewItem({ ...newItem, item: e.target.value })}
                   className="w-full p-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-cyan-400 focus:outline-none"
@@ -290,22 +291,22 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
                   onChange={(e) => setNewItem({ ...newItem, priority: e.target.value as 'high' | 'medium' | 'low' })}
                   className="w-full p-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-cyan-400 focus:outline-none"
                 >
-                  <option value="high">優先度: 高</option>
-                  <option value="medium">優先度: 中</option>
-                  <option value="low">優先度: 低</option>
+                  <option value="high">{language === 'ja' ? '優先度: 高' : 'Priority: High'}</option>
+                  <option value="medium">{language === 'ja' ? '優先度: 中' : 'Priority: Medium'}</option>
+                  <option value="low">{language === 'ja' ? '優先度: 低' : 'Priority: Low'}</option>
                 </select>
                 <div className="flex gap-2">
                   <button
                     onClick={handleAdd}
                     className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 transition-colors"
                   >
-                    追加
+                    {language === 'ja' ? '追加' : 'Add'}
                   </button>
                   <button
                     onClick={() => setShowAddForm(false)}
                     className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
                   >
-                    キャンセル
+                    {language === 'ja' ? 'キャンセル' : 'Cancel'}
                   </button>
                 </div>
               </div>
@@ -320,13 +321,13 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
               onClick={() => setShowAddForm(true)}
               className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all"
             >
-              + 項目を追加
+              {language === 'ja' ? '+ 項目を追加' : '+ Add Item'}
             </button>
             <button
               onClick={handleReset}
               className="px-4 py-2 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-lg hover:from-orange-700 hover:to-red-700 transition-all"
             >
-              デフォルトに戻す
+              {language === 'ja' ? 'デフォルトに戻す' : 'Reset to Default'}
             </button>
           </div>
           <div className="flex gap-2">
@@ -334,13 +335,13 @@ export default function EvaluationCriteriaEditor({ onClose, onSave }: Evaluation
               onClick={onClose}
               className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
             >
-              キャンセル
+              {language === 'ja' ? 'キャンセル' : 'Cancel'}
             </button>
             <button
               onClick={handleSave}
               className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-lg hover:from-cyan-700 hover:to-blue-700 transition-all"
             >
-              保存
+              {language === 'ja' ? '保存' : 'Save'}
             </button>
           </div>
         </div>

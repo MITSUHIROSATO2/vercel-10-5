@@ -55,6 +55,7 @@ export default function Home() {
   const [selectedAvatar, setSelectedAvatar] = useState<'adult' | 'boy' | 'boy_improved' | 'female'>('boy');
   const [isAvatarLoaded, setIsAvatarLoaded] = useState(false);
   const [language, setLanguage] = useState<'ja' | 'en'>('ja'); // 言語設定を追加
+  const languageRef = useRef<'ja' | 'en'>('ja'); // 最新の言語値を保持
   
   // タイマー関連の状態
   const [interviewTime, setInterviewTime] = useState(0);
@@ -128,20 +129,41 @@ export default function Home() {
     };
   }, [stopDemoAudio]);
 
+  // 言語変更を追跡
+  useEffect(() => {
+    console.log('🌐 Language changed to:', language);
+    languageRef.current = language; // useRefも更新
+  }, [language]);
+
+  // デモ開始時に最初の発話を開始
+  useEffect(() => {
+    if (isDemoPlaying && currentDemoIndex === 0 && demoType) {
+      console.log('▶️ Starting demo playback with:', { demoType, demoLanguage, useImprovedDemo });
+      // 少し遅延を入れて状態が確実に更新されるのを待つ
+      const timer = setTimeout(() => {
+        playNextDemoDialogue(0, demoType);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isDemoPlaying]);
+
   // デモンストレーション機能
   const playNextDemoDialogue = async (index: number, type: 'full' | 'short') => {
-    console.log('📖 playNextDemoDialogue:', { index, type, demoLanguage, useImprovedDemo });
+    console.log('📖 playNextDemoDialogue:', {
+      index,
+      type,
+      demoLanguage,
+      demoLanguageValue: `"${demoLanguage}"`,
+      useImprovedDemo
+    });
 
-    const dialogues = useImprovedDemo
-      ? (demoLanguage === 'ja'  // demoLanguageを使用
-        ? (type === 'full' ? improvedDemoDialogues : shortImprovedDemoDialogues)
-        : (type === 'full' ? improvedDemoDialoguesEn : shortImprovedDemoDialoguesEn))
-      : (type === 'full' ? demoDialogues : shortDemoDialogues);
+    // 常に改善版デモを使用（多言語対応のため）
+    const dialogues = demoLanguage === 'ja'
+      ? (type === 'full' ? improvedDemoDialogues : shortImprovedDemoDialogues)
+      : (type === 'full' ? improvedDemoDialoguesEn : shortImprovedDemoDialoguesEn);
 
     console.log('🗣️ Selected dialogue source:',
-      useImprovedDemo
-        ? (demoLanguage === 'ja' ? 'Japanese improved' : 'English improved')
-        : 'Old Japanese demo'
+      `${demoLanguage === 'ja' ? 'Japanese' : 'English'} improved (demoLanguage="${demoLanguage}")`
     );
     if (dialogues[index]) {
       console.log('💬 Current dialogue:', dialogues[index].text.substring(0, 50) + '...');
@@ -342,12 +364,17 @@ export default function Home() {
   };
 
   // startDemo関数を追加
-  const startDemo = (type: 'full' | 'short', shouldUseImprovedDemo?: boolean) => {
-    const useImproved = shouldUseImprovedDemo !== undefined ? shouldUseImprovedDemo : useImprovedDemo;
-    console.log('🎬 Starting demo with:', { type, language, useImprovedDemo: useImproved });
+  const startDemo = (type: 'full' | 'short') => {
+    const currentLang = languageRef.current; // useRefから最新の言語値を取得
+    console.log('🎬 Starting demo with:', {
+      type,
+      currentLanguage: currentLang,
+      stateLanguage: language,
+      languageValue: `"${currentLang}"`
+    });
     setDemoType(type);
-    setDemoLanguage(language); // 現在の言語を保存
-    setUseImprovedDemo(useImproved); // デモタイプを設定
+    setDemoLanguage(currentLang); // 最新の言語を保存
+    setUseImprovedDemo(true); // 常に改善版を使用（多言語対応）
     setIsDemoPlaying(true);
     isDemoPlayingRef.current = true;
     setCurrentDemoIndex(0);
@@ -359,8 +386,7 @@ export default function Home() {
       setInterviewTime(0);
     }
 
-    // 最初の発話を開始
-    playNextDemoDialogue(0, type);
+    // 状態更新後に最初の発話を開始（useEffectで処理される）
   };
 
   // デモ停止時のクリーンアップ
@@ -692,7 +718,10 @@ export default function Home() {
                   {/* 言語切り替えボタン - 左端 */}
                   <div className="absolute top-4 left-4 z-10 flex gap-2">
                     <button
-                      onClick={() => setLanguage('ja')}
+                      onClick={() => {
+                        console.log('🇯🇵 Switching to Japanese (current:', language, ')');
+                        setLanguage('ja');
+                      }}
                       className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                         language === 'ja'
                           ? 'bg-blue-600 text-white shadow-lg'
@@ -702,7 +731,10 @@ export default function Home() {
                       日本語版
                     </button>
                     <button
-                      onClick={() => setLanguage('en')}
+                      onClick={() => {
+                        console.log('🇬🇧 Switching to English (current:', language, ')');
+                        setLanguage('en');
+                      }}
                       className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                         language === 'en'
                           ? 'bg-blue-600 text-white shadow-lg'
@@ -792,29 +824,45 @@ export default function Home() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => {
-                      if (isDemoPlaying) {
+                      if (isDemoPlaying && demoType === 'short') {
                         stopDemo();
+                      } else if (!isDemoPlaying) {
+                        // デモが動作していない場合のみ開始
+                        startDemo('short');
                       } else {
-                        startDemo('full', false);
+                        // 他のデモが動作中の場合は一旦停止してから開始
+                        stopDemo();
+                        // 現在の言語値をキャプチャして渡す
+                        const currentLang = language;
+                        requestAnimationFrame(() => {
+                          startDemo('short');
+                        });
                       }
                     }}
                     className="px-3 py-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all flex items-center gap-2"
                   >
-                    <span>{isDemoPlaying && !useImprovedDemo ? '⏸️' : '▶️'}</span>
-                    {isDemoPlaying && !useImprovedDemo ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'デモ' : 'Demo')}
+                    <span>{isDemoPlaying && demoType === 'short' ? '⏸️' : '▶️'}</span>
+                    {isDemoPlaying && demoType === 'short' ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'デモ' : 'Demo')}
                   </button>
                   <button
                     onClick={() => {
-                      if (isDemoPlaying) {
+                      if (isDemoPlaying && demoType === 'full') {
                         stopDemo();
+                      } else if (!isDemoPlaying) {
+                        // デモが動作していない場合のみ開始
+                        startDemo('full');
                       } else {
-                        startDemo('full', true);
+                        // 他のデモが動作中の場合は一旦停止してから開始
+                        stopDemo();
+                        requestAnimationFrame(() => {
+                          startDemo('full');
+                        });
                       }
                     }}
                     className="px-3 py-1 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white text-sm rounded-lg hover:from-cyan-700 hover:to-cyan-800 transition-all flex items-center gap-2"
                   >
-                    <span>{isDemoPlaying && useImprovedDemo ? '⏸️' : '▶️'}</span>
-                    {isDemoPlaying && useImprovedDemo ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'フルデモ' : 'Full Demo')}
+                    <span>{isDemoPlaying && demoType === 'full' ? '⏸️' : '▶️'}</span>
+                    {isDemoPlaying && demoType === 'full' ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'フルデモ' : 'Full Demo')}
                   </button>
                   <button
                     onClick={() => setIsGeneratingScenario(true)}
@@ -830,6 +878,23 @@ export default function Home() {
                     <span>✏️</span>
                     {language === 'ja' ? '編集' : 'Edit'}
                   </button>
+                  {/* カスタムシナリオの場合は削除ボタンを表示 */}
+                  {customScenarios.some(s => s.id === selectedScenario.id) && (
+                    <button
+                      onClick={() => {
+                        if (confirm(language === 'ja' ? 'このシナリオを削除しますか？' : 'Delete this scenario?')) {
+                          const updatedCustomScenarios = customScenarios.filter(s => s.id !== selectedScenario.id);
+                          setCustomScenarios(updatedCustomScenarios);
+                          localStorage.setItem('customScenarios', JSON.stringify(updatedCustomScenarios));
+                          setSelectedScenario(patientScenarios[0]);
+                        }
+                      }}
+                      className="px-3 py-1 bg-gradient-to-r from-red-600 to-red-700 text-white text-sm rounded-lg hover:from-red-700 hover:to-red-800 transition-all flex items-center gap-2"
+                    >
+                      <span>🗑️</span>
+                      {language === 'ja' ? '削除' : 'Delete'}
+                    </button>
+                  )}
                 </div>
               </div>
               <select
@@ -1201,6 +1266,7 @@ export default function Home() {
             // 評価項目が更新されたことを通知（必要に応じて処理を追加）
             // console.log('評価項目が更新されました');
           }}
+          language={language}
         />
       )}
 
