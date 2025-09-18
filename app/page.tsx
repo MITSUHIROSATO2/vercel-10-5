@@ -22,6 +22,7 @@ const FinalLipSyncAvatar = dynamic(
 );
 import { patientScenarios, formatScenarioForAI } from '@/lib/scenarios';
 import type { PatientScenario } from '@/lib/scenarioTypes';
+import { getTranslatedScenario } from '@/lib/scenariosEnglish';
 import { PatientMessage } from '@/lib/openai';
 import type { InterviewEvaluation as EvaluationType } from '@/lib/evaluationTypes';
 import AIEvaluationResult from '@/components/AIEvaluationResult';
@@ -32,6 +33,7 @@ import ScenarioEditor from '@/components/ScenarioEditor';
 import ScenarioGenerator from '@/components/ScenarioGenerator';
 import { demoDialogues, shortDemoDialogues } from '@/lib/demoDialogues';
 import { improvedDemoDialogues, shortImprovedDemoDialogues, DemoDialogue } from '@/lib/improvedDemoDialogues';
+import { improvedDemoDialoguesEn, shortImprovedDemoDialoguesEn } from '@/lib/improvedDemoDialoguesEnglish';
 
 export default function Home() {
   const [messages, setMessages] = useState<PatientMessage[]>([]);
@@ -52,6 +54,7 @@ export default function Home() {
   const [latestResponse, setLatestResponse] = useState<string>('');
   const [selectedAvatar, setSelectedAvatar] = useState<'adult' | 'boy' | 'boy_improved' | 'female'>('boy');
   const [isAvatarLoaded, setIsAvatarLoaded] = useState(false);
+  const [language, setLanguage] = useState<'ja' | 'en'>('ja'); // 言語設定を追加
   
   // タイマー関連の状態
   const [interviewTime, setInterviewTime] = useState(0);
@@ -66,6 +69,7 @@ export default function Home() {
   const [currentDemoIndex, setCurrentDemoIndex] = useState(0);
   const [demoType, setDemoType] = useState<'full' | 'short'>('short');
   const [useImprovedDemo, setUseImprovedDemo] = useState(false); // 改善版を使うかどうか
+  const [demoLanguage, setDemoLanguage] = useState<'ja' | 'en'>('ja'); // デモ再生時の言語を保持
   const demoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // デモ用の音声フック
@@ -126,9 +130,22 @@ export default function Home() {
 
   // デモンストレーション機能
   const playNextDemoDialogue = async (index: number, type: 'full' | 'short') => {
+    console.log('📖 playNextDemoDialogue:', { index, type, demoLanguage, useImprovedDemo });
+
     const dialogues = useImprovedDemo
-      ? (type === 'full' ? improvedDemoDialogues : shortImprovedDemoDialogues)
+      ? (demoLanguage === 'ja'  // demoLanguageを使用
+        ? (type === 'full' ? improvedDemoDialogues : shortImprovedDemoDialogues)
+        : (type === 'full' ? improvedDemoDialoguesEn : shortImprovedDemoDialoguesEn))
       : (type === 'full' ? demoDialogues : shortDemoDialogues);
+
+    console.log('🗣️ Selected dialogue source:',
+      useImprovedDemo
+        ? (demoLanguage === 'ja' ? 'Japanese improved' : 'English improved')
+        : 'Old Japanese demo'
+    );
+    if (dialogues[index]) {
+      console.log('💬 Current dialogue:', dialogues[index].text.substring(0, 50) + '...');
+    }
     
     if (index >= dialogues.length) {
       // デモ終了
@@ -175,7 +192,8 @@ export default function Home() {
         const requestBody = {
           text: dialogue.text,
           voiceId: patientVoiceId,
-          emotion: 'neutral' // デモでは感情をニュートラルに設定
+          emotion: 'neutral', // デモでは感情をニュートラルに設定
+          language: demoLanguage // demoLanguageを使用
         };
         console.log('📤 ElevenLabs APIリクエスト:', requestBody);
 
@@ -273,7 +291,8 @@ export default function Home() {
           body: JSON.stringify({
             text: dialogue.text,
             voiceId: doctorVoiceId,
-            emotion: 'neutral' // 医師も感情をニュートラルに
+            emotion: 'neutral', // 医師も感情をニュートラルに
+            language: demoLanguage // demoLanguageを使用
           })
         });
         
@@ -323,19 +342,23 @@ export default function Home() {
   };
 
   // startDemo関数を追加
-  const startDemo = (type: 'full' | 'short') => {
+  const startDemo = (type: 'full' | 'short', shouldUseImprovedDemo?: boolean) => {
+    const useImproved = shouldUseImprovedDemo !== undefined ? shouldUseImprovedDemo : useImprovedDemo;
+    console.log('🎬 Starting demo with:', { type, language, useImprovedDemo: useImproved });
     setDemoType(type);
+    setDemoLanguage(language); // 現在の言語を保存
+    setUseImprovedDemo(useImproved); // デモタイプを設定
     setIsDemoPlaying(true);
     isDemoPlayingRef.current = true;
     setCurrentDemoIndex(0);
     setMessages([]); // チャット履歴をクリア
-    
+
     // タイマーを開始
     if (!isTimerRunning) {
       setIsTimerRunning(true);
       setInterviewTime(0);
     }
-    
+
     // 最初の発話を開始
     playNextDemoDialogue(0, type);
   };
@@ -412,7 +435,7 @@ export default function Home() {
           // console.log('音声認識結果:', finalTranscript);
           handleSendMessage(finalTranscript);
         }
-      });
+      }, language);
       
       // 初回のみ音声を初期化（音声認識開始後に実行）
       if (!audioInitialized) {
@@ -480,7 +503,8 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: updatedMessages, // 全会話履歴を送信
-          patientScenario: formatScenarioForAI(selectedScenario)
+          patientScenario: formatScenarioForAI(selectedScenario),
+          language: language // 言語設定を追加
         }),
       });
 
@@ -509,12 +533,12 @@ export default function Home() {
         //   response: data.response.substring(0, 50) + '...'
         // });
         
-        // ElevenLabsまたはフォールバックで音声合成
-        speak(data.response, 
+        // ElevenLabsまたはフォールバックで音声合成（言語設定を渡す）
+        speak(data.response,
           () => {
             setIsSpeaking(false);
             // console.log('音声再生が完了しました');
-            
+
             // 音声再生完了後、自動モードの場合は音声認識を再開
             if (isAutoMode && isConversationActiveRef.current) {
               // console.log('音声再生完了、音声認識を再開待機中...');
@@ -525,7 +549,8 @@ export default function Home() {
             // if (progress % 25 === 0) {
             //   console.log('Speech progress:', progress);
             // }
-          }
+          },
+          language // 言語設定を追加
         );
       }
     } catch (error) {
@@ -663,48 +688,74 @@ export default function Home() {
             <div className="relative z-0 w-full">
               {/* アバター切り替えボタン - ローディング完了後にのみ表示 */}
               {isAvatarLoaded && (
-                <div className="absolute top-4 right-4 z-10 flex gap-2">
-                  <button
-                    onClick={() => handleAvatarChange('boy')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      selectedAvatar === 'boy'
-                        ? 'bg-cyan-600 text-white shadow-lg'
-                        : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-                    }`}
-                  >
-                    男性1
-                  </button>
-                  <button
-                    onClick={() => handleAvatarChange('adult')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      selectedAvatar === 'adult'
-                        ? 'bg-cyan-600 text-white shadow-lg'
-                        : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-                    }`}
-                  >
-                    男性2
-                  </button>
-                  <button
-                    onClick={() => handleAvatarChange('female')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      selectedAvatar === 'female'
-                        ? 'bg-cyan-600 text-white shadow-lg'
-                        : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-                    }`}
-                  >
-                    女性
-                  </button>
-                  <button
-                    onClick={() => handleAvatarChange('boy_improved')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      selectedAvatar === 'boy_improved'
-                        ? 'bg-cyan-600 text-white shadow-lg'
-                        : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-                    }`}
-                  >
-                    青年改
-                  </button>
-                </div>
+                <>
+                  {/* 言語切り替えボタン - 左端 */}
+                  <div className="absolute top-4 left-4 z-10 flex gap-2">
+                    <button
+                      onClick={() => setLanguage('ja')}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                        language === 'ja'
+                          ? 'bg-blue-600 text-white shadow-lg'
+                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                      }`}
+                    >
+                      日本語版
+                    </button>
+                    <button
+                      onClick={() => setLanguage('en')}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                        language === 'en'
+                          ? 'bg-blue-600 text-white shadow-lg'
+                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                      }`}
+                    >
+                      ENGLISH VERSION
+                    </button>
+                  </div>
+                  {/* アバター選択ボタン - 右端 */}
+                  <div className="absolute top-4 right-4 z-10 flex gap-2">
+                    <button
+                      onClick={() => handleAvatarChange('boy')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                        selectedAvatar === 'boy'
+                          ? 'bg-cyan-600 text-white shadow-lg'
+                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                      }`}
+                    >
+                      {language === 'ja' ? '男性1' : 'Male 1'}
+                    </button>
+                    <button
+                      onClick={() => handleAvatarChange('adult')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                        selectedAvatar === 'adult'
+                          ? 'bg-cyan-600 text-white shadow-lg'
+                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                      }`}
+                    >
+                      {language === 'ja' ? '男性2' : 'Male 2'}
+                    </button>
+                    <button
+                      onClick={() => handleAvatarChange('female')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                        selectedAvatar === 'female'
+                          ? 'bg-cyan-600 text-white shadow-lg'
+                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                      }`}
+                    >
+                      {language === 'ja' ? '女性' : 'Female'}
+                    </button>
+                    <button
+                      onClick={() => handleAvatarChange('boy_improved')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                        selectedAvatar === 'boy_improved'
+                          ? 'bg-cyan-600 text-white shadow-lg'
+                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                      }`}
+                    >
+                      {language === 'ja' ? '青年改' : 'Young Male'}
+                    </button>
+                  </div>
+                </>
               )}
               {/* リップシンク対応アバター表示部分 */}
               <div className="scan-overlay" style={{ minHeight: '400px' }}>
@@ -736,42 +787,48 @@ export default function Home() {
             <div className="glass-effect rounded-2xl p-4 border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300 h-[140px]">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-lg font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-                  シナリオ選択
+                  {language === 'ja' ? 'シナリオ選択' : 'Scenario Selection'}
                 </h2>
                 <div className="flex gap-2">
                   <button
                     onClick={() => {
-                      setUseImprovedDemo(false);
-                      isDemoPlaying ? stopDemo() : startDemo('full');
+                      if (isDemoPlaying) {
+                        stopDemo();
+                      } else {
+                        startDemo('full', false);
+                      }
                     }}
                     className="px-3 py-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all flex items-center gap-2"
                   >
                     <span>{isDemoPlaying && !useImprovedDemo ? '⏸️' : '▶️'}</span>
-                    {isDemoPlaying && !useImprovedDemo ? '停止' : 'デモ'}
+                    {isDemoPlaying && !useImprovedDemo ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'デモ' : 'Demo')}
                   </button>
                   <button
                     onClick={() => {
-                      setUseImprovedDemo(true);
-                      isDemoPlaying ? stopDemo() : startDemo('full');
+                      if (isDemoPlaying) {
+                        stopDemo();
+                      } else {
+                        startDemo('full', true);
+                      }
                     }}
                     className="px-3 py-1 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white text-sm rounded-lg hover:from-cyan-700 hover:to-cyan-800 transition-all flex items-center gap-2"
                   >
                     <span>{isDemoPlaying && useImprovedDemo ? '⏸️' : '▶️'}</span>
-                    {isDemoPlaying && useImprovedDemo ? '停止' : 'フルデモ'}
+                    {isDemoPlaying && useImprovedDemo ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'フルデモ' : 'Full Demo')}
                   </button>
                   <button
                     onClick={() => setIsGeneratingScenario(true)}
                     className="px-3 py-1 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-sm rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all flex items-center gap-2"
                   >
                     <span>🎲</span>
-                    シナリオ新規自動生成
+                    {language === 'ja' ? 'シナリオ新規自動生成' : 'Generate New Scenario'}
                   </button>
                   <button
                     onClick={() => setIsEditingScenario(true)}
                     className="px-3 py-1 bg-gradient-to-r from-slate-600 to-slate-700 text-white text-sm rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all flex items-center gap-2"
                   >
                     <span>✏️</span>
-                    編集
+                    {language === 'ja' ? '編集' : 'Edit'}
                   </button>
                 </div>
               </div>
@@ -784,9 +841,10 @@ export default function Home() {
                   // 編集済みシナリオの場合はマークを付ける
                   const isEdited = !!editedScenarios[scenario.id];
                   const displayScenario = editedScenarios[scenario.id] || scenario;
+                  const translatedScenario = getTranslatedScenario(displayScenario, language);
                   return (
                     <option key={scenario.id} value={scenario.id} className="bg-gray-800">
-                      {isEdited ? '✓ ' : ''}{displayScenario.name} - {displayScenario.basicInfo.name}
+                      {isEdited ? '✓ ' : ''}{translatedScenario.name} - {translatedScenario.basicInfo.name}
                     </option>
                   );
                 })}
@@ -799,7 +857,7 @@ export default function Home() {
                 onClick={() => setIsPatientInfoVisible(!isPatientInfoVisible)}
               >
                 <h2 className="text-lg font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-                  AI患者情報
+                  {language === 'ja' ? 'AI患者情報' : 'AI Patient Information'}
                 </h2>
                 <span className={`text-cyan-400 transition-transform duration-300 ${isPatientInfoVisible ? 'rotate-180' : ''}`}>
                   ▼
@@ -809,25 +867,25 @@ export default function Home() {
               <div className={`space-y-2 text-xs overflow-hidden transition-all duration-500 ${isPatientInfoVisible ? 'h-[calc(100%-3rem)] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'}`}>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <strong className="text-gray-400">氏名：</strong> {selectedScenario.basicInfo.name}
+                    <strong className="text-gray-400">{language === 'ja' ? '氏名' : 'Name'}：</strong> {getTranslatedScenario(selectedScenario, language).basicInfo.name}
                   </div>
                   <div>
-                    <strong className="text-gray-400">年齢：</strong> {selectedScenario.basicInfo.age}
+                    <strong className="text-gray-400">{language === 'ja' ? '年齢' : 'Age'}：</strong> {getTranslatedScenario(selectedScenario, language).basicInfo.age}
                   </div>
                   <div>
-                    <strong className="text-gray-400">性別：</strong> {selectedScenario.basicInfo.gender}
+                    <strong className="text-gray-400">{language === 'ja' ? '性別' : 'Gender'}：</strong> {getTranslatedScenario(selectedScenario, language).basicInfo.gender}
                   </div>
                   <div>
-                    <strong className="text-gray-400">職業：</strong> {selectedScenario.basicInfo.occupation}
+                    <strong className="text-gray-400">{language === 'ja' ? '職業' : 'Occupation'}：</strong> {getTranslatedScenario(selectedScenario, language).basicInfo.occupation}
                   </div>
                 </div>
                 <div className="border-t border-gray-700 pt-3">
                   <div className="flex items-start gap-3">
                     <span className="text-cyan-400 mt-1">▶</span>
                     <div>
-                      <strong className="text-gray-400">主訴：</strong> {selectedScenario.chiefComplaint.complaint}
+                      <strong className="text-gray-400">{language === 'ja' ? '主訴' : 'Chief Complaint'}：</strong> {getTranslatedScenario(selectedScenario, language).chiefComplaint.complaint}
                       <div className="text-xs text-gray-500 mt-1">
-                        部位：{selectedScenario.chiefComplaint.location} / {selectedScenario.chiefComplaint.since}
+                        {language === 'ja' ? '部位' : 'Location'}：{getTranslatedScenario(selectedScenario, language).chiefComplaint.location} / {getTranslatedScenario(selectedScenario, language).chiefComplaint.since}
                       </div>
                     </div>
                   </div>
@@ -836,11 +894,11 @@ export default function Home() {
                   <div className="flex items-start gap-3">
                     <span className="text-blue-400 mt-1">▶</span>
                     <div>
-                      <strong className="text-gray-400">現病歴：</strong>
+                      <strong className="text-gray-400">{language === 'ja' ? '現病歴' : 'Present Illness'}：</strong>
                       <div className="text-xs text-gray-300 mt-1 space-y-1">
-                        <div>・{selectedScenario.presentIllness.nature}</div>
-                        <div>・{selectedScenario.presentIllness.severity}</div>
-                        <div>・{selectedScenario.presentIllness.dailyImpact}</div>
+                        <div>・{getTranslatedScenario(selectedScenario, language).presentIllness.nature}</div>
+                        <div>・{getTranslatedScenario(selectedScenario, language).presentIllness.severity}</div>
+                        <div>・{getTranslatedScenario(selectedScenario, language).presentIllness.dailyImpact}</div>
                       </div>
                     </div>
                   </div>
@@ -849,10 +907,10 @@ export default function Home() {
                   <div className="flex items-start gap-3">
                     <span className="text-teal-400 mt-1">▶</span>
                     <div>
-                      <strong className="text-gray-400">全身既往歴：</strong>
+                      <strong className="text-gray-400">{language === 'ja' ? '全身既往歴' : 'Medical History'}：</strong>
                       <div className="text-xs text-gray-300 mt-1">
-                        {selectedScenario.medicalHistory.systemicDisease || 'なし'}
-                        {selectedScenario.medicalHistory.allergies && ` / アレルギー：${selectedScenario.medicalHistory.allergies}`}
+                        {getTranslatedScenario(selectedScenario, language).medicalHistory.systemicDisease || (language === 'ja' ? 'なし' : 'None')}
+                        {getTranslatedScenario(selectedScenario, language).medicalHistory.allergies && ` / ${language === 'ja' ? 'アレルギー' : 'Allergies'}：${getTranslatedScenario(selectedScenario, language).medicalHistory.allergies}`}
                       </div>
                     </div>
                   </div>
@@ -861,9 +919,9 @@ export default function Home() {
                   <div className="flex items-start gap-3">
                     <span className="text-sky-400 mt-1">▶</span>
                     <div>
-                      <strong className="text-gray-400">心理社会的情報：</strong>
+                      <strong className="text-gray-400">{language === 'ja' ? '心理社会的情報' : 'Psychosocial Info'}：</strong>
                       <div className="text-xs text-gray-300 mt-1">
-                        {selectedScenario.psychosocial.concerns}
+                        {getTranslatedScenario(selectedScenario, language).psychosocial.concerns}
                       </div>
                     </div>
                   </div>
@@ -872,7 +930,7 @@ export default function Home() {
               
               {!isPatientInfoVisible && (
                 <div className="text-center text-gray-500 text-sm">
-                  クリックして詳細を表示
+                  {language === 'ja' ? 'クリックして詳細を表示' : 'Click to show details'}
                 </div>
               )}
             </div>
@@ -882,7 +940,7 @@ export default function Home() {
             <div className="glass-effect rounded-2xl p-4 flex flex-col h-[400px] border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-lg font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-                医療面接
+                {language === 'ja' ? '医療面接' : 'Medical Interview'}
               </h2>
               
               {/* タイマー表示 */}
@@ -899,7 +957,7 @@ export default function Home() {
                       setIsTimerRunning(!isTimerRunning);
                     }}
                     className="p-1 hover:bg-white/10 rounded transition-colors"
-                    title={isTimerRunning ? '一時停止' : '再開'}
+                    title={isTimerRunning ? (language === 'ja' ? '一時停止' : 'Pause') : (language === 'ja' ? '再開' : 'Resume')}
                   >
                     {isTimerRunning ? '⏸️' : '▶️'}
                   </button>
@@ -909,7 +967,7 @@ export default function Home() {
                       setInterviewTime(0);
                     }}
                     className="p-1 hover:bg-white/10 rounded transition-colors"
-                    title="リセット"
+                    title={language === 'ja' ? 'リセット' : 'Reset'}
                   >
                     🔄
                   </button>
@@ -922,14 +980,14 @@ export default function Home() {
                   className="px-3 py-1 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-sm rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all flex items-center gap-2"
                 >
                   <span>⚙️</span>
-                  評価項目編集
+                  {language === 'ja' ? '評価項目編集' : 'Edit Criteria'}
                 </button>
                 <button
                   onClick={() => setShowEvaluationList(true)}
                   className="px-3 py-1 bg-gradient-to-r from-slate-600 to-slate-700 text-white text-sm rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all flex items-center gap-2"
                 >
                   <span>📂</span>
-                  評価履歴
+                  {language === 'ja' ? '評価履歴' : 'History'}
                 </button>
               </div>
             </div>
@@ -939,7 +997,7 @@ export default function Home() {
                 <div className="flex items-center justify-center h-full">
                   <div className="text-gray-500 text-center">
                     <div>
-                      マイクボタンを押して開始してください
+                      {language === 'ja' ? 'マイクボタンを押して開始してください' : 'Press the microphone button to start'}
                     </div>
                   </div>
                 </div>
@@ -956,7 +1014,7 @@ export default function Home() {
                     }`}>
                       <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                       <span className="text-xs opacity-60 mt-2 block">
-                        {message.role === 'user' ? '歯科医師' : 'AI患者'}
+                        {message.role === 'user' ? (language === 'ja' ? '歯科医師' : 'Dentist') : (language === 'ja' ? 'AI患者' : 'AI Patient')}
                       </span>
                     </div>
                   </div>
@@ -971,7 +1029,7 @@ export default function Home() {
                         <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                         <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
-                      <span className="text-xs text-blue-300">考えています...</span>
+                      <span className="text-xs text-blue-300">{language === 'ja' ? '考えています...' : 'Thinking...'}</span>
                     </div>
                   </div>
                 </div>
@@ -986,7 +1044,7 @@ export default function Home() {
 
             {speechError && (
               <div className="mb-4 p-3 bg-yellow-900/30 border border-yellow-500/30 rounded-xl">
-                <p className="text-sm text-yellow-300">音声認識エラー: {speechError}</p>
+                <p className="text-sm text-yellow-300">{language === 'ja' ? '音声認識エラー' : 'Speech Recognition Error'}: {speechError}</p>
               </div>
             )}
 
@@ -1027,14 +1085,14 @@ export default function Home() {
                 {isListening && (
                   <div>
                     <div className="text-cyan-400 animate-pulse">
-                      <span className="text-sm">聞いています...</span>
+                      <span className="text-sm">{language === 'ja' ? '聞いています...' : 'Listening...'}</span>
                     </div>
                     {transcript && (
                       <p className="text-white mt-1">{transcript}</p>
                     )}
                     {silenceTimer > 0 && (
                       <p className="text-xs text-gray-400 mt-1">
-                        沈黙: {silenceTimer}秒
+                        {language === 'ja' ? '沈黙' : 'Silence'}: {silenceTimer}{language === 'ja' ? '秒' : 's'}
                       </p>
                     )}
                   </div>
@@ -1042,14 +1100,14 @@ export default function Home() {
                 
                 {isProcessing && (
                   <div className="text-yellow-400 text-sm mt-2">
-                    処理中...
+                    {language === 'ja' ? '処理中...' : 'Processing...'}
                   </div>
                 )}
               </div>
 
               {isLoading && (
                 <div className="text-cyan-400 text-sm animate-pulse">
-                  音声を準備中...
+                  {language === 'ja' ? '音声を準備中...' : 'Preparing audio...'}
                 </div>
               )}
 
@@ -1060,7 +1118,7 @@ export default function Home() {
                   className="px-4 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-sm rounded-lg hover:from-cyan-700 hover:to-blue-700 transition-all flex items-center gap-2 animate-pulse whitespace-nowrap"
                 >
                   <span>🤖</span>
-                  医療面接のAI評価
+                  {language === 'ja' ? '医療面接のAI評価' : 'AI Interview Evaluation'}
                 </button>
               )}
             </div>
@@ -1071,7 +1129,8 @@ export default function Home() {
 
       {isEditingScenario && (
         <ScenarioEditor
-          scenario={selectedScenario}
+          scenario={getTranslatedScenario(selectedScenario, language)}
+          language={language}
           onSave={(updatedScenario) => {
             setSelectedScenario(updatedScenario);
             
@@ -1102,6 +1161,7 @@ export default function Home() {
 
       {isGeneratingScenario && (
         <ScenarioGenerator
+          language={language}
           onGenerate={handleGenerateNewScenario}
           onCancel={() => setIsGeneratingScenario(false)}
         />

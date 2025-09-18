@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   console.log('ElevenLabs API called');
   
   try {
-    const { text, emotion = 'neutral', voiceId } = await request.json();
+    const { text, emotion = 'neutral', voiceId, language = 'ja' } = await request.json();
     
     if (!text) {
       return NextResponse.json(
@@ -35,19 +35,23 @@ export async function POST(request: NextRequest) {
 
     // 辞書ベースでテキストを音声用に変換
     let processedTextForTTS: string = text;
-    
+
     // テキストの正規化（不要なスペースを削除）
     processedTextForTTS = processedTextForTTS.trim().replace(/　+/g, ' ').replace(/ +/g, ' ');
 
-    // 3日前の変換前のテキストを確認
-    if (processedTextForTTS.includes('3日')) {
-      console.log(`Text before conversion contains '3日': "${processedTextForTTS}"`);
-    }
+    console.log(`🌐 Language: ${language}, Original text: "${text.substring(0, 50)}..."`);
 
-    // 包括的な医療辞書を使用して変換
-    // 長い単語から優先的に処理
-    const sortedWords = Object.entries(medicalDictionary)
-      .sort((a, b) => b[0].length - a[0].length);
+    // 日本語の場合のみ医療辞書による変換を行う
+    if (language === 'ja') {
+      // 3日前の変換前のテキストを確認
+      if (processedTextForTTS.includes('3日')) {
+        console.log(`Text before conversion contains '3日': "${processedTextForTTS}"`);
+      }
+
+      // 包括的な医療辞書を使用して変換
+      // 長い単語から優先的に処理
+      const sortedWords = Object.entries(medicalDictionary)
+        .sort((a, b) => b[0].length - a[0].length);
     
     // 生年月日の変換をデバッグ
     if (processedTextForTTS.includes('生年月日')) {
@@ -70,16 +74,17 @@ export async function POST(request: NextRequest) {
         console.log(`Replaced '${kanji}' with '${hiragana}' - Before: "${beforeReplace}" After: "${processedTextForTTS}"`);
       }
     }
-    
-    // 変換後の生年月日を確認
-    if (processedTextForTTS.includes('せいねんがっぴ')) {
-      console.log('せいねんがっぴ found in text after conversion');
-    }
 
-    // 変換後の3日の最終結果を確認
-    if (text.includes('3日')) {
-      console.log(`Final converted text for ElevenLabs: "${processedTextForTTS}"`);
-    }
+      // 変換後の生年月日を確認
+      if (processedTextForTTS.includes('せいねんがっぴ')) {
+        console.log('せいねんがっぴ found in text after conversion');
+      }
+
+      // 変換後の3日の最終結果を確認
+      if (text.includes('3日')) {
+        console.log(`Final converted text for ElevenLabs: "${processedTextForTTS}"`);
+      }
+    } // language === 'ja' の終了
     
     // 以下は古い辞書（コメントアウト済み）
     /*
@@ -346,11 +351,16 @@ export async function POST(request: NextRequest) {
     console.log('Original text:', text);
     console.log('Processed for TTS (Dictionary):', processedTextForTTS);
 
-    // 感情に応じたvoice_settingsを設定（日本語用に最適化）
-    let voiceSettings: any = {
+    // 言語と感情に応じたvoice_settingsを設定
+    let voiceSettings: any = language === 'ja' ? {
       stability: 0.65,  // 日本語はやや安定的に
       similarity_boost: 0.85,  // オリジナル音声に近づける
       style: 0.0,  // スタイルはニュートラルから始める
+      use_speaker_boost: true
+    } : {
+      stability: 0.75,  // 英語はより安定的に
+      similarity_boost: 0.75,  // 英語は標準的な設定
+      style: 0.0,
       use_speaker_boost: true
     };
 

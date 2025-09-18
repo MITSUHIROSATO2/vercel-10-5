@@ -4,7 +4,7 @@ interface AutoVoiceDetectionHook {
   transcript: string;
   isListening: boolean;
   isProcessing: boolean;
-  startConversation: (onTranscriptComplete?: (transcript: string) => void) => void;
+  startConversation: (onTranscriptComplete?: (transcript: string) => void, language?: 'ja' | 'en') => void;
   stopConversation: () => void;
   error: string | null;
   voiceActivityLevel: number;
@@ -255,8 +255,11 @@ export function useAutoVoiceDetection(): AutoVoiceDetectionHook {
   }, [isAutoMode]);
 
   // 会話の開始
-  const startConversation = useCallback((onTranscriptComplete?: (transcript: string) => void) => {
+  const startConversation = useCallback((onTranscriptComplete?: (transcript: string) => void, language: 'ja' | 'en' = 'ja') => {
     if (recognition) {
+      // 言語設定を更新
+      recognition.lang = language === 'ja' ? 'ja-JP' : 'en-US';
+
       // 初回のみリセット（会話が既にアクティブでない場合）
       if (!isConversationActiveRef.current) {
         setTranscript('');
@@ -265,7 +268,7 @@ export function useAutoVoiceDetection(): AutoVoiceDetectionHook {
         interimTranscriptRef.current = '';
         lastSpeechTimeRef.current = Date.now();
       }
-      
+
       if (onTranscriptComplete) {
         onTranscriptCompleteRef.current = onTranscriptComplete;
       }

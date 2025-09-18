@@ -7,9 +7,10 @@ interface ScenarioEditorProps {
   scenario: PatientScenario;
   onSave: (scenario: PatientScenario) => void;
   onCancel: () => void;
+  language?: 'ja' | 'en';
 }
 
-export default function ScenarioEditor({ scenario, onSave, onCancel }: ScenarioEditorProps) {
+export default function ScenarioEditor({ scenario, onSave, onCancel, language = 'ja' }: ScenarioEditorProps) {
   const [editedScenario, setEditedScenario] = useState<PatientScenario>(scenario);
   const [activeCategory, setActiveCategory] = useState<string>('basicInfo');
   
@@ -29,7 +30,7 @@ export default function ScenarioEditor({ scenario, onSave, onCancel }: ScenarioE
   };
 
 
-  const categories = [
+  const categories = language === 'ja' ? [
     { id: 'basicInfo', label: '基本情報', icon: '👤' },
     { id: 'chiefComplaint', label: '主訴', icon: '🦷' },
     { id: 'presentIllness', label: '現病歴', icon: '📋' },
@@ -38,9 +39,18 @@ export default function ScenarioEditor({ scenario, onSave, onCancel }: ScenarioE
     { id: 'lifestyle', label: '生活歴', icon: '🏠' },
     { id: 'psychosocial', label: '心理社会的情報', icon: '💭' },
     { id: 'interviewEvaluation', label: '面接技法評価', icon: '✅' }
+  ] : [
+    { id: 'basicInfo', label: 'Basic Info', icon: '👤' },
+    { id: 'chiefComplaint', label: 'Chief Complaint', icon: '🦷' },
+    { id: 'presentIllness', label: 'Present Illness', icon: '📋' },
+    { id: 'dentalHistory', label: 'Dental History', icon: '🏥' },
+    { id: 'medicalHistory', label: 'Medical History', icon: '💊' },
+    { id: 'lifestyle', label: 'Lifestyle', icon: '🏠' },
+    { id: 'psychosocial', label: 'Psychosocial', icon: '💭' },
+    { id: 'interviewEvaluation', label: 'Interview Evaluation', icon: '✅' }
   ];
 
-  const fieldConfigs: Record<string, Array<{field: string, label: string, placeholder: string}>> = {
+  const fieldConfigs: Record<string, Array<{field: string, label: string, placeholder: string}>> = language === 'ja' ? {
     basicInfo: [
       { field: 'name', label: '氏名', placeholder: '例：田中 弘樹' },
       { field: 'age', label: '年齢', placeholder: '例：43歳' },
@@ -85,6 +95,51 @@ export default function ScenarioEditor({ scenario, onSave, onCancel }: ScenarioE
       { field: 'summarization', label: '主訴の要約確認', placeholder: '面接終盤での再確認' },
       { field: 'additionalCheck', label: '言い忘れの確認', placeholder: '例：『他に気になることは？』' }
     ]
+  } : {
+    basicInfo: [
+      { field: 'name', label: 'Name', placeholder: 'e.g., John Smith' },
+      { field: 'age', label: 'Age', placeholder: 'e.g., 43 years old' },
+      { field: 'gender', label: 'Gender', placeholder: 'e.g., Male/Female/Other' },
+      { field: 'occupation', label: 'Occupation', placeholder: 'e.g., Office Worker/Homemaker/Student' }
+    ],
+    chiefComplaint: [
+      { field: 'complaint', label: 'Chief Complaint', placeholder: 'e.g., Throbbing pain in lower right molar' },
+      { field: 'location', label: 'Location', placeholder: 'e.g., Lower right 6th tooth' },
+      { field: 'since', label: 'Duration', placeholder: 'e.g., Since 1 week ago' }
+    ],
+    presentIllness: [
+      { field: 'nature', label: 'Nature of Symptoms', placeholder: 'e.g., Throbbing/Aching' },
+      { field: 'severity', label: 'Severity', placeholder: 'e.g., Reduced with painkillers' },
+      { field: 'progress', label: 'Progress', placeholder: 'e.g., Gradually worsening' },
+      { field: 'trigger', label: 'Triggers', placeholder: 'e.g., Pain with cold things' },
+      { field: 'dailyImpact', label: 'Daily Impact', placeholder: 'e.g., Difficult to eat' },
+      { field: 'medication', label: 'Medication History', placeholder: 'e.g., OTC pain relievers' },
+      { field: 'dentalVisit', label: 'Dental Visit History', placeholder: 'e.g., First visit/Previous clinic' }
+    ],
+    dentalHistory: [
+      { field: 'extraction', label: 'Extraction History', placeholder: 'e.g., Wisdom tooth extracted' },
+      { field: 'anesthesia', label: 'Anesthesia Experience', placeholder: 'e.g., Yes (difficult to numb)' },
+      { field: 'complications', label: 'Treatment Complications', placeholder: 'e.g., Swelling after extraction' }
+    ],
+    medicalHistory: [
+      { field: 'systemicDisease', label: 'Systemic Diseases', placeholder: 'e.g., Hypertension, Diabetes' },
+      { field: 'currentMedication', label: 'Current Medications', placeholder: 'e.g., Taking Amlodipine' },
+      { field: 'allergies', label: 'Allergies', placeholder: 'e.g., Penicillin allergy' }
+    ],
+    lifestyle: [
+      { field: 'oralHygiene', label: 'Oral Hygiene Habits', placeholder: 'e.g., Twice daily/Once daily' },
+      { field: 'dietaryHabits', label: 'Dietary Habits', placeholder: 'e.g., Sweet coffee/Smoker' },
+      { field: 'familyStructure', label: 'Family Structure', placeholder: 'e.g., Living with spouse and 2 children' },
+      { field: 'workSchedule', label: 'Work Schedule', placeholder: 'e.g., Available weekdays until 7pm' }
+    ],
+    psychosocial: [
+      { field: 'concerns', label: 'Concerns', placeholder: 'e.g., Afraid of anesthesia/Don\'t want extraction' },
+      { field: 'requests', label: 'Requests', placeholder: 'e.g., Want painless treatment' }
+    ],
+    interviewEvaluation: [
+      { field: 'summarization', label: 'Summary Confirmation', placeholder: 'Reconfirm at interview end' },
+      { field: 'additionalCheck', label: 'Additional Check', placeholder: 'e.g., "Anything else concerning you?"' }
+    ]
   };
 
   // スクロール処理
@@ -103,20 +158,20 @@ export default function ScenarioEditor({ scenario, onSave, onCancel }: ScenarioE
         <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 p-6 border-b border-cyan-500/30">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-              シナリオ編集
+              {language === 'ja' ? 'シナリオ編集' : 'Edit Scenario'}
             </h2>
             <div className="flex gap-2">
               <button
                 onClick={onCancel}
                 className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
               >
-                キャンセル
+                {language === 'ja' ? 'キャンセル' : 'Cancel'}
               </button>
               <button
                 onClick={() => onSave(editedScenario)}
                 className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-lg hover:from-cyan-700 hover:to-blue-700 transition-all"
               >
-                保存
+                {language === 'ja' ? '保存' : 'Save'}
               </button>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 
 interface ElevenLabsSpeechHook {
-  speak: (text: string, onEnd?: () => void, onProgress?: (progress: number) => void) => Promise<void>;
+  speak: (text: string, onEnd?: () => void, onProgress?: (progress: number) => void, language?: 'ja' | 'en') => Promise<void>;
   cancel: () => void;
   isCurrentlySpeaking: boolean;
   currentWord: string;
@@ -94,9 +94,10 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
   };
 
   const speak = useCallback(async (
-    text: string, 
-    onEnd?: () => void, 
-    onProgress?: (progress: number) => void
+    text: string,
+    onEnd?: () => void,
+    onProgress?: (progress: number) => void,
+    language: 'ja' | 'en' = 'ja'
   ) => {
     try {
       setIsLoading(true);
@@ -116,13 +117,13 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       const emotion = detectEmotion(text);
       console.log(`Detected emotion: ${emotion} for text: "${text.substring(0, 50)}..."`)
 
-      // ElevenLabs APIを呼び出し（感情パラメータ付き）
+      // ElevenLabs APIを呼び出し（感情パラメータと言語設定付き）
       const response = await fetch('/api/elevenlabs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text, emotion }),
+        body: JSON.stringify({ text, emotion, language }),
       });
 
       if (!response.ok) {
@@ -133,7 +134,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         if (typeof window !== 'undefined' && window.speechSynthesis) {
           console.log('Using Web Speech API for fallback...');
           const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = 'ja-JP';
+          utterance.lang = language === 'ja' ? 'ja-JP' : 'en-US';
           utterance.rate = 1.0;
           utterance.pitch = 1.0;
           utterance.volume = 0.8;
@@ -189,7 +190,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         // Use Web Speech API as fallback
         if (typeof window !== 'undefined' && window.speechSynthesis) {
           const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = 'ja-JP';
+          utterance.lang = language === 'ja' ? 'ja-JP' : 'en-US';
           utterance.rate = 1.0;
           utterance.pitch = 1.0;
           utterance.volume = 0.8;
