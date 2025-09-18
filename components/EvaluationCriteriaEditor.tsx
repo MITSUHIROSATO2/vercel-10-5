@@ -6,6 +6,7 @@ interface EvaluationCriteria {
   category: string;
   subcategory?: string;
   item: string;
+  itemEn?: string;
   priority: 'high' | 'medium' | 'low';
 }
 
@@ -16,38 +17,150 @@ interface EvaluationCriteriaEditorProps {
 }
 
 const defaultCriteria: EvaluationCriteria[] = [
-  // （１）対人関係能力：患者との良好な関係の構築
-  { category: 'interpersonal', item: '言語的コミュニケーションを適切に行う', priority: 'high' },
-  
-  // （２）全体をとおして
-  { category: 'overall', item: '順序立った面接を行う', priority: 'high' },
-  { category: 'overall', item: '話題を変えるときには、唐突でなく適切な声かけをする', priority: 'high' },
-  
-  // （３）導入部分：オープニング
-  { category: 'opening', item: '挨拶を行う', priority: 'high' },
-  { category: 'opening', item: '本人確認と自己紹介を適切に行う', priority: 'high' },
-  { category: 'opening', item: '面接の概要説明と同意を取得する', priority: 'high' },
-  
-  // （４）患者に聞く：歯科医学的情報
-  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '主訴を聞く', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '主訴の現病歴を聞く', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'history', item: '歯科的既往歴を聞く', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'history', item: '全身的既往歴を聞く', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'lifestyle', item: '口腔衛生習慣(歯磨きの頻度など)を聞く', priority: 'low' },
-  { category: 'medicalInfo', subcategory: 'lifestyle', item: '患者の食習慣や嗜好を聞く', priority: 'low' },
-  { category: 'medicalInfo', subcategory: 'lifestyle', item: '患者の家族歴や社会歴を聞く', priority: 'low' },
-  
-  // （５）患者に聞く：心理・社会的情報
-  { category: 'psychosocial', item: '解釈モデルを聞く', priority: 'high' },
-  { category: 'psychosocial', item: '来院動機を聞く', priority: 'low' },
-  { category: 'psychosocial', item: '心理的状況を聞く', priority: 'low' },
-  { category: 'psychosocial', item: '検査や治療に関する要望を聞く', priority: 'low' },
-  { category: 'psychosocial', item: '患者背景に関わる通院条件、健康･受療行動、生活･社会･心理的背景などを聞く', priority: 'low' },
-  
-  // （６）締めくくり部分：クロージング
-  { category: 'closing', item: '要約と確認を行う', priority: 'high' },
-  { category: 'closing', item: '言い忘れの確認を行う', priority: 'high' },
-  { category: 'closing', item: '面接終了後、患者が次にどうしたら良いかを適切に伝える', priority: 'high' },
+  // （１）対人関係能力：患者との良好な関係の構築 / Interpersonal Skills
+  {
+    category: 'interpersonal',
+    item: '言語的コミュニケーションを適切に行う',
+    itemEn: 'Communicate verbally appropriately',
+    priority: 'high'
+  },
+
+  // （２）全体をとおして / Overall
+  {
+    category: 'overall',
+    item: '順序立った面接を行う',
+    itemEn: 'Conduct an organized interview',
+    priority: 'high'
+  },
+  {
+    category: 'overall',
+    item: '話題を変えるときには、唐突でなく適切な声かけをする',
+    itemEn: 'Use appropriate transitions when changing topics',
+    priority: 'high'
+  },
+
+  // （３）導入部分：オープニング / Opening
+  {
+    category: 'opening',
+    item: '挨拶を行う',
+    itemEn: 'Give appropriate greetings',
+    priority: 'high'
+  },
+  {
+    category: 'opening',
+    item: '本人確認と自己紹介を適切に行う',
+    itemEn: 'Verify patient identity and introduce yourself appropriately',
+    priority: 'high'
+  },
+  {
+    category: 'opening',
+    item: '面接の概要説明と同意を取得する',
+    itemEn: 'Explain interview overview and obtain consent',
+    priority: 'high'
+  },
+
+  // （４）患者に聞く：歯科医学的情報 / Medical Information
+  {
+    category: 'medicalInfo',
+    subcategory: 'chiefComplaint',
+    item: '主訴を聞く',
+    itemEn: 'Ask about chief complaint',
+    priority: 'high'
+  },
+  {
+    category: 'medicalInfo',
+    subcategory: 'chiefComplaint',
+    item: '主訴の現病歴を聞く',
+    itemEn: 'Ask about history of present illness',
+    priority: 'high'
+  },
+  {
+    category: 'medicalInfo',
+    subcategory: 'history',
+    item: '歯科的既往歴を聞く',
+    itemEn: 'Ask about dental history',
+    priority: 'high'
+  },
+  {
+    category: 'medicalInfo',
+    subcategory: 'history',
+    item: '全身的既往歴を聞く',
+    itemEn: 'Ask about general medical history',
+    priority: 'high'
+  },
+  {
+    category: 'medicalInfo',
+    subcategory: 'lifestyle',
+    item: '口腔衛生習慣(歯磨きの頻度など)を聞く',
+    itemEn: 'Ask about oral hygiene habits (brushing frequency, etc.)',
+    priority: 'low'
+  },
+  {
+    category: 'medicalInfo',
+    subcategory: 'lifestyle',
+    item: '患者の食習慣や嗜好を聞く',
+    itemEn: 'Ask about dietary habits and preferences',
+    priority: 'low'
+  },
+  {
+    category: 'medicalInfo',
+    subcategory: 'lifestyle',
+    item: '患者の家族歴や社会歴を聞く',
+    itemEn: 'Ask about family and social history',
+    priority: 'low'
+  },
+
+  // （５）患者に聞く：心理・社会的情報 / Psychosocial Information
+  {
+    category: 'psychosocial',
+    item: '解釈モデルを聞く',
+    itemEn: 'Explore patient\'s ideas about their condition',
+    priority: 'high'
+  },
+  {
+    category: 'psychosocial',
+    item: '来院動機を聞く',
+    itemEn: 'Ask about motivation for seeking care',
+    priority: 'low'
+  },
+  {
+    category: 'psychosocial',
+    item: '心理的状況を聞く',
+    itemEn: 'Ask about psychological state',
+    priority: 'low'
+  },
+  {
+    category: 'psychosocial',
+    item: '検査や治療に関する要望を聞く',
+    itemEn: 'Ask about preferences for examination and treatment',
+    priority: 'low'
+  },
+  {
+    category: 'psychosocial',
+    item: '患者背景に関わる通院条件、健康･受療行動、生活･社会･心理的背景などを聞く',
+    itemEn: 'Ask about patient background including healthcare access, health behaviors, and psychosocial factors',
+    priority: 'low'
+  },
+
+  // （６）締めくくり部分：クロージング / Closing
+  {
+    category: 'closing',
+    item: '要約と確認を行う',
+    itemEn: 'Summarize and confirm information',
+    priority: 'high'
+  },
+  {
+    category: 'closing',
+    item: '言い忘れの確認を行う',
+    itemEn: 'Check for additional concerns',
+    priority: 'high'
+  },
+  {
+    category: 'closing',
+    item: '面接終了後、患者が次にどうしたら良いかを適切に伝える',
+    itemEn: 'Appropriately explain next steps to the patient',
+    priority: 'high'
+  },
 ];
 
 const categoryLabels: { [key: string]: { ja: string; en: string } } = {
@@ -72,8 +185,9 @@ export default function EvaluationCriteriaEditor({ onClose, onSave, language = '
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newItem, setNewItem] = useState<EvaluationCriteria>({
-    category: 'communication',
+    category: 'interpersonal',
     item: '',
+    itemEn: '',
     priority: 'medium'
   });
   const [showAddForm, setShowAddForm] = useState(false);
@@ -82,7 +196,18 @@ export default function EvaluationCriteriaEditor({ onClose, onSave, language = '
     // LocalStorageから保存された評価項目を読み込み
     const savedCriteria = localStorage.getItem('evaluationCriteria');
     if (savedCriteria) {
-      setCriteria(JSON.parse(savedCriteria));
+      const parsed = JSON.parse(savedCriteria);
+      // Merge English translations from defaultCriteria for existing items
+      const mergedCriteria = parsed.map((savedItem: EvaluationCriteria) => {
+        const defaultItem = defaultCriteria.find(
+          d => d.item === savedItem.item && d.category === savedItem.category
+        );
+        if (defaultItem && !savedItem.itemEn) {
+          return { ...savedItem, itemEn: defaultItem.itemEn };
+        }
+        return savedItem;
+      });
+      setCriteria(mergedCriteria);
     } else {
       setCriteria(defaultCriteria);
     }
@@ -127,8 +252,9 @@ export default function EvaluationCriteriaEditor({ onClose, onSave, language = '
     }
     setCriteria([...criteria, newItem]);
     setNewItem({
-      category: 'communication',
+      category: 'interpersonal',
       item: '',
+      itemEn: '',
       priority: 'medium'
     });
     setShowAddForm(false);
@@ -209,8 +335,8 @@ export default function EvaluationCriteriaEditor({ onClose, onSave, language = '
                   <div className="space-y-2">
                     <input
                       type="text"
-                      value={item.item}
-                      onChange={(e) => handleUpdate(index, 'item', e.target.value)}
+                      value={language === 'en' && item.itemEn ? item.itemEn : item.item}
+                      onChange={(e) => handleUpdate(index, language === 'en' ? 'itemEn' : 'item', e.target.value)}
                       className="w-full p-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-cyan-400 focus:outline-none"
                     />
                     <div className="flex gap-2">
@@ -243,7 +369,7 @@ export default function EvaluationCriteriaEditor({ onClose, onSave, language = '
                           {priorityLabels[item.priority as keyof typeof priorityLabels]}
                         </span>
                       </div>
-                      <p className="text-white">{item.item}</p>
+                      <p className="text-white">{language === 'en' && item.itemEn ? item.itemEn : item.item}</p>
                     </div>
                     <div className="flex gap-2">
                       <button
@@ -281,9 +407,16 @@ export default function EvaluationCriteriaEditor({ onClose, onSave, language = '
                 </select>
                 <input
                   type="text"
-                  placeholder={language === 'ja' ? '評価項目を入力' : 'Enter evaluation criterion'}
+                  placeholder={language === 'ja' ? '評価項目を入力（日本語）' : 'Enter evaluation criterion (Japanese)'}
                   value={newItem.item}
                   onChange={(e) => setNewItem({ ...newItem, item: e.target.value })}
+                  className="w-full p-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-cyan-400 focus:outline-none"
+                />
+                <input
+                  type="text"
+                  placeholder={language === 'ja' ? '評価項目を入力（英語）' : 'Enter evaluation criterion (English)'}
+                  value={newItem.itemEn || ''}
+                  onChange={(e) => setNewItem({ ...newItem, itemEn: e.target.value })}
                   className="w-full p-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-cyan-400 focus:outline-none"
                 />
                 <select

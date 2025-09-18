@@ -701,8 +701,8 @@ function AvatarModel({
   selectedAvatar = 'adult'
 }: AvatarModelProps) {
   // モデルタイプの判定
-  const isBoyModel = modelPath.includes('ClassicMan') || modelPath.includes('少年アバター');
-  const isBoyImprovedModel = modelPath.includes('ClassicMan-3のコピー');
+  const isBoyModel = modelPath.includes('ClassicMan') || modelPath.includes('少年アバター.glb');
+  const isBoyImprovedModel = modelPath.includes('ClassicMan-3のコピー') || modelPath.includes('少年改アバター');
   const isFemaleModel = modelPath.includes('Hayden') || modelPath.includes('female');
   
   // モデル別のリップシンク設定
@@ -749,6 +749,7 @@ function AvatarModel({
   
   // GLBファイル読み込み（Suspenseと連携）
   // modelPathは既にmodelPaths.tsでクリーニング済み
+  console.log(`[FinalLipSyncAvatar] Loading model: ${modelPath} for avatar: ${selectedAvatar}`);
   const gltf = useGLTF(modelPath);
   const scene = gltf.scene;
   
@@ -1090,6 +1091,7 @@ function AvatarModel({
       scene.userData.texturesApplied = true;
       
       if (onLoaded) {
+        console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
         setTimeout(() => {
           onLoaded();
         }, 100);
@@ -1100,6 +1102,7 @@ function AvatarModel({
       console.log('[AvatarModel] 少年改アバターのテクスチャ適用を一時的にスキップ');
       
       if (onLoaded) {
+        console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
         setTimeout(() => {
           onLoaded();
         }, 100);
@@ -1108,6 +1111,7 @@ function AvatarModel({
       // 女性アバター - テクスチャ適用を一時的に無効化
       console.log('[AvatarModel] 女性アバターのテクスチャ適用を一時的にスキップ');
       if (onLoaded) {
+        console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
         setTimeout(() => {
           onLoaded();
         }, 100);
@@ -1128,6 +1132,7 @@ function AvatarModel({
     } else {
       // 成人男性モデルの場合はすぐに通知
       if (onLoaded) {
+        console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
         setTimeout(() => {
           onLoaded();
         }, 100);

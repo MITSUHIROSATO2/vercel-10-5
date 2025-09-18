@@ -8,13 +8,15 @@ interface EvaluationListProps {
   onEdit: (evaluation: InterviewEvaluation) => void;
   onDelete: (evaluationId: string) => void;
   onClose: () => void;
+  language?: 'ja' | 'en';
 }
 
 export default function EvaluationList({
   evaluations,
   onEdit,
   onDelete,
-  onClose
+  onClose,
+  language = 'ja'
 }: EvaluationListProps) {
   const [selectedEvaluation, setSelectedEvaluation] = useState<InterviewEvaluation | null>(null);
 
@@ -25,9 +27,9 @@ export default function EvaluationList({
   };
 
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('ja-JP', {
+    return new Date(date).toLocaleDateString(language === 'ja' ? 'ja-JP' : 'en-US', {
       year: 'numeric',
-      month: '2-digit',
+      month: language === 'ja' ? '2-digit' : 'short',
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit'
@@ -42,9 +44,11 @@ export default function EvaluationList({
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-                評価履歴
+                {language === 'ja' ? '評価履歴' : 'Evaluation History'}
               </h2>
-              <p className="text-gray-400 mt-1">過去の医療面接評価一覧</p>
+              <p className="text-gray-400 mt-1">
+                {language === 'ja' ? '過去の医療面接評価一覧' : 'Past Medical Interview Evaluations'}
+              </p>
             </div>
             <button
               onClick={onClose}
@@ -59,7 +63,9 @@ export default function EvaluationList({
         <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(80vh - 100px)' }}>
           {evaluations.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-400">評価履歴がありません</p>
+              <p className="text-gray-400">
+                {language === 'ja' ? '評価履歴がありません' : 'No evaluation history'}
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -77,7 +83,7 @@ export default function EvaluationList({
                       <div className="flex-1">
                         <div className="flex items-center gap-4 mb-2">
                           <h3 className="text-lg font-semibold text-white">
-                            シナリオID: {evaluation.scenarioId}
+                            {language === 'ja' ? 'シナリオID' : 'Scenario ID'}: {evaluation.scenarioId}
                           </h3>
                           <span className={`text-2xl font-bold ${getScoreColor(percentage)}`}>
                             {percentage}%
@@ -86,17 +92,25 @@ export default function EvaluationList({
                         
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
-                            <span className="text-gray-400">評価日時: </span>
+                            <span className="text-gray-400">
+                              {language === 'ja' ? '評価日時' : 'Evaluation Date'}:
+                            </span>
                             <span className="text-white">{formatDate(evaluation.timestamp)}</span>
                           </div>
                           <div>
-                            <span className="text-gray-400">評価者: </span>
-                            <span className="text-white">{evaluation.evaluatorName || '未記入'}</span>
+                            <span className="text-gray-400">
+                              {language === 'ja' ? '評価者' : 'Evaluator'}:
+                            </span>
+                            <span className="text-white">
+                              {evaluation.evaluatorName || (language === 'ja' ? '未記入' : 'Not entered')}
+                            </span>
                           </div>
                           <div>
-                            <span className="text-gray-400">スコア: </span>
+                            <span className="text-gray-400">
+                              {language === 'ja' ? 'スコア' : 'Score'}:
+                            </span>
                             <span className="text-white">
-                              {evaluation.totalScore || 0} / {evaluation.maxScore || 100} 点
+                              {evaluation.totalScore || 0} / {evaluation.maxScore || 100} {language === 'ja' ? '点' : 'points'}
                             </span>
                           </div>
                         </div>
@@ -110,12 +124,16 @@ export default function EvaluationList({
                         {/* 詳細表示 */}
                         {selectedEvaluation?.id === evaluation.id && (
                           <div className="mt-4 p-4 bg-gray-900/30 rounded-lg space-y-3">
-                            <h4 className="text-cyan-400 font-semibold">評価詳細</h4>
+                            <h4 className="text-cyan-400 font-semibold">
+                              {language === 'ja' ? '評価詳細' : 'Evaluation Details'}
+                            </h4>
                             
                             {/* チェック済み項目のサマリー */}
                             <div className="space-y-2 text-sm">
                               <div>
-                                <span className="text-gray-400">コミュニケーション: </span>
+                                <span className="text-gray-400">
+                                  {language === 'ja' ? 'コミュニケーション' : 'Communication'}:
+                                </span>
                                 <span className="text-white">
                                   {[...evaluation.categories.communication.verbal, ...evaluation.categories.communication.overall]
                                     .filter(item => item.checked).length} / 
@@ -123,14 +141,18 @@ export default function EvaluationList({
                                 </span>
                               </div>
                               <div>
-                                <span className="text-gray-400">導入: </span>
+                                <span className="text-gray-400">
+                                  {language === 'ja' ? '導入' : 'Introduction'}:
+                                </span>
                                 <span className="text-white">
                                   {evaluation.categories.introduction.filter(item => item.checked).length} / 
                                   {evaluation.categories.introduction.length}
                                 </span>
                               </div>
                               <div>
-                                <span className="text-gray-400">医学的情報: </span>
+                                <span className="text-gray-400">
+                                  {language === 'ja' ? '医学的情報' : 'Medical Information'}:
+                                </span>
                                 <span className="text-white">
                                   {[...evaluation.categories.medicalInfo.chiefComplaint, 
                                     ...evaluation.categories.medicalInfo.history,
@@ -142,14 +164,18 @@ export default function EvaluationList({
                                 </span>
                               </div>
                               <div>
-                                <span className="text-gray-400">心理社会: </span>
+                                <span className="text-gray-400">
+                                  {language === 'ja' ? '心理社会' : 'Psychosocial'}:
+                                </span>
                                 <span className="text-white">
                                   {evaluation.categories.psychosocial.filter(item => item.checked).length} / 
                                   {evaluation.categories.psychosocial.length}
                                 </span>
                               </div>
                               <div>
-                                <span className="text-gray-400">締めくくり: </span>
+                                <span className="text-gray-400">
+                                  {language === 'ja' ? '締めくくり' : 'Closing'}:
+                                </span>
                                 <span className="text-white">
                                   {evaluation.categories.closing.filter(item => item.checked).length} / 
                                   {evaluation.categories.closing.length}
@@ -168,23 +194,25 @@ export default function EvaluationList({
                           )}
                           className="px-3 py-1 bg-cyan-600/20 text-cyan-400 rounded-lg hover:bg-cyan-600/30 transition-all text-sm"
                         >
-                          {selectedEvaluation?.id === evaluation.id ? '閉じる' : '詳細'}
+                          {selectedEvaluation?.id === evaluation.id
+                            ? (language === 'ja' ? '閉じる' : 'Close')
+                            : (language === 'ja' ? '詳細' : 'Details')}
                         </button>
                         <button
                           onClick={() => onEdit(evaluation)}
                           className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/30 transition-all text-sm"
                         >
-                          編集
+                          {language === 'ja' ? '編集' : 'Edit'}
                         </button>
                         <button
                           onClick={() => {
-                            if (confirm('この評価を削除しますか？')) {
+                            if (confirm(language === 'ja' ? 'この評価を削除しますか？' : 'Delete this evaluation?')) {
                               onDelete(evaluation.id);
                             }
                           }}
                           className="px-3 py-1 bg-red-600/20 text-red-400 rounded-lg hover:bg-red-600/30 transition-all text-sm"
                         >
-                          削除
+                          {language === 'ja' ? '削除' : 'Delete'}
                         </button>
                       </div>
                     </div>

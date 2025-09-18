@@ -49,11 +49,11 @@ const evaluationCriteria: EvaluationCriteria[] = [
 
 export async function POST(request: NextRequest) {
   try {
-    const { messages, scenarioId, customCriteria } = await request.json();
+    const { messages, scenarioId, customCriteria, language = 'ja' } = await request.json();
     
     if (!messages || messages.length === 0) {
       return NextResponse.json(
-        { error: '会話履歴が必要です' },
+        { error: language === 'ja' ? '会話履歴が必要です' : 'Conversation history is required' },
         { status: 400 }
       );
     }
@@ -63,11 +63,11 @@ export async function POST(request: NextRequest) {
 
     // 会話履歴を文字列に変換
     const conversationText = messages
-      .map((msg: any) => `${msg.role === 'user' ? '医師' : '患者'}: ${msg.content}`)
+      .map((msg: any) => `${msg.role === 'user' ? (language === 'ja' ? '医師' : 'Doctor') : (language === 'ja' ? '患者' : 'Patient')}: ${msg.content}`)
       .join('\n');
 
     // GPT-4による評価
-    const evaluationPrompt = `
+    const evaluationPrompt = language === 'ja' ? `
 あなたは歯科医療面接の評価者です。以下の医療面接の会話を分析し、評価基準に基づいて評価してください。
 
 【会話履歴】
@@ -106,6 +106,45 @@ ${criteriaToUse.map((c: EvaluationCriteria) => `- ${c.item} (優先度: ${c.prio
     "medicalInfo": "医学的情報収集に関する詳細フィードバック",
     "overall": "全体的な詳細フィードバック"
   }
+}` : `
+You are a dental medical interview evaluator. Analyze the following medical interview conversation and evaluate it based on the evaluation criteria.
+
+[Conversation History]
+${conversationText}
+
+[Evaluation Criteria]
+${criteriaToUse.map((c: EvaluationCriteria) => `- ${c.item} (Priority: ${c.priority})`).join('\n')}
+
+[Evaluation Method]
+1. Determine whether each evaluation item was performed in the conversation
+2. Mark performed items as "checked": true, not performed as "checked": false
+3. Provide specific evaluation comments
+4. Calculate an overall evaluation score (out of 100)
+5. Provide comprehensive feedback
+
+[Output Format]
+Please output in the following JSON format:
+{
+  "evaluatedItems": [
+    {
+      "category": "category name",
+      "subcategory": "subcategory name (if applicable)",
+      "item": "evaluation item",
+      "checked": true/false,
+      "comment": "specific evaluation comment",
+      "priority": "high/medium/low"
+    }
+  ],
+  "totalScore": overall score (0-100),
+  "maxScore": 100,
+  "summary": "comprehensive evaluation comment",
+  "strengths": ["strength 1", "strength 2"],
+  "improvements": ["improvement 1", "improvement 2"],
+  "detailedFeedback": {
+    "communication": "detailed feedback on communication",
+    "medicalInfo": "detailed feedback on medical information gathering",
+    "overall": "overall detailed feedback"
+  }
 }`;
 
     const completion = await openai.chat.completions.create({
@@ -113,7 +152,9 @@ ${criteriaToUse.map((c: EvaluationCriteria) => `- ${c.item} (優先度: ${c.prio
       messages: [
         {
           role: 'system',
-          content: '医療面接評価の専門家として、客観的かつ建設的な評価を行ってください。'
+          content: language === 'ja'
+            ? '医療面接評価の専門家として、客観的かつ建設的な評価を行ってください。日本語で評価してください。'
+            : 'As a medical interview evaluation expert, provide objective and constructive evaluation. Provide evaluation in English.'
         },
         {
           role: 'user',
@@ -131,7 +172,7 @@ ${criteriaToUse.map((c: EvaluationCriteria) => `- ${c.item} (優先度: ${c.prio
       id: `eval_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       timestamp: new Date(),
       scenarioId,
-      evaluatorName: 'AI自動評価システム',
+      evaluatorName: language === 'ja' ? 'AI自動評価システム' : 'AI Automatic Evaluation System',
       ...evaluationResult,
       conversationLength: messages.length,
       isAIEvaluation: true

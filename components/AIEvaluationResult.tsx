@@ -8,6 +8,7 @@ interface AIEvaluationResultProps {
   scenarioId: string;
   onClose: () => void;
   onSave?: (evaluation: any) => void;
+  language?: 'ja' | 'en';
 }
 
 interface EvaluationResult {
@@ -35,7 +36,8 @@ export default function AIEvaluationResult({
   messages,
   scenarioId,
   onClose,
-  onSave
+  onSave,
+  language = 'ja'
 }: AIEvaluationResultProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
@@ -57,16 +59,17 @@ export default function AIEvaluationResult({
       const response = await fetch('/api/evaluate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          messages, 
+        body: JSON.stringify({
+          messages,
           scenarioId,
-          customCriteria: customCriteria ? JSON.parse(customCriteria) : null
+          customCriteria: customCriteria ? JSON.parse(customCriteria) : null,
+          language
         })
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || '評価の生成に失敗しました');
+        throw new Error(errorData.error || (language === 'ja' ? '評価の生成に失敗しました' : 'Failed to generate evaluation'));
       }
 
       const data = await response.json();
@@ -77,8 +80,8 @@ export default function AIEvaluationResult({
         onSave(data.evaluation);
       }
     } catch (err) {
-      console.error('AI評価エラー:', err);
-      setError(err instanceof Error ? err.message : '評価中にエラーが発生しました');
+      console.error('AI evaluation error:', err);
+      setError(err instanceof Error ? err.message : (language === 'ja' ? '評価中にエラーが発生しました' : 'An error occurred during evaluation'));
     } finally {
       setIsLoading(false);
     }
@@ -100,17 +103,17 @@ export default function AIEvaluationResult({
   };
 
   const tabs = [
-    { id: 'overview', label: '総合評価', icon: '📊' },
-    { id: 'details', label: '詳細項目', icon: '📋' },
-    { id: 'feedback', label: 'フィードバック', icon: '💬' },
+    { id: 'overview', label: language === 'ja' ? '総合評価' : 'Overall Evaluation', icon: '📊' },
+    { id: 'details', label: language === 'ja' ? '詳細項目' : 'Detailed Items', icon: '📋' },
+    { id: 'feedback', label: language === 'ja' ? 'フィードバック' : 'Feedback', icon: '💬' },
   ];
 
-  const categoryLabels: { [key: string]: string } = {
-    communication: 'コミュニケーション',
-    introduction: '導入',
-    medicalInfo: '医学的情報',
-    psychosocial: '心理社会的側面',
-    closing: '締めくくり'
+  const categoryLabels: { [key: string]: { ja: string; en: string } } = {
+    communication: { ja: 'コミュニケーション', en: 'Communication' },
+    introduction: { ja: '導入', en: 'Introduction' },
+    medicalInfo: { ja: '医学的情報', en: 'Medical Information' },
+    psychosocial: { ja: '心理社会的側面', en: 'Psychosocial Aspects' },
+    closing: { ja: '締めくくり', en: 'Closing' }
   };
 
   return (
@@ -121,9 +124,11 @@ export default function AIEvaluationResult({
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-cyan-400 flex items-center gap-2" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-                <span>🤖</span> AI医療面接評価
+                <span>🤖</span> {language === 'ja' ? 'AI医療面接評価' : 'AI Medical Interview Evaluation'}
               </h2>
-              <p className="text-gray-400 mt-1">AIによる自動評価結果</p>
+              <p className="text-gray-400 mt-1">
+                {language === 'ja' ? 'AIによる自動評価結果' : 'Automatic Evaluation by AI'}
+              </p>
             </div>
             <button
               onClick={onClose}
@@ -142,8 +147,12 @@ export default function AIEvaluationResult({
                 <div className="w-16 h-16 border-4 border-cyan-500/30 rounded-full animate-spin border-t-cyan-500"></div>
                 <span className="absolute inset-0 flex items-center justify-center text-2xl">🤖</span>
               </div>
-              <p className="mt-4 text-cyan-400 animate-pulse">AIが面接を分析中...</p>
-              <p className="mt-2 text-gray-500 text-sm">しばらくお待ちください</p>
+              <p className="mt-4 text-cyan-400 animate-pulse">
+                {language === 'ja' ? 'AIが面接を分析中...' : 'AI is analyzing the interview...'}
+              </p>
+              <p className="mt-2 text-gray-500 text-sm">
+                {language === 'ja' ? 'しばらくお待ちください' : 'Please wait a moment'}
+              </p>
             </div>
           ) : error ? (
             <div className="text-center py-12">
@@ -152,7 +161,7 @@ export default function AIEvaluationResult({
                 onClick={generateEvaluation}
                 className="mt-4 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
               >
-                再試行
+                {language === 'ja' ? '再試行' : 'Retry'}
               </button>
             </div>
           ) : evaluation ? (
@@ -181,9 +190,11 @@ export default function AIEvaluationResult({
                   {/* スコア */}
                   <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/20">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-white">総合スコア</h3>
+                      <h3 className="text-lg font-semibold text-white">
+                        {language === 'ja' ? '総合スコア' : 'Total Score'}
+                      </h3>
                       <span className={`text-4xl font-bold ${getScoreColor(evaluation.totalScore)}`}>
-                        {evaluation.totalScore}点
+                        {evaluation.totalScore}{language === 'ja' ? '点' : ' points'}
                       </span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
@@ -202,7 +213,7 @@ export default function AIEvaluationResult({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-green-900/20 rounded-xl p-4 border border-green-500/30">
                       <h4 className="text-green-400 font-semibold mb-3 flex items-center gap-2">
-                        <span>✅</span> 良かった点
+                        <span>✅</span> {language === 'ja' ? '良かった点' : 'Strengths'}
                       </h4>
                       <ul className="space-y-2">
                         {evaluation.strengths.map((strength, idx) => (
@@ -215,7 +226,7 @@ export default function AIEvaluationResult({
                     </div>
                     <div className="bg-orange-900/20 rounded-xl p-4 border border-orange-500/30">
                       <h4 className="text-orange-400 font-semibold mb-3 flex items-center gap-2">
-                        <span>📝</span> 改善点
+                        <span>📝</span> {language === 'ja' ? '改善点' : 'Areas for Improvement'}
                       </h4>
                       <ul className="space-y-2">
                         {evaluation.improvements.map((improvement, idx) => (
@@ -243,7 +254,7 @@ export default function AIEvaluationResult({
                   ).map(([category, items]) => (
                     <div key={category} className="bg-gray-800/50 rounded-xl p-4 border border-cyan-500/20">
                       <h4 className="text-cyan-400 font-semibold mb-3">
-                        {categoryLabels[category] || category}
+                        {categoryLabels[category]?.[language] || category}
                       </h4>
                       <div className="space-y-2">
                         {items.map((item, idx) => (
@@ -258,7 +269,9 @@ export default function AIEvaluationResult({
                               <div className="flex items-center gap-2">
                                 <span className="text-gray-300">{item.item}</span>
                                 <span className={`text-xs px-2 py-1 rounded-full ${getPriorityColor(item.priority)}`}>
-                                  {item.priority === 'high' ? '高' : item.priority === 'medium' ? '中' : '低'}
+                                  {language === 'ja'
+                                    ? (item.priority === 'high' ? '高' : item.priority === 'medium' ? '中' : '低')
+                                    : (item.priority === 'high' ? 'High' : item.priority === 'medium' ? 'Medium' : 'Low')}
                                 </span>
                               </div>
                               {item.comment && (
@@ -278,19 +291,19 @@ export default function AIEvaluationResult({
                 <div className="space-y-4">
                   <div className="bg-blue-900/20 rounded-xl p-4 border border-blue-500/30">
                     <h4 className="text-blue-400 font-semibold mb-3 flex items-center gap-2">
-                      <span>💬</span> コミュニケーション
+                      <span>💬</span> {language === 'ja' ? 'コミュニケーション' : 'Communication'}
                     </h4>
                     <p className="text-gray-300">{evaluation.detailedFeedback.communication}</p>
                   </div>
                   <div className="bg-purple-900/20 rounded-xl p-4 border border-purple-500/30">
                     <h4 className="text-purple-400 font-semibold mb-3 flex items-center gap-2">
-                      <span>🏥</span> 医学的情報収集
+                      <span>🏥</span> {language === 'ja' ? '医学的情報収集' : 'Medical Information Gathering'}
                     </h4>
                     <p className="text-gray-300">{evaluation.detailedFeedback.medicalInfo}</p>
                   </div>
                   <div className="bg-cyan-900/20 rounded-xl p-4 border border-cyan-500/30">
                     <h4 className="text-cyan-400 font-semibold mb-3 flex items-center gap-2">
-                      <span>📊</span> 総合評価
+                      <span>📊</span> {language === 'ja' ? '総合評価' : 'Overall Evaluation'}
                     </h4>
                     <p className="text-gray-300">{evaluation.detailedFeedback.overall}</p>
                   </div>
@@ -304,13 +317,13 @@ export default function AIEvaluationResult({
         {!isLoading && evaluation && (
           <div className="p-6 border-t border-cyan-500/30 flex justify-between items-center">
             <div className="text-sm text-gray-500">
-              評価日時: {new Date().toLocaleString('ja-JP')}
+              {language === 'ja' ? '評価日時' : 'Evaluation Date'}: {new Date().toLocaleString(language === 'ja' ? 'ja-JP' : 'en-US')}
             </div>
             <button
               onClick={onClose}
               className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
             >
-              閉じる
+              {language === 'ja' ? '閉じる' : 'Close'}
             </button>
           </div>
         )}
