@@ -85,19 +85,15 @@ export default function Home() {
   // アバター変更時にローディング状態をリセット
   const handleAvatarChange = (avatar: 'adult' | 'boy' | 'boy_improved' | 'female') => {
     if (avatar !== selectedAvatar) {
-      console.log(`[Avatar Change] Switching from ${selectedAvatar} to ${avatar}`);
       setIsAvatarLoaded(false);
       setSelectedAvatar(avatar);
-      const modelPath = getModelPath(avatar);
-      console.log(`[Avatar Change] Model path for ${avatar}: ${modelPath}`);
     }
   };
   
   // onLoaded コールバックをメモ化
   const handleAvatarLoaded = React.useCallback(() => {
-    console.log(`[Avatar Loaded] Avatar ${selectedAvatar} loaded successfully`);
     setIsAvatarLoaded(true);
-  }, [selectedAvatar]);
+  }, []);
 
   // デモが再生中かどうかを追跡するためのref
   const isDemoPlayingRef = useRef(false);
@@ -800,9 +796,9 @@ export default function Home() {
                     <div className="text-cyan-400 animate-pulse">モデルを読み込み中...</div>
                   </div>
                 }>
-                  <FinalLipSyncAvatar 
-                    key={selectedAvatar} // アバター変更時に完全に再マウント
-                    isSpeaking={isSpeaking || isCurrentlySpeaking || isDemoAudioPlaying} 
+                  <FinalLipSyncAvatar
+                    key={`avatar-${selectedAvatar}`} // アバター変更時に完全に再マウント
+                    isSpeaking={isSpeaking || isCurrentlySpeaking || isDemoAudioPlaying}
                     currentWord={isDemoAudioPlaying ? demoCurrentWord : currentWord}
                     audioLevel={isDemoAudioPlaying ? demoAudioLevel : audioLevel}
                     currentPhoneme={currentPhoneme}
