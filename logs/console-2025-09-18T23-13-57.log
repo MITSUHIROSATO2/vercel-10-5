@@ -1,0 +1,80 @@
+{"timestamp":"2025-09-18T23:13:59.061Z","type":"info","text":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold","location":" [react-dom-client.development.js:24650]"}
+{"timestamp":"2025-09-18T23:13:59.160Z","type":"log","text":"🌐 Language changed to: ja","location":" [page.tsx:152]"}
+{"timestamp":"2025-09-18T23:14:02.612Z","type":"log","text":"[AvatarModel] 少年アバターの色を同期的に設定（morphTargets保持）","location":" [FinalLipSyncAvatar.tsx:886]"}
+{"timestamp":"2025-09-18T23:14:02.613Z","type":"log","text":"  -> 非表示: Beard_Base","location":" [FinalLipSyncAvatar.tsx:897]"}
+{"timestamp":"2025-09-18T23:14:02.613Z","type":"log","text":"マテリアル総数: 22","location":" [FinalLipSyncAvatar.tsx:919]"}
+{"timestamp":"2025-09-18T23:14:02.613Z","type":"log","text":"マテリアル処理: Boat_Shoes (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.614Z","type":"log","text":"  -> 靴: 茶色","location":" [FinalLipSyncAvatar.tsx:1102]"}
+{"timestamp":"2025-09-18T23:14:02.614Z","type":"log","text":"  最終的な色: #4a3c28","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.614Z","type":"log","text":"マテリアル処理: Eyebrow_Transparency (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.614Z","type":"log","text":"  -> 眉毛: 茶色","location":" [FinalLipSyncAvatar.tsx:969]"}
+{"timestamp":"2025-09-18T23:14:02.614Z","type":"log","text":"  最終的な色: #1a1511","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.614Z","type":"log","text":"マテリアル処理: Fit_shirts (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.614Z","type":"log","text":"  -> シャツ: 緑","location":" [FinalLipSyncAvatar.tsx:1088]"}
+{"timestamp":"2025-09-18T23:14:02.614Z","type":"log","text":"  最終的な色: #4a7c59","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"マテリアル処理: Hair_Transparency (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"  -> 髪: 茶色（マット）","location":" [FinalLipSyncAvatar.tsx:961]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"  最終的な色: #1a1511","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"マテリアル処理: NUG_Skin_Head (type: MeshPhysicalMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"  -> 肌: ベージュ","location":" [FinalLipSyncAvatar.tsx:1052]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"  最終的な色: #c08870","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"マテリアル処理: NUG_Skin_Body (type: MeshPhysicalMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"  -> 肌: ベージュ","location":" [FinalLipSyncAvatar.tsx:1052]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"  最終的な色: #c08870","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"マテリアル処理: NUG_Skin_Arm (type: MeshPhysicalMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"  -> 肌: ベージュ","location":" [FinalLipSyncAvatar.tsx:1052]"}
+{"timestamp":"2025-09-18T23:14:02.615Z","type":"log","text":"  最終的な色: #c08870","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"マテリアル処理: NUG_Skin_Leg (type: MeshPhysicalMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"  -> 肌: ベージュ","location":" [FinalLipSyncAvatar.tsx:1052]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"  最終的な色: #c08870","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"マテリアル処理: NUG_Nails (type: MeshPhysicalMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"  -> 爪: 薄いベージュ","location":" [FinalLipSyncAvatar.tsx:1080]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"  最終的な色: #f5c9a6","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"マテリアル処理: NUG_Eyelash (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"  -> まつ毛/ティアライン: 肌色","location":" [FinalLipSyncAvatar.tsx:1125]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"  最終的な色: #c08870","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"マテリアル処理: NUG_Eye_R (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"  -> 右目: 茶色虹彩（フォールバック色設定）","location":" [FinalLipSyncAvatar.tsx:999]"}
+{"timestamp":"2025-09-18T23:14:02.616Z","type":"log","text":"  最終的な色: #8b6f47","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.617Z","type":"log","text":"マテリアル処理: NUG_Cornea_R (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.617Z","type":"log","text":"  -> 角膜: 完全透明（非表示）","location":" [FinalLipSyncAvatar.tsx:1041]"}
+{"timestamp":"2025-09-18T23:14:02.617Z","type":"log","text":"  最終的な色: #ffffff","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.617Z","type":"log","text":"マテリアル処理: NUG_Eye_L (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.617Z","type":"log","text":"  -> 左目: 茶色虹彩（フォールバック色設定）","location":" [FinalLipSyncAvatar.tsx:1029]"}
+{"timestamp":"2025-09-18T23:14:02.617Z","type":"log","text":"  最終的な色: #8b6f47","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.617Z","type":"log","text":"マテリアル処理: NUG_Cornea_L (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.618Z","type":"log","text":"  -> 角膜: 完全透明（非表示）","location":" [FinalLipSyncAvatar.tsx:1041]"}
+{"timestamp":"2025-09-18T23:14:02.618Z","type":"log","text":"  最終的な色: #ffffff","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.618Z","type":"log","text":"マテリアル処理: NUG_Eye_ONUGlusion_R (type: MeshPhysicalMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.618Z","type":"log","text":"  -> スキップ: nug_eye_onuglusion_r","location":" [FinalLipSyncAvatar.tsx:1131]"}
+{"timestamp":"2025-09-18T23:14:02.618Z","type":"log","text":"  最終的な色: #ffffff","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.618Z","type":"log","text":"マテリアル処理: NUG_Eye_ONUGlusion_L (type: MeshPhysicalMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.618Z","type":"log","text":"  -> スキップ: nug_eye_onuglusion_l","location":" [FinalLipSyncAvatar.tsx:1131]"}
+{"timestamp":"2025-09-18T23:14:02.618Z","type":"log","text":"  最終的な色: #ffffff","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.619Z","type":"log","text":"マテリアル処理: NUG_Tearline_R (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.619Z","type":"log","text":"  -> まつ毛/ティアライン: 肌色","location":" [FinalLipSyncAvatar.tsx:1125]"}
+{"timestamp":"2025-09-18T23:14:02.619Z","type":"log","text":"  最終的な色: #c08870","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.619Z","type":"log","text":"マテリアル処理: NUG_Tearline_L (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.619Z","type":"log","text":"  -> まつ毛/ティアライン: 肌色","location":" [FinalLipSyncAvatar.tsx:1125]"}
+{"timestamp":"2025-09-18T23:14:02.619Z","type":"log","text":"  最終的な色: #c08870","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.619Z","type":"log","text":"マテリアル処理: NUG_Upper_Teeth (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.620Z","type":"log","text":"  -> 歯: 白","location":" [FinalLipSyncAvatar.tsx:1063]"}
+{"timestamp":"2025-09-18T23:14:02.620Z","type":"log","text":"  最終的な色: #ffffff","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.620Z","type":"log","text":"マテリアル処理: NUG_Lower_Teeth (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.620Z","type":"log","text":"  -> 歯: 白","location":" [FinalLipSyncAvatar.tsx:1063]"}
+{"timestamp":"2025-09-18T23:14:02.620Z","type":"log","text":"  最終的な色: #ffffff","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.620Z","type":"log","text":"マテリアル処理: NUG_Tongue (type: MeshPhysicalMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.620Z","type":"log","text":"  -> 舌: ピンク（エミッシブ付き）","location":" [FinalLipSyncAvatar.tsx:1074]"}
+{"timestamp":"2025-09-18T23:14:02.620Z","type":"log","text":"  最終的な色: #ff6b6b","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.620Z","type":"log","text":"マテリアル処理: Pants (type: MeshStandardMaterial)","location":" [FinalLipSyncAvatar.tsx:926]"}
+{"timestamp":"2025-09-18T23:14:02.621Z","type":"log","text":"  -> パンツ: 青","location":" [FinalLipSyncAvatar.tsx:1096]"}
+{"timestamp":"2025-09-18T23:14:02.621Z","type":"log","text":"  最終的な色: #3b4c5a","location":" [FinalLipSyncAvatar.tsx:1145]"}
+{"timestamp":"2025-09-18T23:14:02.621Z","type":"log","text":"  -> 目を表示: NUG_Base_Eye_1","location":" [FinalLipSyncAvatar.tsx:1162]"}
+{"timestamp":"2025-09-18T23:14:02.621Z","type":"log","text":"  -> 目を表示: NUG_Base_Eye_2","location":" [FinalLipSyncAvatar.tsx:1162]"}
+{"timestamp":"2025-09-18T23:14:02.621Z","type":"log","text":"  -> 目を表示: NUG_Base_Eye_3","location":" [FinalLipSyncAvatar.tsx:1162]"}
+{"timestamp":"2025-09-18T23:14:02.621Z","type":"log","text":"  -> 目を表示: NUG_Base_Eye_4","location":" [FinalLipSyncAvatar.tsx:1162]"}
+{"timestamp":"2025-09-18T23:14:02.621Z","type":"log","text":"  -> 非表示設定: NUG_Base_EyeONUGlusion_1","location":" [FinalLipSyncAvatar.tsx:1157]"}
+{"timestamp":"2025-09-18T23:14:02.621Z","type":"log","text":"  -> 非表示設定: NUG_Base_EyeONUGlusion_2","location":" [FinalLipSyncAvatar.tsx:1157]"}
+{"timestamp":"2025-09-18T23:14:02.621Z","type":"log","text":"[AvatarModel] 少年アバターの色設定完了","location":" [FinalLipSyncAvatar.tsx:1171]"}
+{"timestamp":"2025-09-18T23:14:04.328Z","type":"log","text":"  -> 右目: テクスチャ読み込み完了","location":" [FinalLipSyncAvatar.tsx:991]"}
+{"timestamp":"2025-09-18T23:14:04.329Z","type":"log","text":"  -> 左目: テクスチャ読み込み完了","location":" [FinalLipSyncAvatar.tsx:1021]"}
