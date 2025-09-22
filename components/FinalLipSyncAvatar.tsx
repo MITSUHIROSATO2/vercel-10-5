@@ -1296,13 +1296,6 @@ function AvatarModel({
           }
         });
       }
-
-      // GLTFローダーのキャッシュをクリア（重要）
-      try {
-        useGLTF.clear(modelPath);
-      } catch (e) {
-        // キャッシュクリアエラーは無視
-      }
     };
   }, [scene, onLoaded, modelPath, selectedAvatar, isBoyImprovedModel]); // 依存配列を適切に設定
   
