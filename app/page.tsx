@@ -34,6 +34,7 @@ import ScenarioGenerator from '@/components/ScenarioGenerator';
 import { demoDialogues, shortDemoDialogues } from '@/lib/demoDialogues';
 import { improvedDemoDialogues, shortImprovedDemoDialogues, DemoDialogue } from '@/lib/improvedDemoDialogues';
 import { improvedDemoDialoguesEn, shortImprovedDemoDialoguesEn } from '@/lib/improvedDemoDialoguesEnglish';
+import { generateDemoDialogues, generateDemoDialoguesEnglish } from '@/lib/dynamicDemoDialogues';
 
 export default function Home() {
   const [messages, setMessages] = useState<PatientMessage[]>([]);
@@ -158,16 +159,34 @@ export default function Home() {
       type,
       demoLanguage,
       demoLanguageValue: `"${demoLanguage}"`,
-      useImprovedDemo
+      useImprovedDemo,
+      selectedScenario: selectedScenario.name
     });
 
-    // 常に改善版デモを使用（多言語対応のため）
-    const dialogues = demoLanguage === 'ja'
-      ? (type === 'full' ? improvedDemoDialogues : shortImprovedDemoDialogues)
-      : (type === 'full' ? improvedDemoDialoguesEn : shortImprovedDemoDialoguesEn);
+    // シナリオに基づく動的デモ対話を生成（fullタイプのみ対応）
+    let dialogues: DemoDialogue[];
+
+    if (type === 'full') {
+      // フルデモはシナリオに基づいて動的に生成
+      console.log('🎯 Generating dynamic demo for scenario:', selectedScenario.name, selectedScenario.id);
+      dialogues = demoLanguage === 'ja'
+        ? generateDemoDialogues(selectedScenario)
+        : generateDemoDialoguesEnglish(selectedScenario).length > 0
+          ? generateDemoDialoguesEnglish(selectedScenario)
+          : improvedDemoDialoguesEn; // 英語版が実装されるまでフォールバック
+      console.log('📚 Generated dialogues count:', dialogues.length);
+      console.log('🔍 First patient response:', dialogues.find(d => d.speaker === 'patient')?.text);
+    } else {
+      // ショートデモは既存の固定版を使用
+      dialogues = demoLanguage === 'ja'
+        ? shortImprovedDemoDialogues
+        : shortImprovedDemoDialoguesEn;
+    }
 
     console.log('🗣️ Selected dialogue source:',
-      `${demoLanguage === 'ja' ? 'Japanese' : 'English'} improved (demoLanguage="${demoLanguage}")`
+      type === 'full'
+        ? `Dynamic demo for "${selectedScenario.name}" (${demoLanguage === 'ja' ? 'Japanese' : 'English'})`
+        : `Fixed short demo (${demoLanguage === 'ja' ? 'Japanese' : 'English'})`
     );
     if (dialogues[index]) {
       console.log('💬 Current dialogue:', dialogues[index].text.substring(0, 50) + '...');
