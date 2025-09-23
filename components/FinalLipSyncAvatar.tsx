@@ -897,23 +897,25 @@ function AvatarModel({
             mat.depthWrite = true;
             mat.side = THREE.FrontSide;
             
-            // テクスチャを非同期で読み込み
-            const textureLoaderR = new THREE.TextureLoader();
-            textureLoaderR.load(
-              '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
-              (texture) => {
-                texture.colorSpace = THREE.SRGBColorSpace;
-                mat.map = texture;
-                mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
-                mat.needsUpdate = true;
-                console.log(`  -> 右目: テクスチャ読み込み完了`);
-              },
-              undefined,
-              (error) => {
-                console.error(`  -> 右目: テクスチャ読み込みエラー`, error);
-                // エラー時はフォールバック色のまま
-              }
-            );
+            // テクスチャを遅延して非同期で読み込み（WebGLコンテキストの負荷を軽減）
+            setTimeout(() => {
+              const textureLoaderR = new THREE.TextureLoader();
+              textureLoaderR.load(
+                '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
+                (texture) => {
+                  texture.colorSpace = THREE.SRGBColorSpace;
+                  mat.map = texture;
+                  mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
+                  mat.needsUpdate = true;
+                  console.log(`  -> 右目: テクスチャ読み込み完了`);
+                },
+                undefined,
+                (error) => {
+                  console.error(`  -> 右目: テクスチャ読み込みエラー`, error);
+                  // エラー時はフォールバック色のまま
+                }
+              );
+            }, 500); // 500ms遅延
             console.log(`  -> 右目: 茶色虹彩（フォールバック色設定）`);
             break;
             
@@ -930,23 +932,25 @@ function AvatarModel({
             mat.depthWrite = true;
             mat.side = THREE.FrontSide;
             
-            // テクスチャを非同期で読み込み
-            const textureLoaderL = new THREE.TextureLoader();
-            textureLoaderL.load(
-              '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
-              (texture) => {
-                texture.colorSpace = THREE.SRGBColorSpace;
-                mat.map = texture;
-                mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
-                mat.needsUpdate = true;
-                console.log(`  -> 左目: テクスチャ読み込み完了`);
-              },
-              undefined,
-              (error) => {
-                console.error(`  -> 左目: テクスチャ読み込みエラー`, error);
-                // エラー時はフォールバック色のまま
-              }
-            );
+            // テクスチャを遅延して非同期で読み込み（WebGLコンテキストの負荷を軽減）
+            setTimeout(() => {
+              const textureLoaderL = new THREE.TextureLoader();
+              textureLoaderL.load(
+                '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
+                (texture) => {
+                  texture.colorSpace = THREE.SRGBColorSpace;
+                  mat.map = texture;
+                  mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
+                  mat.needsUpdate = true;
+                  console.log(`  -> 左目: テクスチャ読み込み完了`);
+                },
+                undefined,
+                (error) => {
+                  console.error(`  -> 左目: テクスチャ読み込みエラー`, error);
+                  // エラー時はフォールバック色のまま
+                }
+              );
+            }, 700); // 700ms遅延（右目の後）
             console.log(`  -> 左目: 茶色虹彩（フォールバック色設定）`);
             break;
             
