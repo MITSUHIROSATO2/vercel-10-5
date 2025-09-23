@@ -772,7 +772,7 @@ function AvatarModel({
       // GLTFのキャッシュをクリア
       useGLTF.preload(modelPath); // preloadを呼び出してキャッシュをリフレッシュ
     };
-  }, [modelPath, scene]);
+  }, []); // 依存配列を空にして、アンマウント時のみ実行
   
   useEffect(() => {
     if (!scene) return;

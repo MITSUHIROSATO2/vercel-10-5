@@ -85,22 +85,11 @@ export default function Home() {
   // アバター変更時にローディング状態をリセット
   const handleAvatarChange = (avatar: 'adult' | 'boy' | 'boy_improved' | 'female') => {
     if (avatar !== selectedAvatar) {
-      // 短い遅延を追加して、既存のWebGLコンテキストをクリーンアップする時間を確保
+      // ローディング状態をリセット
       setIsAvatarLoaded(false);
 
-      // 一時的にアバターを空にして強制的にアンマウント
-      setSelectedAvatar(null as any);
-
-      // より長い遅延で完全なクリーンアップを確保（特に男性2から男性1への遷移用）
-      // 男性2（adult）から男性1（boy）への遷移で問題が発生するため遅延を増加
-      const cleanupDelay = selectedAvatar === 'adult' && avatar === 'boy' ? 200 : 100;
-
-      // 次のフレームで新しいアバターを設定
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          setSelectedAvatar(avatar);
-        }, cleanupDelay); // 動的な遅延でWebGLリソースのクリーンアップを待つ
-      });
+      // 直接アバターを切り替え（keyプロップで再マウントを制御）
+      setSelectedAvatar(avatar);
     }
   };
   
@@ -805,30 +794,23 @@ export default function Home() {
               )}
               {/* リップシンク対応アバター表示部分 */}
               <div className="scan-overlay" style={{ minHeight: '400px' }}>
-                {selectedAvatar && (
-                  <React.Suspense fallback={
-                    <div className="flex items-center justify-center h-[400px]">
-                      <div className="text-cyan-400 animate-pulse">モデルを読み込み中...</div>
-                    </div>
-                  }>
-                    <FinalLipSyncAvatar
-                      key={`avatar-${selectedAvatar}`} // アバター変更時に再マウント
-                      isSpeaking={isSpeaking || isCurrentlySpeaking || isDemoAudioPlaying}
-                      currentWord={isDemoAudioPlaying ? demoCurrentWord : currentWord}
-                      audioLevel={isDemoAudioPlaying ? demoAudioLevel : audioLevel}
-                      currentPhoneme={currentPhoneme}
-                      speechProgress={speechProgress}
-                      modelPath={getModelPath(selectedAvatar)}
-                      selectedAvatar={selectedAvatar}
-                      onLoaded={handleAvatarLoaded}
-                    />
-                  </React.Suspense>
-                )}
-                {!selectedAvatar && (
+                <React.Suspense fallback={
                   <div className="flex items-center justify-center h-[400px]">
-                    <div className="text-cyan-400 animate-pulse">切り替え中...</div>
+                    <div className="text-cyan-400 animate-pulse">モデルを読み込み中...</div>
                   </div>
-                )}
+                }>
+                  <FinalLipSyncAvatar
+                    key={`avatar-${selectedAvatar}`} // アバター変更時に再マウント
+                    isSpeaking={isSpeaking || isCurrentlySpeaking || isDemoAudioPlaying}
+                    currentWord={isDemoAudioPlaying ? demoCurrentWord : currentWord}
+                    audioLevel={isDemoAudioPlaying ? demoAudioLevel : audioLevel}
+                    currentPhoneme={currentPhoneme}
+                    speechProgress={speechProgress}
+                    modelPath={getModelPath(selectedAvatar)}
+                    selectedAvatar={selectedAvatar}
+                    onLoaded={handleAvatarLoaded}
+                  />
+                </React.Suspense>
               </div>
             </div>
           </div>
