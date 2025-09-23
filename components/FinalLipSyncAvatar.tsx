@@ -1,10 +1,25 @@
 'use client';
 
-import React, { useRef, useEffect, useState, Suspense, useCallback } from 'react';
+import React, { useRef, useEffect, useState, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { getModelPath } from '@/lib/modelPaths';
+
+// モデルURLをプリロード（クライアントサイドのみ）
+if (typeof window !== 'undefined') {
+  const modelTypes: ('adult' | 'boy' | 'boy_improved' | 'female')[] = ['adult', 'boy', 'boy_improved', 'female'];
+  
+  modelTypes.forEach(type => {
+    try {
+      const modelPath = getModelPath(type);
+      useGLTF.preload(modelPath);
+      // console.log(`Preloading model ${type}: ${modelPath}`);
+    } catch (error) {
+      console.warn(`Model preload skipped for ${type}:`, error);
+    }
+  });
+}
 
 
 interface AvatarModelProps {
@@ -734,45 +749,9 @@ function AvatarModel({
   
   // GLBファイル読み込み（Suspenseと連携）
   // modelPathは既にmodelPaths.tsでクリーニング済み
+  console.log(`[FinalLipSyncAvatar] Loading model: ${modelPath} for avatar: ${selectedAvatar}`);
   const gltf = useGLTF(modelPath);
   const scene = gltf.scene;
-
-  // コンポーネントのアンマウント時にGLTFをクリーンアップ
-  useEffect(() => {
-    return () => {
-      // シーン内のすべてのテクスチャとマテリアルを破棄
-      if (scene) {
-        scene.traverse((child: any) => {
-          if (child.isMesh) {
-            // ジオメトリの破棄
-            if (child.geometry) {
-              child.geometry.dispose();
-            }
-
-            // マテリアルの破棄
-            if (child.material) {
-              const materials = Array.isArray(child.material) ? child.material : [child.material];
-              materials.forEach((material: any) => {
-                // テクスチャの破棄
-                if (material.map) material.map.dispose();
-                if (material.normalMap) material.normalMap.dispose();
-                if (material.roughnessMap) material.roughnessMap.dispose();
-                if (material.metalnessMap) material.metalnessMap.dispose();
-                if (material.aoMap) material.aoMap.dispose();
-                if (material.emissiveMap) material.emissiveMap.dispose();
-                if (material.alphaMap) material.alphaMap.dispose();
-                // マテリアル自体の破棄
-                material.dispose();
-              });
-            }
-          }
-        });
-      }
-
-      // GLTFのキャッシュをクリア
-      useGLTF.preload(modelPath); // preloadを呼び出してキャッシュをリフレッシュ
-    };
-  }, []); // 依存配列を空にして、アンマウント時のみ実行
   
   useEffect(() => {
     if (!scene) return;
@@ -897,25 +876,23 @@ function AvatarModel({
             mat.depthWrite = true;
             mat.side = THREE.FrontSide;
             
-            // テクスチャを遅延して非同期で読み込み（WebGLコンテキストの負荷を軽減）
-            setTimeout(() => {
-              const textureLoaderR = new THREE.TextureLoader();
-              textureLoaderR.load(
-                '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
-                (texture) => {
-                  texture.colorSpace = THREE.SRGBColorSpace;
-                  mat.map = texture;
-                  mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
-                  mat.needsUpdate = true;
-                  console.log(`  -> 右目: テクスチャ読み込み完了`);
-                },
-                undefined,
-                (error) => {
-                  console.error(`  -> 右目: テクスチャ読み込みエラー`, error);
-                  // エラー時はフォールバック色のまま
-                }
-              );
-            }, 500); // 500ms遅延
+            // テクスチャを非同期で読み込み
+            const textureLoaderR = new THREE.TextureLoader();
+            textureLoaderR.load(
+              '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
+              (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                mat.map = texture;
+                mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
+                mat.needsUpdate = true;
+                console.log(`  -> 右目: テクスチャ読み込み完了`);
+              },
+              undefined,
+              (error) => {
+                console.error(`  -> 右目: テクスチャ読み込みエラー`, error);
+                // エラー時はフォールバック色のまま
+              }
+            );
             console.log(`  -> 右目: 茶色虹彩（フォールバック色設定）`);
             break;
             
@@ -932,25 +909,23 @@ function AvatarModel({
             mat.depthWrite = true;
             mat.side = THREE.FrontSide;
             
-            // テクスチャを遅延して非同期で読み込み（WebGLコンテキストの負荷を軽減）
-            setTimeout(() => {
-              const textureLoaderL = new THREE.TextureLoader();
-              textureLoaderL.load(
-                '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
-                (texture) => {
-                  texture.colorSpace = THREE.SRGBColorSpace;
-                  mat.map = texture;
-                  mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
-                  mat.needsUpdate = true;
-                  console.log(`  -> 左目: テクスチャ読み込み完了`);
-                },
-                undefined,
-                (error) => {
-                  console.error(`  -> 左目: テクスチャ読み込みエラー`, error);
-                  // エラー時はフォールバック色のまま
-                }
-              );
-            }, 700); // 700ms遅延（右目の後）
+            // テクスチャを非同期で読み込み
+            const textureLoaderL = new THREE.TextureLoader();
+            textureLoaderL.load(
+              '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
+              (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                mat.map = texture;
+                mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
+                mat.needsUpdate = true;
+                console.log(`  -> 左目: テクスチャ読み込み完了`);
+              },
+              undefined,
+              (error) => {
+                console.error(`  -> 左目: テクスチャ読み込みエラー`, error);
+                // エラー時はフォールバック色のまま
+              }
+            );
             console.log(`  -> 左目: 茶色虹彩（フォールバック色設定）`);
             break;
             
@@ -1116,6 +1091,7 @@ function AvatarModel({
       scene.userData.texturesApplied = true;
       
       if (onLoaded) {
+        console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
         setTimeout(() => {
           onLoaded();
         }, 100);
@@ -1126,6 +1102,7 @@ function AvatarModel({
       console.log('[AvatarModel] 少年改アバターのテクスチャ適用を一時的にスキップ');
       
       if (onLoaded) {
+        console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
         setTimeout(() => {
           onLoaded();
         }, 100);
@@ -1134,6 +1111,7 @@ function AvatarModel({
       // 女性アバター - テクスチャ適用を一時的に無効化
       console.log('[AvatarModel] 女性アバターのテクスチャ適用を一時的にスキップ');
       if (onLoaded) {
+        console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
         setTimeout(() => {
           onLoaded();
         }, 100);
@@ -1154,6 +1132,7 @@ function AvatarModel({
     } else {
       // 成人男性モデルの場合はすぐに通知
       if (onLoaded) {
+        console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
         setTimeout(() => {
           onLoaded();
         }, 100);
@@ -1317,27 +1296,6 @@ function AvatarModel({
     
     setMorphTargets(morphMeshes);
     setOralMeshes(oralMeshList);
-
-    // クリーンアップ処理
-    return () => {
-      // メモリリークを防ぐためにリファレンスをクリア
-      morphMeshes.length = 0;
-      oralMeshList.length = 0;
-
-      // Three.jsのリソースをクリーンアップ
-      if (scene) {
-        scene.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.geometry?.dispose();
-            if (Array.isArray(child.material)) {
-              child.material.forEach(mat => mat?.dispose?.());
-            } else {
-              child.material?.dispose?.();
-            }
-          }
-        });
-      }
-    };
   }, [scene, onLoaded, modelPath, selectedAvatar, isBoyImprovedModel]); // 依存配列を適切に設定
   
   useFrame((state, delta) => {
@@ -2308,50 +2266,22 @@ export default function FinalLipSyncAvatar({
 }) {
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const [currentModelPath, setCurrentModelPath] = useState(modelPath);
-  const [contextLost, setContextLost] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   
-  // WebGL context loss handling
-  const handleContextLost = useCallback((event: Event) => {
-    event.preventDefault();
-    console.log('WebGL context lost, attempting recovery...');
-    setContextLost(true);
-    setIsModelLoaded(false);
-  }, []);
-
-  const handleContextRestored = useCallback(() => {
-    console.log('WebGL context restored');
-    setContextLost(false);
-    // Force re-render of the canvas
-    setCurrentModelPath(prev => {
-      // Trigger a new model load
-      return prev + '?t=' + Date.now();
-    });
-  }, []);
-
   // モデルパスまたはアバタータイプが変更されたらローディング状態をリセット
   useEffect(() => {
-    if (modelPath !== currentModelPath && !modelPath.includes('?t=')) {
+    if (modelPath !== currentModelPath) {
+      console.log('[FinalLipSyncAvatar] Model path changed:');
+      console.log('- Previous:', currentModelPath);
+      console.log('- New:', modelPath);
+      console.log('- Is URL:', modelPath.startsWith('http'));
       setIsModelLoaded(false);
       setCurrentModelPath(modelPath);
     }
   }, [modelPath, currentModelPath]);
-
-  // コンポーネントのアンマウント時のクリーンアップ
-  useEffect(() => {
-    return () => {
-      // WebGLリソースのクリーンアップ
-      setIsModelLoaded(false);
-      // Clean up WebGL context handlers on unmount
-      if ((canvasRef as any).current?.cleanup) {
-        (canvasRef as any).current.cleanup();
-      }
-    };
-  }, []);
-
+  
   // selectedAvatarが変更されたときも再ロード（削除 - keyプロップで処理される）
   // このuseEffectは不要で点滅の原因になる
-
+  
   const handleModelLoaded = () => {
     setIsModelLoaded(true);
     if (onLoaded) {
@@ -2387,7 +2317,7 @@ export default function FinalLipSyncAvatar({
     <div className="relative w-full h-[400px] rounded-xl overflow-hidden" style={{ 
       background: 'linear-gradient(135deg, #d4f1f4 0%, #bae6fd 50%, #d4f1f4 100%)'
     }}>
-      {(!isModelLoaded || contextLost) && (
+      {!isModelLoaded && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
           {/* 背景の装飾的な円 */}
           <div className="absolute inset-0 overflow-hidden">
@@ -2412,10 +2342,10 @@ export default function FinalLipSyncAvatar({
             
             {/* テキスト */}
             <div className="text-gray-600 font-medium">
-              {contextLost ? 'WebGLコンテキストを復元中' : 'AI患者アバターを準備中'}
+              AI患者アバターを準備中
             </div>
             <div className="text-gray-400 text-sm mt-1">
-              {contextLost ? '少々お待ちください...' : '3Dモデルを読み込んでいます...'}
+              3Dモデルを読み込んでいます...
             </div>
           </div>
           
@@ -2460,35 +2390,15 @@ export default function FinalLipSyncAvatar({
         </div>
       )}
         <Canvas
-          ref={canvasRef}
           camera={{ position: cameraSettings.position as [number, number, number], fov: cameraSettings.fov }}
-          shadows={false}
+          shadows
           gl={{
             antialias: true,
             toneMapping: THREE.ACESFilmicToneMapping,
             toneMappingExposure: 1.0,
-            outputColorSpace: THREE.SRGBColorSpace,
-            powerPreference: "high-performance",
-            preserveDrawingBuffer: false,
-            failIfMajorPerformanceCaveat: false
+            outputColorSpace: THREE.SRGBColorSpace
           }}
-          onCreated={({ gl }) => {
-            gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-            // Add WebGL context loss handlers
-            const canvas = gl.domElement;
-            canvas.addEventListener('webglcontextlost', handleContextLost);
-            canvas.addEventListener('webglcontextrestored', handleContextRestored);
-
-            // Store cleanup function
-            (canvasRef as any).current = {
-              cleanup: () => {
-                canvas.removeEventListener('webglcontextlost', handleContextLost);
-                canvas.removeEventListener('webglcontextrestored', handleContextRestored);
-              }
-            };
-          }}
-          style={{ opacity: isModelLoaded && !contextLost ? 1 : 0, transition: 'opacity 0.3s' }}
+          style={{ opacity: isModelLoaded ? 1 : 0, transition: 'opacity 0.3s' }}
         >
           {/* 陰影を減らすため、アンビエントライトを強化 */}
           <ambientLight intensity={0.8} color="#ffffff" />
