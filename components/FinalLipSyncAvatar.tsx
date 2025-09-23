@@ -736,6 +736,14 @@ function AvatarModel({
   // modelPathは既にmodelPaths.tsでクリーニング済み
   const gltf = useGLTF(modelPath);
   const scene = gltf.scene;
+
+  // コンポーネントのアンマウント時にGLTFをクリーンアップ
+  useEffect(() => {
+    return () => {
+      // GLTFのキャッシュをクリア
+      useGLTF.preload(modelPath); // preloadを呼び出してキャッシュをリフレッシュ
+    };
+  }, [modelPath]);
   
   useEffect(() => {
     if (!scene) return;
