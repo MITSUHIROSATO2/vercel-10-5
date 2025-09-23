@@ -740,10 +740,39 @@ function AvatarModel({
   // コンポーネントのアンマウント時にGLTFをクリーンアップ
   useEffect(() => {
     return () => {
+      // シーン内のすべてのテクスチャとマテリアルを破棄
+      if (scene) {
+        scene.traverse((child: any) => {
+          if (child.isMesh) {
+            // ジオメトリの破棄
+            if (child.geometry) {
+              child.geometry.dispose();
+            }
+
+            // マテリアルの破棄
+            if (child.material) {
+              const materials = Array.isArray(child.material) ? child.material : [child.material];
+              materials.forEach((material: any) => {
+                // テクスチャの破棄
+                if (material.map) material.map.dispose();
+                if (material.normalMap) material.normalMap.dispose();
+                if (material.roughnessMap) material.roughnessMap.dispose();
+                if (material.metalnessMap) material.metalnessMap.dispose();
+                if (material.aoMap) material.aoMap.dispose();
+                if (material.emissiveMap) material.emissiveMap.dispose();
+                if (material.alphaMap) material.alphaMap.dispose();
+                // マテリアル自体の破棄
+                material.dispose();
+              });
+            }
+          }
+        });
+      }
+
       // GLTFのキャッシュをクリア
       useGLTF.preload(modelPath); // preloadを呼び出してキャッシュをリフレッシュ
     };
-  }, [modelPath]);
+  }, [modelPath, scene]);
   
   useEffect(() => {
     if (!scene) return;

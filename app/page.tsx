@@ -91,11 +91,15 @@ export default function Home() {
       // 一時的にアバターを空にして強制的にアンマウント
       setSelectedAvatar(null as any);
 
+      // より長い遅延で完全なクリーンアップを確保（特に男性2から男性1への遷移用）
+      // 男性2（adult）から男性1（boy）への遷移で問題が発生するため遅延を増加
+      const cleanupDelay = selectedAvatar === 'adult' && avatar === 'boy' ? 200 : 100;
+
       // 次のフレームで新しいアバターを設定
       requestAnimationFrame(() => {
         setTimeout(() => {
           setSelectedAvatar(avatar);
-        }, 50); // 50msの遅延でWebGLリソースのクリーンアップを待つ
+        }, cleanupDelay); // 動的な遅延でWebGLリソースのクリーンアップを待つ
       });
     }
   };
