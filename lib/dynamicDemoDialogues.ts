@@ -285,8 +285,73 @@ function generateSummary(scenario: PatientScenario): string {
          `${scenario.presentIllness.nature}ということですね。`;
 }
 
+// ショートデモ用の対話生成
+export function generateShortDemoDialogues(scenario: PatientScenario, language: 'ja' | 'en' = 'ja'): DemoDialogue[] {
+  const dialogues: DemoDialogue[] = [];
+
+  // ===== 簡潔版：主要な質問のみ =====
+
+  // 導入
+  dialogues.push(
+    { speaker: 'doctor', text: doctorQuestions.greeting, delay: 3000 },
+    { speaker: 'patient', text: 'こんにちは、よろしくお願いします。', delay: 2500 },
+
+    { speaker: 'doctor', text: doctorQuestions.nameConfirmation, delay: 2000 },
+    { speaker: 'patient', text: `${scenario.basicInfo.name}です。`, delay: 2000 }
+  );
+
+  // 主訴
+  dialogues.push(
+    { speaker: 'doctor', text: doctorQuestions.chiefComplaint, delay: 2500 },
+    { speaker: 'patient', text: `${scenario.chiefComplaint.complaint}で来ました。`, delay: 2500 }
+  );
+
+  // 現病歴（主要な項目のみ）
+  dialogues.push(
+    { speaker: 'doctor', text: doctorQuestions.onset, delay: 2000 },
+    { speaker: 'patient', text: scenario.chiefComplaint.since, delay: 2000 },
+
+    { speaker: 'doctor', text: doctorQuestions.quality, delay: 2500 },
+    { speaker: 'patient', text: scenario.presentIllness.nature, delay: 2500 },
+
+    { speaker: 'doctor', text: doctorQuestions.severity, delay: 2500 },
+    { speaker: 'patient', text: generateSeverityResponse(scenario.presentIllness.severity), delay: 3000 }
+  );
+
+  // 既往歴（簡潔に）
+  dialogues.push(
+    { speaker: 'doctor', text: doctorQuestions.currentDiseases, delay: 2000 },
+    { speaker: 'patient', text: scenario.medicalHistory.systemicDisease || 'ありません。', delay: 2000 },
+
+    { speaker: 'doctor', text: doctorQuestions.allergies, delay: 2000 },
+    { speaker: 'patient', text: scenario.medicalHistory.allergies || 'ありません。', delay: 2500 }
+  );
+
+  // 心理社会的側面
+  dialogues.push(
+    { speaker: 'doctor', text: doctorQuestions.concerns, delay: 2500 },
+    { speaker: 'patient', text: scenario.psychosocial.concerns || '特にありません。', delay: 2500 }
+  );
+
+  // まとめ
+  dialogues.push(
+    { speaker: 'doctor', text: doctorQuestions.additionalConcerns, delay: 2500 },
+    { speaker: 'patient', text: '大丈夫です。', delay: 2000 },
+
+    { speaker: 'doctor', text: doctorQuestions.conclusion, delay: 2500 }
+  );
+
+  return dialogues;
+}
+
 // 英語版の対話生成（将来的な拡張用）
 export function generateDemoDialoguesEnglish(scenario: PatientScenario): DemoDialogue[] {
+  // 英語版の実装は後で追加
+  return [];
+}
+
+// 英語版ショートデモ（将来的な拡張用）
+export function generateShortDemoDialoguesEnglish(scenario: PatientScenario): DemoDialogue[] {
   // 英語版の実装は後で追加
   return [];
 }

@@ -34,7 +34,12 @@ import ScenarioGenerator from '@/components/ScenarioGenerator';
 import { demoDialogues, shortDemoDialogues } from '@/lib/demoDialogues';
 import { improvedDemoDialogues, shortImprovedDemoDialogues, DemoDialogue } from '@/lib/improvedDemoDialogues';
 import { improvedDemoDialoguesEn, shortImprovedDemoDialoguesEn } from '@/lib/improvedDemoDialoguesEnglish';
-import { generateDemoDialogues, generateDemoDialoguesEnglish } from '@/lib/dynamicDemoDialogues';
+import {
+  generateDemoDialogues,
+  generateDemoDialoguesEnglish,
+  generateShortDemoDialogues,
+  generateShortDemoDialoguesEnglish
+} from '@/lib/dynamicDemoDialogues';
 
 export default function Home() {
   const [messages, setMessages] = useState<PatientMessage[]>([]);
@@ -163,12 +168,12 @@ export default function Home() {
       selectedScenario: selectedScenario.name
     });
 
-    // シナリオに基づく動的デモ対話を生成（fullタイプのみ対応）
+    // シナリオに基づく動的デモ対話を生成
     let dialogues: DemoDialogue[];
 
     if (type === 'full') {
       // フルデモはシナリオに基づいて動的に生成
-      console.log('🎯 Generating dynamic demo for scenario:', selectedScenario.name, selectedScenario.id);
+      console.log('🎯 Generating dynamic FULL demo for scenario:', selectedScenario.name, selectedScenario.id);
       dialogues = demoLanguage === 'ja'
         ? generateDemoDialogues(selectedScenario)
         : generateDemoDialoguesEnglish(selectedScenario).length > 0
@@ -177,16 +182,19 @@ export default function Home() {
       console.log('📚 Generated dialogues count:', dialogues.length);
       console.log('🔍 First patient response:', dialogues.find(d => d.speaker === 'patient')?.text);
     } else {
-      // ショートデモは既存の固定版を使用
+      // ショートデモもシナリオに基づいて動的に生成
+      console.log('🎯 Generating dynamic SHORT demo for scenario:', selectedScenario.name, selectedScenario.id);
       dialogues = demoLanguage === 'ja'
-        ? shortImprovedDemoDialogues
-        : shortImprovedDemoDialoguesEn;
+        ? generateShortDemoDialogues(selectedScenario)
+        : generateShortDemoDialoguesEnglish(selectedScenario).length > 0
+          ? generateShortDemoDialoguesEnglish(selectedScenario)
+          : shortImprovedDemoDialoguesEn; // 英語版が実装されるまでフォールバック
+      console.log('📚 Generated short dialogues count:', dialogues.length);
+      console.log('🔍 First patient response:', dialogues.find(d => d.speaker === 'patient')?.text);
     }
 
     console.log('🗣️ Selected dialogue source:',
-      type === 'full'
-        ? `Dynamic demo for "${selectedScenario.name}" (${demoLanguage === 'ja' ? 'Japanese' : 'English'})`
-        : `Fixed short demo (${demoLanguage === 'ja' ? 'Japanese' : 'English'})`
+      `Dynamic ${type} demo for "${selectedScenario.name}" (${demoLanguage === 'ja' ? 'Japanese' : 'English'})`
     );
     if (dialogues[index]) {
       console.log('💬 Current dialogue:', dialogues[index].text.substring(0, 50) + '...');
