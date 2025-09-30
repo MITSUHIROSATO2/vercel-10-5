@@ -37,8 +37,7 @@ import { improvedDemoDialoguesEn, shortImprovedDemoDialoguesEn } from '@/lib/imp
 import {
   generateDemoDialogues,
   generateDemoDialoguesEnglish,
-  generateShortDemoDialogues,
-  generateShortDemoDialoguesEnglish
+  generateShortDemoDialogues
 } from '@/lib/dynamicDemoDialogues';
 
 export default function Home() {
@@ -56,7 +55,6 @@ export default function Home() {
   const [showEvaluationList, setShowEvaluationList] = useState(false);
   const [showCriteriaEditor, setShowCriteriaEditor] = useState(false);
   const [evaluations, setEvaluations] = useState<EvaluationType[]>([]);
-  const [editingEvaluation, setEditingEvaluation] = useState<EvaluationType | null>(null);
   const [latestResponse, setLatestResponse] = useState<string>('');
   const [selectedAvatar, setSelectedAvatar] = useState<'adult' | 'boy' | 'boy_improved' | 'female'>('boy');
   const [isAvatarLoaded, setIsAvatarLoaded] = useState(false);
@@ -185,10 +183,8 @@ export default function Home() {
       // ショートデモもシナリオに基づいて動的に生成
       console.log('🎯 Generating dynamic SHORT demo for scenario:', selectedScenario.name, selectedScenario.id);
       dialogues = demoLanguage === 'ja'
-        ? generateShortDemoDialogues(selectedScenario)
-        : generateShortDemoDialoguesEnglish(selectedScenario).length > 0
-          ? generateShortDemoDialoguesEnglish(selectedScenario)
-          : shortImprovedDemoDialoguesEn; // 英語版が実装されるまでフォールバック
+        ? generateShortDemoDialogues(selectedScenario, 'ja')
+        : generateShortDemoDialogues(selectedScenario, 'en');
       console.log('📚 Generated short dialogues count:', dialogues.length);
       console.log('🔍 First patient response:', dialogues.find(d => d.speaker === 'patient')?.text);
     }
@@ -655,27 +651,14 @@ export default function Home() {
 
   // 評価の保存
   const handleSaveEvaluation = (evaluation: EvaluationType) => {
-    if (editingEvaluation) {
-      // 編集モード
-      setEvaluations(prev => prev.map(e => e.id === evaluation.id ? evaluation : e));
-      setEditingEvaluation(null);
-    } else {
-      // 新規作成
-      setEvaluations(prev => [...prev, evaluation]);
-    }
+    // 新規作成のみ
+    setEvaluations(prev => [...prev, evaluation]);
     setShowAIEvaluation(false);
-    
+
     // localStorageに保存
     const storedEvaluations = localStorage.getItem('evaluations');
     const allEvaluations = storedEvaluations ? JSON.parse(storedEvaluations) : [];
-    if (editingEvaluation) {
-      const updatedEvaluations = allEvaluations.map((e: EvaluationType) => 
-        e.id === evaluation.id ? evaluation : e
-      );
-      localStorage.setItem('evaluations', JSON.stringify(updatedEvaluations));
-    } else {
-      localStorage.setItem('evaluations', JSON.stringify([...allEvaluations, evaluation]));
-    }
+    localStorage.setItem('evaluations', JSON.stringify([...allEvaluations, evaluation]));
   };
 
   // 評価の削除
@@ -691,12 +674,6 @@ export default function Home() {
     }
   };
 
-  // 評価の編集
-  const handleEditEvaluation = (evaluation: EvaluationType) => {
-    setEditingEvaluation(evaluation);
-    setShowEvaluationList(false);
-    setShowAIEvaluation(true);
-  };
 
   // localStorageから評価とシナリオを読み込み
   useEffect(() => {
@@ -1285,7 +1262,6 @@ export default function Home() {
       {showEvaluationList && (
         <EvaluationList
           evaluations={evaluations}
-          onEdit={handleEditEvaluation}
           onDelete={handleDeleteEvaluation}
           onClose={() => setShowEvaluationList(false)}
           language={language}

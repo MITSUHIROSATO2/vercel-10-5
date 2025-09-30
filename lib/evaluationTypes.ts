@@ -38,6 +38,22 @@ export interface InterviewEvaluation {
   };
   notes?: string;
   evaluatorName?: string;
+  // AI評価の詳細情報
+  conversationLog?: Array<{
+    role: 'student' | 'patient';
+    content: string;
+    timestamp?: string;
+  }>;
+  aiEvaluation?: {
+    summary: string;
+    strengths: string[];
+    improvements: string[];
+    detailedFeedback: {
+      communication: string;
+      medicalInfo: string;
+      overall: string;
+    };
+  };
 }
 
 // 評価項目の定義

@@ -135,6 +135,7 @@ export const improvedDemoDialoguesEn: DemoDialogue[] = [
   { speaker: 'patient', text: 'Okay, thank you.', delay: 2000 }
 ];
 
+// Shortened version (for practice)
 export const shortImprovedDemoDialoguesEn: DemoDialogue[] = [
   // Introduction
   { speaker: 'doctor', text: 'Hello. I\'m Dr. Tanaka.', delay: 2000 },

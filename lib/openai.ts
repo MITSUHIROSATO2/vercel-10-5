@@ -23,17 +23,191 @@ export interface PatientMessage {
   content: string;
 }
 
+// 患者シナリオを英語に翻訳する関数
+function translateScenarioToEnglish(scenario: string): string {
+  // 基本的な翻訳マッピング
+  const translations: { [key: string]: string } = {
+    // 基本情報
+    '名前': 'Name',
+    '年齢': 'Age',
+    '性別': 'Gender',
+    '職業': 'Occupation',
+    '男性': 'Male',
+    '女性': 'Female',
+    '歳': 'years old',
+
+    // 日本人名を英語名に変換
+    '山田太郎': 'John Smith',
+    '山田 太郎': 'John Smith',
+    '田中 弘樹': 'Michael Johnson',
+    '佐藤 美咲': 'Sarah Williams',
+    '鈴木 健太': 'David Brown',
+    '伊藤 さくら': 'Emily Davis',
+
+    // 主訴
+    '主訴': 'Chief Complaint',
+    '右下奥歯': 'lower right back tooth',
+    '左下奥歯': 'lower left back tooth',
+    '右上奥歯': 'upper right back tooth',
+    '左上奥歯': 'upper left back tooth',
+    '前歯': 'front tooth',
+    '歯が痛い': 'tooth pain',
+    '歯茎が腫れ': 'gum swelling',
+    'ズキズキ': 'throbbing',
+
+    // 時間表現
+    '1週間前から': 'since a week ago',
+    '3日前から': 'since 3 days ago',
+    '昨日から': 'since yesterday',
+    '今朝から': 'since this morning',
+
+    // 症状
+    '冷たいもので痛む': 'hurts with cold things',
+    '熱いもので痛む': 'hurts with hot things',
+    '噛むと痛む': 'hurts when chewing',
+    '何もしなくても痛い': 'hurts even without doing anything',
+
+    // 既往歴
+    '高血圧': 'hypertension',
+    '糖尿病': 'diabetes',
+    'アレルギー': 'allergies',
+    'ペニシリン': 'penicillin',
+    '親知らず抜歯': 'wisdom tooth extraction',
+
+    // 薬
+    'ロキソニン': 'Loxonin',
+    'アムロジピン': 'Amlodipine',
+    'メトホルミン': 'Metformin',
+
+    // 職業
+    '営業職': 'sales representative',
+    '会社員': 'office worker',
+    'エンジニア': 'engineer',
+    '教師': 'teacher',
+    '主婦': 'homemaker',
+    '学生': 'student',
+    '看護師': 'nurse',
+
+    // その他
+    '初診': 'first visit',
+    'あり': 'yes',
+    'なし': 'no/none',
+    '効きにくい': 'difficult to take effect',
+    '服用中': 'currently taking',
+
+    // シナリオジェネレーター用追加
+    '奥歯が痛む': 'back tooth hurts',
+    '歯茎から血が出る': 'gums are bleeding',
+    '冷たいものがしみる': 'sensitive to cold',
+    '歯がグラグラする': 'tooth is loose',
+    '口臭が気になる': 'concerned about bad breath',
+    '歯が欠けた': 'tooth is chipped',
+    '顎が痛い': 'jaw hurts',
+    '詰め物が取れた': 'filling fell out',
+    '右上6番': 'upper right 6th tooth',
+    '右下6番': 'lower right 6th tooth',
+    '左上6番': 'upper left 6th tooth',
+    '左下6番': 'lower left 6th tooth',
+    '前歯': 'front teeth',
+    '奥歯全体': 'all back teeth',
+    '1ヶ月前から': 'since a month ago',
+    '3ヶ月前から': 'since 3 months ago',
+    '半年前から': 'since 6 months ago',
+    'ジーンとした痛み': 'tingling pain',
+    '鈍い痛み': 'dull pain',
+    '激痛': 'severe pain',
+    '違和感程度': 'slight discomfort',
+    '時々痛む': 'occasional pain',
+    '鎮痛剤で軽減': 'relieved by painkillers',
+    '鎮痛剤が効かない': 'painkillers not effective',
+    '我慢できる程度': 'tolerable level',
+    '夜も眠れない': "can't sleep at night",
+    '日常生活に支障': 'affecting daily life',
+    '徐々に悪化': 'gradually worsening',
+    '変化なし': 'no change',
+    '良くなったり悪くなったり': 'comes and goes',
+    '急激に悪化': 'suddenly worsened',
+    '何もしなくても痛む': 'hurts without doing anything',
+    '甘いもので痛む': 'hurts with sweet things',
+    '食事がつらい': 'difficult to eat',
+    '仕事に集中できない': "can't concentrate at work",
+    '会話がしづらい': 'difficult to talk',
+    '人前に出たくない': "don't want to go out in public",
+    '特に支障なし': 'no particular problems',
+    'バファリン': 'Bufferin',
+    '市販の鎮痛剤': 'over-the-counter painkillers',
+    '処方された抗生物質': 'prescribed antibiotics',
+    '10年前に抜歯': 'tooth extraction 10 years ago',
+    '複数回抜歯経験あり': 'multiple tooth extractions',
+    '問題なし': 'no problems',
+    'アレルギー反応': 'allergic reaction',
+    '抜歯後の腫れ': 'swelling after extraction',
+    '出血が止まりにくい': 'bleeding hard to stop',
+    '治療後の痛み': 'pain after treatment',
+    '心臓病': 'heart disease',
+    '骨粗鬆症': 'osteoporosis',
+    '血圧の薬': 'blood pressure medication',
+    '複数の薬を服用': 'taking multiple medications',
+    '金属アレルギー': 'metal allergy',
+    'ラテックスアレルギー': 'latex allergy',
+    '朝晩2回': 'twice daily (morning and night)',
+    '朝のみ': 'morning only',
+    '夜のみ': 'night only',
+    '朝昼晩3回': 'three times daily',
+    '不規則': 'irregular',
+    '甘いもの好き': 'likes sweets',
+    'コーヒー常飲': 'regular coffee drinker',
+    '喫煙あり': 'smoker',
+    '飲酒習慣あり': 'regular drinker',
+    '間食多い': 'frequent snacking',
+    '健康的な食生活': 'healthy diet',
+    '一人暮らし': 'living alone',
+    '夫婦二人': 'couple',
+    '家族と同居': 'living with family',
+    '子供と同居': 'living with children',
+    '高齢の親と同居': 'living with elderly parents',
+    '平日日中のみ可': 'weekdays daytime only',
+    '土日のみ可': 'weekends only',
+    'いつでも可': 'anytime available',
+    '午後のみ可': 'afternoons only',
+    '金銭的不安': 'financial concerns',
+    '痛みをなくしたい': 'want pain relief',
+    '見た目を改善': 'improve appearance',
+    '長持ちする治療': 'long-lasting treatment',
+    '早い治療': 'quick treatment',
+    '自営業': 'self-employed',
+    '公務員': 'civil servant',
+    '教員': 'teacher',
+    '医療従事者': 'healthcare worker',
+    '年金生活者': 'pensioner',
+    'フリーランス': 'freelancer'
+  };
+
+  let translated = scenario;
+
+  // 翻訳を適用
+  Object.entries(translations).forEach(([japanese, english]) => {
+    const regex = new RegExp(japanese, 'g');
+    translated = translated.replace(regex, english);
+  });
+
+  return translated;
+}
+
 export async function generatePatientResponse(
   messages: PatientMessage[],
   patientScenario: string,
   language: 'ja' | 'en' = 'ja'
 ): Promise<string> {
   try {
+    // 英語の場合は患者シナリオを英語に翻訳
+    const processedScenario = language === 'en' ? translateScenarioToEnglish(patientScenario) : patientScenario;
+
     const systemPrompt = language === 'ja' ?
     `【役割】あなたは歯科医療面接の教育用模擬患者（Simulated Patient: SP）です。
 
 【患者設定】
-${patientScenario}
+${processedScenario}
 
 【SPとしての重要な行動指針】
 1. 医療面接教育への貢献
@@ -202,7 +376,7 @@ ${patientScenario}
     : `[Role] You are a Simulated Patient (SP) for dental interview education.
 
 [Patient Setting]
-${patientScenario}
+${processedScenario}
 
 [Important Guidelines for SP Behavior]
 1. Educational Contribution

@@ -5,7 +5,6 @@ import type { InterviewEvaluation } from '@/lib/evaluationTypes';
 
 interface EvaluationListProps {
   evaluations: InterviewEvaluation[];
-  onEdit: (evaluation: InterviewEvaluation) => void;
   onDelete: (evaluationId: string) => void;
   onClose: () => void;
   language?: 'ja' | 'en';
@@ -13,18 +12,12 @@ interface EvaluationListProps {
 
 export default function EvaluationList({
   evaluations,
-  onEdit,
   onDelete,
   onClose,
   language = 'ja'
 }: EvaluationListProps) {
   const [selectedEvaluation, setSelectedEvaluation] = useState<InterviewEvaluation | null>(null);
-
-  const getScoreColor = (percentage: number) => {
-    if (percentage >= 80) return 'text-green-400';
-    if (percentage >= 60) return 'text-yellow-400';
-    return 'text-red-400';
-  };
+  const [detailView, setDetailView] = useState<'overall' | 'details' | 'feedback' | 'conversation'>('overall');
 
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString(language === 'ja' ? 'ja-JP' : 'en-US', {
@@ -34,6 +27,101 @@ export default function EvaluationList({
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  // 評価詳細をファイルとしてエクスポート
+  const exportEvaluation = (evaluation: InterviewEvaluation) => {
+    const exportData = {
+      基本情報: {
+        評価ID: evaluation.id,
+        シナリオID: evaluation.scenarioId,
+        評価日時: formatDate(evaluation.timestamp),
+        評価者: evaluation.evaluatorName || (language === 'ja' ? '未記入' : 'Not entered'),
+        総合スコア: `${evaluation.totalScore || 0} / ${evaluation.maxScore || 100} 点`,
+        達成率: `${evaluation.totalScore && evaluation.maxScore
+          ? Math.round((evaluation.totalScore / evaluation.maxScore) * 100)
+          : 0}%`
+      },
+      評価項目: evaluation.categories ? {
+        コミュニケーション: {
+          言語的: evaluation.categories.communication?.verbal?.filter(item => item.checked).map(item => item.label) || [],
+          全体的: evaluation.categories.communication?.overall?.filter(item => item.checked).map(item => item.label) || []
+        },
+        導入: evaluation.categories.introduction?.filter(item => item.checked).map(item => item.label) || [],
+        医学的情報: {
+          主訴: evaluation.categories.medicalInfo?.chiefComplaint?.filter(item => item.checked).map(item => item.label) || [],
+          既往歴: evaluation.categories.medicalInfo?.history?.filter(item => item.checked).map(item => item.label) || [],
+          生活習慣: evaluation.categories.medicalInfo?.lifestyle?.filter(item => item.checked).map(item => item.label) || []
+        },
+        心理社会的情報: evaluation.categories.psychosocial?.filter(item => item.checked).map(item => item.label) || [],
+        締めくくり: evaluation.categories.closing?.filter(item => item.checked).map(item => item.label) || []
+      } : null,
+      AI評価: evaluation.aiEvaluation || null,
+      会話ログ: evaluation.conversationLog || null,
+      備考: evaluation.notes || ''
+    };
+
+    // JSONファイルとしてダウンロード
+    const jsonContent = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `evaluation_${evaluation.scenarioId}_${new Date(evaluation.timestamp).toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  // すべての評価をエクスポート
+  const exportAllEvaluations = () => {
+    const exportData = evaluations.map(evaluation => ({
+      基本情報: {
+        評価ID: evaluation.id,
+        シナリオID: evaluation.scenarioId,
+        評価日時: formatDate(evaluation.timestamp),
+        評価者: evaluation.evaluatorName || (language === 'ja' ? '未記入' : 'Not entered'),
+        総合スコア: `${evaluation.totalScore || 0} / ${evaluation.maxScore || 100} 点`,
+        達成率: `${evaluation.totalScore && evaluation.maxScore
+          ? Math.round((evaluation.totalScore / evaluation.maxScore) * 100)
+          : 0}%`
+      },
+      評価項目: evaluation.categories ? {
+        コミュニケーション: {
+          言語的: evaluation.categories.communication?.verbal?.filter(item => item.checked).map(item => item.label) || [],
+          全体的: evaluation.categories.communication?.overall?.filter(item => item.checked).map(item => item.label) || []
+        },
+        導入: evaluation.categories.introduction?.filter(item => item.checked).map(item => item.label) || [],
+        医学的情報: {
+          主訴: evaluation.categories.medicalInfo?.chiefComplaint?.filter(item => item.checked).map(item => item.label) || [],
+          既往歴: evaluation.categories.medicalInfo?.history?.filter(item => item.checked).map(item => item.label) || [],
+          生活習慣: evaluation.categories.medicalInfo?.lifestyle?.filter(item => item.checked).map(item => item.label) || []
+        },
+        心理社会的情報: evaluation.categories.psychosocial?.filter(item => item.checked).map(item => item.label) || [],
+        締めくくり: evaluation.categories.closing?.filter(item => item.checked).map(item => item.label) || []
+      } : null,
+      AI評価: evaluation.aiEvaluation || null,
+      会話ログ: evaluation.conversationLog || null,
+      備考: evaluation.notes || ''
+    }));
+
+    const jsonContent = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `all_evaluations_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const getScoreColor = (percentage: number) => {
+    if (percentage >= 80) return 'text-green-400';
+    if (percentage >= 60) return 'text-yellow-400';
+    return 'text-red-400';
   };
 
   return (
@@ -50,12 +138,24 @@ export default function EvaluationList({
                 {language === 'ja' ? '過去の医療面接評価一覧' : 'Past Medical Interview Evaluations'}
               </p>
             </div>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-2">
+              {evaluations.length > 0 && (
+                <button
+                  onClick={exportAllEvaluations}
+                  className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-lg hover:from-emerald-700 hover:to-green-700 transition-all flex items-center gap-2 text-sm"
+                  title={language === 'ja' ? 'すべての評価をエクスポート' : 'Export All Evaluations'}
+                >
+                  <span>📥</span>
+                  {language === 'ja' ? '全てエクスポート' : 'Export All'}
+                </button>
+              )}
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-white transition-colors text-xl"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
 
@@ -123,65 +223,395 @@ export default function EvaluationList({
 
                         {/* 詳細表示 */}
                         {selectedEvaluation?.id === evaluation.id && (
-                          <div className="mt-4 p-4 bg-gray-900/30 rounded-lg space-y-3">
-                            <h4 className="text-cyan-400 font-semibold">
-                              {language === 'ja' ? '評価詳細' : 'Evaluation Details'}
-                            </h4>
-                            
-                            {/* チェック済み項目のサマリー */}
-                            <div className="space-y-2 text-sm">
-                              <div>
-                                <span className="text-gray-400">
-                                  {language === 'ja' ? 'コミュニケーション' : 'Communication'}:
-                                </span>
-                                <span className="text-white">
-                                  {[...evaluation.categories.communication.verbal, ...evaluation.categories.communication.overall]
-                                    .filter(item => item.checked).length} / 
-                                  {evaluation.categories.communication.verbal.length + evaluation.categories.communication.overall.length}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="text-gray-400">
-                                  {language === 'ja' ? '導入' : 'Introduction'}:
-                                </span>
-                                <span className="text-white">
-                                  {evaluation.categories.introduction.filter(item => item.checked).length} / 
-                                  {evaluation.categories.introduction.length}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="text-gray-400">
-                                  {language === 'ja' ? '医学的情報' : 'Medical Information'}:
-                                </span>
-                                <span className="text-white">
-                                  {[...evaluation.categories.medicalInfo.chiefComplaint, 
-                                    ...evaluation.categories.medicalInfo.history,
-                                    ...evaluation.categories.medicalInfo.lifestyle]
-                                    .filter(item => item.checked).length} / 
-                                  {evaluation.categories.medicalInfo.chiefComplaint.length + 
-                                   evaluation.categories.medicalInfo.history.length +
-                                   evaluation.categories.medicalInfo.lifestyle.length}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="text-gray-400">
-                                  {language === 'ja' ? '心理社会' : 'Psychosocial'}:
-                                </span>
-                                <span className="text-white">
-                                  {evaluation.categories.psychosocial.filter(item => item.checked).length} / 
-                                  {evaluation.categories.psychosocial.length}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="text-gray-400">
-                                  {language === 'ja' ? '締めくくり' : 'Closing'}:
-                                </span>
-                                <span className="text-white">
-                                  {evaluation.categories.closing.filter(item => item.checked).length} / 
-                                  {evaluation.categories.closing.length}
-                                </span>
-                              </div>
+                          <div className="mt-4 p-4 bg-gray-900/30 rounded-lg space-y-4">
+                            {/* タブ切り替え */}
+                            <div className="flex gap-2 border-b border-cyan-500/30 pb-2">
+                              <button
+                                onClick={() => setDetailView('overall')}
+                                className={`px-3 py-1 rounded-t transition-all ${
+                                  detailView === 'overall'
+                                    ? 'bg-cyan-600/30 text-cyan-400 border-b-2 border-cyan-400'
+                                    : 'text-gray-400 hover:text-white'
+                                }`}
+                              >
+                                {language === 'ja' ? '総合評価' : 'Overall Evaluation'}
+                              </button>
+                              <button
+                                onClick={() => setDetailView('details')}
+                                className={`px-3 py-1 rounded-t transition-all ${
+                                  detailView === 'details'
+                                    ? 'bg-cyan-600/30 text-cyan-400 border-b-2 border-cyan-400'
+                                    : 'text-gray-400 hover:text-white'
+                                }`}
+                              >
+                                {language === 'ja' ? '詳細項目' : 'Detailed Items'}
+                              </button>
+                              <button
+                                onClick={() => setDetailView('feedback')}
+                                className={`px-3 py-1 rounded-t transition-all ${
+                                  detailView === 'feedback'
+                                    ? 'bg-cyan-600/30 text-cyan-400 border-b-2 border-cyan-400'
+                                    : 'text-gray-400 hover:text-white'
+                                }`}
+                              >
+                                {language === 'ja' ? 'フィードバック' : 'Feedback'}
+                              </button>
+                              <button
+                                onClick={() => setDetailView('conversation')}
+                                className={`px-3 py-1 rounded-t transition-all ${
+                                  detailView === 'conversation'
+                                    ? 'bg-cyan-600/30 text-cyan-400 border-b-2 border-cyan-400'
+                                    : 'text-gray-400 hover:text-white'
+                                }`}
+                              >
+                                {language === 'ja' ? '会話ログ' : 'Conversation Log'}
+                              </button>
                             </div>
+
+                            {/* コンテンツエリア */}
+                            {/* 総合評価タブ */}
+                            {detailView === 'overall' && (
+                              <div className="space-y-4">
+                                {/* スコアサマリー */}
+                                <div className="bg-gray-800/50 rounded-lg p-4">
+                                  <h5 className="text-cyan-400 font-semibold mb-3">
+                                    {language === 'ja' ? 'スコアサマリー' : 'Score Summary'}
+                                  </h5>
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                      <span className="text-gray-400 text-xs">
+                                        {language === 'ja' ? '総合スコア' : 'Total Score'}
+                                      </span>
+                                      <p className="text-2xl font-bold text-white">
+                                        {evaluation.totalScore || 0} / {evaluation.maxScore || 100}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-400 text-xs">
+                                        {language === 'ja' ? '達成率' : 'Achievement Rate'}
+                                      </span>
+                                      <p className={`text-2xl font-bold ${getScoreColor(
+                                        evaluation.totalScore && evaluation.maxScore
+                                          ? Math.round((evaluation.totalScore / evaluation.maxScore) * 100)
+                                          : 0
+                                      )}`}>
+                                        {evaluation.totalScore && evaluation.maxScore
+                                          ? Math.round((evaluation.totalScore / evaluation.maxScore) * 100)
+                                          : 0}%
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* AI総合評価 */}
+                                {evaluation.aiEvaluation?.summary && (
+                                  <div className="bg-gray-800/50 rounded-lg p-4">
+                                    <h5 className="text-cyan-400 font-semibold mb-2">
+                                      {language === 'ja' ? 'AI総合評価' : 'AI Overall Assessment'}
+                                    </h5>
+                                    <p className="text-sm text-gray-300 leading-relaxed">
+                                      {evaluation.aiEvaluation.summary}
+                                    </p>
+                                  </div>
+                                )}
+
+                                {/* カテゴリー別サマリー */}
+                                {evaluation.categories && (
+                                  <div className="bg-gray-800/50 rounded-lg p-4">
+                                    <h5 className="text-cyan-400 font-semibold mb-3">
+                                      {language === 'ja' ? 'カテゴリー別達成状況' : 'Category Achievement'}
+                                    </h5>
+                                    <div className="space-y-2">
+                                      <div className="flex justify-between items-center">
+                                        <span className="text-gray-300 text-sm">
+                                          {language === 'ja' ? 'コミュニケーション' : 'Communication'}
+                                        </span>
+                                        <span className="text-white text-sm font-medium">
+                                          {[...(evaluation.categories.communication?.verbal || []),
+                                            ...(evaluation.categories.communication?.overall || [])]
+                                            .filter(item => item.checked).length} /
+                                          {(evaluation.categories.communication?.verbal?.length || 0) +
+                                           (evaluation.categories.communication?.overall?.length || 0)}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between items-center">
+                                        <span className="text-gray-300 text-sm">
+                                          {language === 'ja' ? '導入' : 'Introduction'}
+                                        </span>
+                                        <span className="text-white text-sm font-medium">
+                                          {(evaluation.categories.introduction || []).filter(item => item.checked).length} /
+                                          {evaluation.categories.introduction?.length || 0}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between items-center">
+                                        <span className="text-gray-300 text-sm">
+                                          {language === 'ja' ? '医学的情報' : 'Medical Information'}
+                                        </span>
+                                        <span className="text-white text-sm font-medium">
+                                          {[...(evaluation.categories.medicalInfo?.chiefComplaint || []),
+                                            ...(evaluation.categories.medicalInfo?.history || []),
+                                            ...(evaluation.categories.medicalInfo?.lifestyle || [])]
+                                            .filter(item => item.checked).length} /
+                                          {(evaluation.categories.medicalInfo?.chiefComplaint?.length || 0) +
+                                           (evaluation.categories.medicalInfo?.history?.length || 0) +
+                                           (evaluation.categories.medicalInfo?.lifestyle?.length || 0)}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between items-center">
+                                        <span className="text-gray-300 text-sm">
+                                          {language === 'ja' ? '心理社会的情報' : 'Psychosocial'}
+                                        </span>
+                                        <span className="text-white text-sm font-medium">
+                                          {(evaluation.categories.psychosocial || []).filter(item => item.checked).length} /
+                                          {evaluation.categories.psychosocial?.length || 0}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between items-center">
+                                        <span className="text-gray-300 text-sm">
+                                          {language === 'ja' ? '締めくくり' : 'Closing'}
+                                        </span>
+                                        <span className="text-white text-sm font-medium">
+                                          {(evaluation.categories.closing || []).filter(item => item.checked).length} /
+                                          {evaluation.categories.closing?.length || 0}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            {/* 詳細項目タブ */}
+                            {detailView === 'details' && (
+                              <div className="space-y-4">
+                                {evaluation.categories ? (
+                                  <>
+                                    {/* コミュニケーション */}
+                                    {(evaluation.categories.communication?.verbal?.some(item => item.checked) ||
+                                      evaluation.categories.communication?.overall?.some(item => item.checked)) && (
+                                      <div className="bg-gray-800/50 rounded-lg p-4">
+                                        <h5 className="text-cyan-400 font-semibold mb-2">
+                                          {language === 'ja' ? 'コミュニケーション' : 'Communication'}
+                                        </h5>
+                                        <ul className="space-y-1">
+                                          {[...(evaluation.categories.communication?.verbal || []),
+                                            ...(evaluation.categories.communication?.overall || [])]
+                                            .filter(item => item.checked)
+                                            .map((item, idx) => (
+                                              <li key={idx} className="text-sm text-gray-300 flex items-start">
+                                                <span className="text-green-400 mr-2">✓</span>
+                                                {item.label}
+                                              </li>
+                                            ))}
+                                        </ul>
+                                      </div>
+                                    )}
+
+                                    {/* 導入 */}
+                                    {evaluation.categories.introduction?.some(item => item.checked) && (
+                                      <div className="bg-gray-800/50 rounded-lg p-4">
+                                        <h5 className="text-cyan-400 font-semibold mb-2">
+                                          {language === 'ja' ? '導入' : 'Introduction'}
+                                        </h5>
+                                        <ul className="space-y-1">
+                                          {evaluation.categories.introduction
+                                            .filter(item => item.checked)
+                                            .map((item, idx) => (
+                                              <li key={idx} className="text-sm text-gray-300 flex items-start">
+                                                <span className="text-green-400 mr-2">✓</span>
+                                                {item.label}
+                                              </li>
+                                            ))}
+                                        </ul>
+                                      </div>
+                                    )}
+
+                                    {/* 医学的情報 */}
+                                    {(evaluation.categories.medicalInfo?.chiefComplaint?.some(item => item.checked) ||
+                                      evaluation.categories.medicalInfo?.history?.some(item => item.checked) ||
+                                      evaluation.categories.medicalInfo?.lifestyle?.some(item => item.checked)) && (
+                                      <div className="bg-gray-800/50 rounded-lg p-4">
+                                        <h5 className="text-cyan-400 font-semibold mb-2">
+                                          {language === 'ja' ? '医学的情報' : 'Medical Information'}
+                                        </h5>
+                                        <ul className="space-y-1">
+                                          {[...(evaluation.categories.medicalInfo?.chiefComplaint || []),
+                                            ...(evaluation.categories.medicalInfo?.history || []),
+                                            ...(evaluation.categories.medicalInfo?.lifestyle || [])]
+                                            .filter(item => item.checked)
+                                            .map((item, idx) => (
+                                              <li key={idx} className="text-sm text-gray-300 flex items-start">
+                                                <span className="text-green-400 mr-2">✓</span>
+                                                {item.label}
+                                              </li>
+                                            ))}
+                                        </ul>
+                                      </div>
+                                    )}
+
+                                    {/* 心理社会的情報 */}
+                                    {evaluation.categories.psychosocial?.some(item => item.checked) && (
+                                      <div className="bg-gray-800/50 rounded-lg p-4">
+                                        <h5 className="text-cyan-400 font-semibold mb-2">
+                                          {language === 'ja' ? '心理社会的情報' : 'Psychosocial Information'}
+                                        </h5>
+                                        <ul className="space-y-1">
+                                          {evaluation.categories.psychosocial
+                                            .filter(item => item.checked)
+                                            .map((item, idx) => (
+                                              <li key={idx} className="text-sm text-gray-300 flex items-start">
+                                                <span className="text-green-400 mr-2">✓</span>
+                                                {item.label}
+                                              </li>
+                                            ))}
+                                        </ul>
+                                      </div>
+                                    )}
+
+                                    {/* 締めくくり */}
+                                    {evaluation.categories.closing?.some(item => item.checked) && (
+                                      <div className="bg-gray-800/50 rounded-lg p-4">
+                                        <h5 className="text-cyan-400 font-semibold mb-2">
+                                          {language === 'ja' ? '締めくくり' : 'Closing'}
+                                        </h5>
+                                        <ul className="space-y-1">
+                                          {evaluation.categories.closing
+                                            .filter(item => item.checked)
+                                            .map((item, idx) => (
+                                              <li key={idx} className="text-sm text-gray-300 flex items-start">
+                                                <span className="text-green-400 mr-2">✓</span>
+                                                {item.label}
+                                              </li>
+                                            ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </>
+                                ) : (
+                                  <p className="text-gray-400 text-center py-8">
+                                    {language === 'ja' ? '詳細項目情報なし' : 'No detailed items information'}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+
+                            {/* 会話ログタブ */}
+                            {detailView === 'conversation' && (
+                              <div className="space-y-4">
+                                {evaluation.conversationLog && evaluation.conversationLog.length > 0 ? (
+                                  <div className="max-h-96 overflow-y-auto space-y-2">
+                                    {evaluation.conversationLog.map((msg, index) => (
+                                  <div key={index} className={`p-3 rounded-lg ${
+                                    msg.role === 'student'
+                                      ? 'bg-blue-900/30 border-l-2 border-blue-400'
+                                      : 'bg-green-900/30 border-l-2 border-green-400'
+                                  }`}>
+                                    <div className="flex justify-between mb-1">
+                                      <span className={`text-xs font-semibold ${
+                                        msg.role === 'student' ? 'text-blue-400' : 'text-green-400'
+                                      }`}>
+                                        {msg.role === 'student'
+                                          ? (language === 'ja' ? '学生' : 'Student')
+                                          : (language === 'ja' ? '患者' : 'Patient')}
+                                      </span>
+                                      {msg.timestamp && (
+                                        <span className="text-xs text-gray-500">
+                                          {new Date(msg.timestamp).toLocaleTimeString()}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="text-sm text-gray-200">{msg.content}</p>
+                                  </div>
+                                ))}
+                                  </div>
+                                ) : (
+                                  <p className="text-gray-400 text-center py-8">
+                                    {language === 'ja' ? '会話ログなし' : 'No conversation log'}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+
+                            {/* フィードバックタブ */}
+                            {detailView === 'feedback' && (
+                              <div className="space-y-4">
+                                {evaluation.aiEvaluation ? (
+                                  <>
+                                    {/* 総合評価 */}
+                                    {evaluation.aiEvaluation.summary && (
+                                  <div>
+                                    <h5 className="text-cyan-400 font-semibold mb-2">
+                                      {language === 'ja' ? '総合評価' : 'Overall Assessment'}
+                                    </h5>
+                                    <p className="text-sm text-gray-300">{evaluation.aiEvaluation.summary}</p>
+                                  </div>
+                                )}
+
+                                {/* 良かった点 */}
+                                {evaluation.aiEvaluation.strengths && evaluation.aiEvaluation.strengths.length > 0 && (
+                                  <div>
+                                    <h5 className="text-green-400 font-semibold mb-2">
+                                      {language === 'ja' ? '良かった点' : 'Strengths'}
+                                    </h5>
+                                    <ul className="list-disc list-inside space-y-1">
+                                      {evaluation.aiEvaluation.strengths.map((strength, index) => (
+                                        <li key={index} className="text-sm text-gray-300">{strength}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+
+                                {/* 改善点 */}
+                                {evaluation.aiEvaluation.improvements && evaluation.aiEvaluation.improvements.length > 0 && (
+                                  <div>
+                                    <h5 className="text-yellow-400 font-semibold mb-2">
+                                      {language === 'ja' ? '改善点' : 'Areas for Improvement'}
+                                    </h5>
+                                    <ul className="list-disc list-inside space-y-1">
+                                      {evaluation.aiEvaluation.improvements.map((improvement, index) => (
+                                        <li key={index} className="text-sm text-gray-300">{improvement}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+
+                                {/* 詳細フィードバック */}
+                                {evaluation.aiEvaluation.detailedFeedback && (
+                                  <div className="space-y-3">
+                                    {evaluation.aiEvaluation.detailedFeedback.communication && (
+                                      <div>
+                                        <h6 className="text-xs uppercase tracking-wider text-cyan-300 mb-1">
+                                          {language === 'ja' ? 'コミュニケーション' : 'Communication'}
+                                        </h6>
+                                        <p className="text-sm text-gray-300">{evaluation.aiEvaluation.detailedFeedback.communication}</p>
+                                      </div>
+                                    )}
+                                    {evaluation.aiEvaluation.detailedFeedback.medicalInfo && (
+                                      <div>
+                                        <h6 className="text-xs uppercase tracking-wider text-cyan-300 mb-1">
+                                          {language === 'ja' ? '医学的情報収集' : 'Medical Information Gathering'}
+                                        </h6>
+                                        <p className="text-sm text-gray-300">{evaluation.aiEvaluation.detailedFeedback.medicalInfo}</p>
+                                      </div>
+                                    )}
+                                    {evaluation.aiEvaluation.detailedFeedback.overall && (
+                                      <div>
+                                        <h6 className="text-xs uppercase tracking-wider text-cyan-300 mb-1">
+                                          {language === 'ja' ? '総合所見' : 'Overall Comments'}
+                                        </h6>
+                                        <p className="text-sm text-gray-300">{evaluation.aiEvaluation.detailedFeedback.overall}</p>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                                  </>
+                                ) : (
+                                  <p className="text-gray-400 text-center py-8">
+                                    {language === 'ja' ? 'フィードバック情報なし' : 'No feedback information'}
+                                  </p>
+                                )}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -199,10 +629,12 @@ export default function EvaluationList({
                             : (language === 'ja' ? '詳細' : 'Details')}
                         </button>
                         <button
-                          onClick={() => onEdit(evaluation)}
-                          className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/30 transition-all text-sm"
+                          onClick={() => exportEvaluation(evaluation)}
+                          className="px-3 py-1 bg-emerald-600/20 text-emerald-400 rounded-lg hover:bg-emerald-600/30 transition-all text-sm flex items-center gap-1"
+                          title={language === 'ja' ? '評価をエクスポート' : 'Export Evaluation'}
                         >
-                          {language === 'ja' ? '編集' : 'Edit'}
+                          <span className="text-xs">📥</span>
+                          {language === 'ja' ? 'エクスポート' : 'Export'}
                         </button>
                         <button
                           onClick={() => {

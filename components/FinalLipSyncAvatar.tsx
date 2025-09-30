@@ -5,6 +5,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { getModelPath } from '@/lib/modelPaths';
+import { textToPhonemes, phonemeToViseme } from '@/lib/englishPhonemeConverter';
 
 // モデルURLをプリロード（クライアントサイドのみ）
 if (typeof window !== 'undefined') {
@@ -35,6 +36,353 @@ interface AvatarModelProps {
   lipSyncIntensity?: number;
   selectedAvatar?: string;
 }
+
+// 英語の音素に基づくモーフターゲットマッピング
+const EnglishPhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
+  // === 母音 (Vowels) ===
+  // AA - father, hot
+  'AA': {
+    'A25_Jaw_Open': 0.6,
+    'V_Open': 0.5,
+    'Mouth_Open': 0.45,
+    'A44_Mouth_Upper_Up_Left': 0.2,
+    'A45_Mouth_Upper_Up_Right': 0.2,
+    'A46_Mouth_Lower_Down_Left': 0.25,
+    'A47_Mouth_Lower_Down_Right': 0.25,
+    'V_Lip_Open': 0.4
+  },
+  // AE - cat, hat
+  'AE': {
+    'A25_Jaw_Open': 0.5,
+    'V_Wide': 0.4,
+    'A50_Mouth_Stretch_Left': 0.3,
+    'A51_Mouth_Stretch_Right': 0.3,
+    'Mouth_Open': 0.35,
+    'A44_Mouth_Upper_Up_Left': 0.15,
+    'A45_Mouth_Upper_Up_Right': 0.15
+  },
+  // AH - but, sun
+  'AH': {
+    'A25_Jaw_Open': 0.35,
+    'V_Open': 0.3,
+    'Mouth_Open': 0.25,
+    'V_Lip_Open': 0.2
+  },
+  // AO - dog, law
+  'AO': {
+    'A25_Jaw_Open': 0.45,
+    'V_Open': 0.35,
+    'A29_Mouth_Funnel': 0.25,
+    'V_Tight_O': 0.3,
+    'A33_Mouth_Roll_Upper': 0.15,
+    'A34_Mouth_Roll_Lower': 0.15
+  },
+  // AW - how, now
+  'AW': {
+    'A25_Jaw_Open': 0.5,
+    'A30_Mouth_Pucker': 0.4,
+    'A29_Mouth_Funnel': 0.35,
+    'V_Tight_O': 0.3,
+    'Mouth_Pucker_Open': 0.3
+  },
+  // AY - hide, my
+  'AY': {
+    'A25_Jaw_Open': 0.4,
+    'V_Wide': 0.35,
+    'A50_Mouth_Stretch_Left': 0.25,
+    'A51_Mouth_Stretch_Right': 0.25,
+    'Mouth_Widen': 0.2
+  },
+  // EH - bed, said
+  'EH': {
+    'A25_Jaw_Open': 0.3,
+    'V_Wide': 0.25,
+    'Mouth_Open': 0.2,
+    'A50_Mouth_Stretch_Left': 0.15,
+    'A51_Mouth_Stretch_Right': 0.15
+  },
+  // ER - her, bird
+  'ER': {
+    'A25_Jaw_Open': 0.25,
+    'A30_Mouth_Pucker': 0.3,
+    'V_Tight_O': 0.2,
+    'V_Tongue_Curl_U': 0.4,
+    'T06_Tongue_Tip_Up': 0.3
+  },
+  // EY - take, day
+  'EY': {
+    'A25_Jaw_Open': 0.2,
+    'V_Wide': 0.45,
+    'A50_Mouth_Stretch_Left': 0.35,
+    'A51_Mouth_Stretch_Right': 0.35,
+    'A38_Mouth_Smile_Left': 0.15,
+    'A39_Mouth_Smile_Right': 0.15
+  },
+  // IH - it, sit
+  'IH': {
+    'A25_Jaw_Open': 0.15,
+    'V_Wide': 0.35,
+    'A50_Mouth_Stretch_Left': 0.25,
+    'A51_Mouth_Stretch_Right': 0.25,
+    'Mouth_Widen': 0.2
+  },
+  // IY - eat, see
+  'IY': {
+    'A25_Jaw_Open': 0.1,
+    'V_Wide': 0.6,
+    'A50_Mouth_Stretch_Left': 0.5,
+    'A51_Mouth_Stretch_Right': 0.5,
+    'A38_Mouth_Smile_Left': 0.25,
+    'A39_Mouth_Smile_Right': 0.25,
+    'Mouth_Widen_Sides': 0.4
+  },
+  // OW - go, home
+  'OW': {
+    'A25_Jaw_Open': 0.3,
+    'A30_Mouth_Pucker': 0.5,
+    'A29_Mouth_Funnel': 0.4,
+    'V_Tight_O': 0.35,
+    'A33_Mouth_Roll_Upper': 0.2,
+    'A34_Mouth_Roll_Lower': 0.2
+  },
+  // OY - toy, boy
+  'OY': {
+    'A25_Jaw_Open': 0.35,
+    'A30_Mouth_Pucker': 0.35,
+    'V_Wide': 0.2,
+    'A29_Mouth_Funnel': 0.25,
+    'V_Tight_O': 0.2
+  },
+  // UH - hood, could
+  'UH': {
+    'A25_Jaw_Open': 0.2,
+    'A30_Mouth_Pucker': 0.35,
+    'V_Tight_O': 0.25,
+    'A29_Mouth_Funnel': 0.2
+  },
+  // UW - two, blue
+  'UW': {
+    'A25_Jaw_Open': 0.15,
+    'A30_Mouth_Pucker': 0.6,
+    'A29_Mouth_Funnel': 0.5,
+    'V_Tight_O': 0.4,
+    'Mouth_Pucker_Open': 0.35,
+    'A33_Mouth_Roll_Upper': 0.25,
+    'A34_Mouth_Roll_Lower': 0.25
+  },
+
+  // === 子音 (Consonants) ===
+  // B - boy, cab
+  'B': {
+    'A25_Jaw_Open': 0,
+    'V_Explosive': 0.4,
+    'A44_Mouth_Upper_Up_Left': 0,
+    'A45_Mouth_Upper_Up_Right': 0,
+    'A48_Mouth_Press_Left': 0.35,
+    'A49_Mouth_Press_Right': 0.35,
+    'Mouth_Lips_Part': 0
+  },
+  // CH - chair, match
+  'CH': {
+    'A25_Jaw_Open': 0.15,
+    'A30_Mouth_Pucker': 0.25,
+    'V_Tight_O': 0.15,
+    'V_Affricate': 0.4,
+    'V_Tongue_Raise': 0.3
+  },
+  // D - dog, sad
+  'D': {
+    'A25_Jaw_Open': 0.1,
+    'V_Wide': 0.15,
+    'Mouth_Open': 0.08,
+    'V_Dental_Lip': 0.3,
+    'V_Tongue_up': 0.4
+  },
+  // DH - the, this
+  'DH': {
+    'A25_Jaw_Open': 0.12,
+    'V_Wide': 0.2,
+    'Mouth_Open': 0.1,
+    'V_Dental_Lip': 0.4,
+    'V_Tongue_Out': 0.2,
+    'T06_Tongue_Tip_Up': 0.15
+  },
+  // F - five, off
+  'F': {
+    'A25_Jaw_Open': 0.08,
+    'A44_Mouth_Upper_Up_Left': 0.15,
+    'A45_Mouth_Upper_Up_Right': 0.15,
+    'V_Dental_Lip': 0.5,
+    'Mouth_Bottom_Lip_Bite': 0.3
+  },
+  // G - go, big
+  'G': {
+    'A25_Jaw_Open': 0.15,
+    'V_Open': 0.1,
+    'Mouth_Open': 0.12,
+    'V_Explosive': 0.3,
+    'V_Tongue_Lower': 0.2
+  },
+  // HH - he, how
+  'HH': {
+    'A25_Jaw_Open': 0.2,
+    'V_Open': 0.15,
+    'Mouth_Open': 0.15
+  },
+  // JH - judge, age
+  'JH': {
+    'A25_Jaw_Open': 0.15,
+    'A30_Mouth_Pucker': 0.3,
+    'V_Tight_O': 0.2,
+    'V_Affricate': 0.4,
+    'V_Tongue_Raise': 0.35
+  },
+  // K - key, back
+  'K': {
+    'A25_Jaw_Open': 0.12,
+    'V_Open': 0.08,
+    'Mouth_Open': 0.1,
+    'V_Explosive': 0.35,
+    'V_Tongue_Lower': 0.25
+  },
+  // L - let, ball
+  'L': {
+    'A25_Jaw_Open': 0.18,
+    'V_Wide': 0.25,
+    'Mouth_Open': 0.15,
+    'V_Tongue_up': 0.4,
+    'T06_Tongue_Tip_Up': 0.35
+  },
+  // M - man, sum
+  'M': {
+    'A25_Jaw_Open': 0,
+    'A44_Mouth_Upper_Up_Left': 0,
+    'A45_Mouth_Upper_Up_Right': 0,
+    'A37_Mouth_Close': 0.5,
+    'A48_Mouth_Press_Left': 0.3,
+    'A49_Mouth_Press_Right': 0.3,
+    'Mouth_Lips_Part': 0
+  },
+  // N - no, sun
+  'N': {
+    'A25_Jaw_Open': 0.08,
+    'V_Wide': 0.1,
+    'Mouth_Open': 0.05,
+    'V_Tongue_up': 0.35,
+    'T06_Tongue_Tip_Up': 0.3
+  },
+  // NG - sing, long
+  'NG': {
+    'A25_Jaw_Open': 0.1,
+    'V_Open': 0.12,
+    'Mouth_Open': 0.08,
+    'V_Tongue_Lower': 0.3,
+    'A20_Cheek_Puff': 0.05
+  },
+  // P - pen, top
+  'P': {
+    'A25_Jaw_Open': 0,
+    'A44_Mouth_Upper_Up_Left': 0,
+    'A45_Mouth_Upper_Up_Right': 0,
+    'V_Explosive': 0.45,
+    'A48_Mouth_Press_Left': 0.4,
+    'A49_Mouth_Press_Right': 0.4,
+    'Mouth_Plosive': 0.4
+  },
+  // R - run, car
+  'R': {
+    'A25_Jaw_Open': 0.2,
+    'A30_Mouth_Pucker': 0.25,
+    'V_Tight_O': 0.18,
+    'V_Tongue_Curl_U': 0.45,
+    'T05_Tongue_Roll': 0.3
+  },
+  // S - see, pass
+  'S': {
+    'A25_Jaw_Open': 0.1,
+    'V_Wide': 0.3,
+    'A50_Mouth_Stretch_Left': 0.2,
+    'A51_Mouth_Stretch_Right': 0.2,
+    'V_Tight': 0.4,
+    'V_Tongue_Raise': 0.25
+  },
+  // SH - she, push
+  'SH': {
+    'A25_Jaw_Open': 0.12,
+    'A30_Mouth_Pucker': 0.35,
+    'V_Tight_O': 0.25,
+    'V_Affricate': 0.3,
+    'V_Tongue_Raise': 0.3,
+    'A29_Mouth_Funnel': 0.2
+  },
+  // T - top, cat
+  'T': {
+    'A25_Jaw_Open': 0.08,
+    'V_Wide': 0.12,
+    'Mouth_Open': 0.06,
+    'V_Dental_Lip': 0.25,
+    'V_Tongue_up': 0.45,
+    'T06_Tongue_Tip_Up': 0.4
+  },
+  // TH - think, both
+  'TH': {
+    'A25_Jaw_Open': 0.1,
+    'V_Wide': 0.18,
+    'Mouth_Open': 0.08,
+    'V_Dental_Lip': 0.45,
+    'V_Tongue_Out': 0.25,
+    'T06_Tongue_Tip_Up': 0.2
+  },
+  // V - voice, have
+  'V': {
+    'A25_Jaw_Open': 0.1,
+    'A44_Mouth_Upper_Up_Left': 0.12,
+    'A45_Mouth_Upper_Up_Right': 0.12,
+    'V_Dental_Lip': 0.45,
+    'Mouth_Bottom_Lip_Bite': 0.25
+  },
+  // W - win, away
+  'W': {
+    'A25_Jaw_Open': 0.12,
+    'A30_Mouth_Pucker': 0.45,
+    'A29_Mouth_Funnel': 0.35,
+    'V_Tight_O': 0.3,
+    'Mouth_Pucker_Open': 0.25
+  },
+  // Y - yes, you
+  'Y': {
+    'A25_Jaw_Open': 0.15,
+    'V_Wide': 0.4,
+    'A50_Mouth_Stretch_Left': 0.3,
+    'A51_Mouth_Stretch_Right': 0.3,
+    'V_Tongue_Raise': 0.2
+  },
+  // Z - zoo, buzz
+  'Z': {
+    'A25_Jaw_Open': 0.12,
+    'V_Wide': 0.25,
+    'A50_Mouth_Stretch_Left': 0.18,
+    'A51_Mouth_Stretch_Right': 0.18,
+    'V_Tight': 0.35,
+    'V_Tongue_Raise': 0.2
+  },
+  // ZH - measure, vision
+  'ZH': {
+    'A25_Jaw_Open': 0.15,
+    'A30_Mouth_Pucker': 0.3,
+    'V_Tight_O': 0.22,
+    'V_Affricate': 0.25,
+    'V_Tongue_Raise': 0.25,
+    'A29_Mouth_Funnel': 0.15
+  },
+
+  // === 基本アルファベット対応 ===
+  'A': { 'A25_Jaw_Open': 0.5, 'V_Open': 0.4, 'Mouth_Open': 0.35, 'V_Lip_Open': 0.3 },
+  'E': { 'A25_Jaw_Open': 0.3, 'V_Wide': 0.25, 'Mouth_Open': 0.2 },
+  'I': { 'A25_Jaw_Open': 0.15, 'V_Wide': 0.5, 'A50_Mouth_Stretch_Left': 0.4, 'A51_Mouth_Stretch_Right': 0.4 },
+  'O': { 'A25_Jaw_Open': 0.35, 'A30_Mouth_Pucker': 0.4, 'V_Tight_O': 0.3 },
+  'U': { 'A25_Jaw_Open': 0.2, 'A30_Mouth_Pucker': 0.5, 'V_Tight_O': 0.35 }
+};
 
 // 日本語の音素に基づくモーフターゲットマッピング（精度向上版）
 const PhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
@@ -627,6 +975,70 @@ const AdultImprovedPhonemeMap: { [key: string]: { [morphName: string]: number } 
 
 // 文字から音素マッピングを取得（アバター対応版）
 function getPhonemeMapping(char: string, avatarType?: string): { [morphName: string]: number } {
+  // 英語の音素マッピングをチェック（大文字）
+  const upperChar = char.toUpperCase();
+
+  // Direct phoneme check first (for phonemes passed from hook)
+  if (EnglishPhonemeToMorphs[upperChar]) {
+    // Enhance the mapping for boy avatars
+    if (avatarType === 'boy' || avatarType === 'boy_improved') {
+      const baseMapping = EnglishPhonemeToMorphs[upperChar];
+      const enhancedMapping: { [key: string]: number } = {};
+
+      // Convert standard morph names to boy-specific ones where applicable
+      Object.entries(baseMapping).forEach(([morphName, value]) => {
+        if (morphName === 'A25_Jaw_Open') {
+          enhancedMapping['Move_Jaw_Down'] = value * 1.2;
+        }
+        if (morphName === 'V_Wide') {
+          enhancedMapping['Mouth_Widen'] = value;
+          enhancedMapping['Mouth_Widen_Sides'] = value * 0.8;
+        }
+        if (morphName === 'A30_Mouth_Pucker') {
+          enhancedMapping['Mouth_Pucker'] = value;
+        }
+        // Keep original mapping as well
+        enhancedMapping[morphName] = value;
+      });
+
+      return enhancedMapping;
+    }
+
+    return EnglishPhonemeToMorphs[upperChar];
+  }
+
+  // 2文字の英語音素をチェック（例: CH, SH, TH）
+  if (char.length >= 2) {
+    const twoChar = char.substring(0, 2).toUpperCase();
+    if (EnglishPhonemeToMorphs[twoChar]) {
+      return EnglishPhonemeToMorphs[twoChar];
+    }
+  }
+
+  // アルファベット1文字の場合
+  if (/^[a-zA-Z]$/.test(char)) {
+    // 基本母音にマッピング
+    const vowelMap: { [key: string]: string } = {
+      'a': 'A', 'e': 'E', 'i': 'I', 'o': 'O', 'u': 'U',
+      'A': 'A', 'E': 'E', 'I': 'I', 'O': 'O', 'U': 'U'
+    };
+
+    const consonantMap: { [key: string]: string } = {
+      'b': 'B', 'c': 'K', 'd': 'D', 'f': 'F', 'g': 'G',
+      'h': 'HH', 'j': 'JH', 'k': 'K', 'l': 'L', 'm': 'M',
+      'n': 'N', 'p': 'P', 'q': 'K', 'r': 'R', 's': 'S',
+      't': 'T', 'v': 'V', 'w': 'W', 'x': 'K', 'y': 'Y', 'z': 'Z'
+    };
+
+    const lowerChar = char.toLowerCase();
+    if (vowelMap[lowerChar] && EnglishPhonemeToMorphs[vowelMap[lowerChar]]) {
+      return EnglishPhonemeToMorphs[vowelMap[lowerChar]];
+    }
+    if (consonantMap[lowerChar] && EnglishPhonemeToMorphs[consonantMap[lowerChar]]) {
+      return EnglishPhonemeToMorphs[consonantMap[lowerChar]];
+    }
+  }
+
   // 少年アバター用の最適化されたマッピングを使用
   if (avatarType === 'boy' && BoyPhonemeMap[char]) {
     return BoyPhonemeMap[char];
@@ -1475,19 +1887,36 @@ function AvatarModel({
       }
       
       if (currentWord && currentWord.length > 0) {
-        // 現在の文字と次の文字を考慮
-        const currentChar = currentWord[0];
-        const nextChar = currentWord.length > 1 ? currentWord[1] : null;
-        
-        const currentMapping = getPhonemeMapping(currentChar, selectedAvatar);
-        
+        // Check if current word is an English phoneme (all caps, 1-2 letters)
+        const isPhoneme = /^[A-Z]{1,2}$/.test(currentWord);
+        const isEnglishText = /^[a-zA-Z\s\d.,!?';:\-()]+$/.test(currentWord);
+
+        let currentMapping: { [key: string]: number } = {};
+
+        if (isPhoneme) {
+          // Direct phoneme passed from demo hook
+          currentMapping = getPhonemeMapping(currentWord, selectedAvatar);
+        } else if (isEnglishText && currentWord.length > 1) {
+          // English word - convert to phonemes
+          const phonemes = textToPhonemes(currentWord);
+          if (phonemes.length > 0) {
+            // Use the first phoneme for now (could be improved with timing)
+            const firstPhoneme = phonemes[0];
+            currentMapping = getPhonemeMapping(firstPhoneme.phoneme, selectedAvatar);
+          }
+        } else {
+          // Single character or Japanese
+          const currentChar = currentWord[0];
+          currentMapping = getPhonemeMapping(currentChar, selectedAvatar);
+        }
+
         // 音声レベルに完全に同期した口の動き
         Object.entries(currentMapping).forEach(([morphName, value]) => {
           // 音声波形の強度に直接連動
           const syncedValue = value * baseLevel * frequencyModifier;
-          
+
           // 顎の動きは音声レベルに特に敏感に反応
-          if (morphName === 'A25_Jaw_Open') {
+          if (morphName === 'A25_Jaw_Open' || morphName === 'Move_Jaw_Down') {
             targetMorphs[morphName] = syncedValue * (0.8 + realAudioLevel * 0.4);
           } else {
             targetMorphs[morphName] = syncedValue;

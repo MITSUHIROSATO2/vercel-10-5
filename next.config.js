@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  
+
   // 大きなファイルを処理するための設定
   experimental: {
     largePageDataBytes: 200 * 1024 * 1024, // 200MB
+    optimizeCss: false, // CSSの最適化を無効化して404エラーを回避
   },
   
   // ESLintエラーがあってもビルドを続行

@@ -74,10 +74,28 @@ export default function AIEvaluationResult({
 
       const data = await response.json();
       setEvaluation(data.evaluation);
-      
-      // 評価を保存
+
+      // 評価を保存（会話ログとAI評価を含む）
       if (onSave && data.evaluation) {
-        onSave(data.evaluation);
+        const evaluationWithDetails = {
+          ...data.evaluation,
+          conversationLog: messages.map((msg, index) => ({
+            role: msg.role === 'user' ? 'student' : 'patient',
+            content: msg.content,
+            timestamp: new Date(Date.now() - (messages.length - index) * 30000).toISOString() // 概算のタイムスタンプ
+          })),
+          aiEvaluation: {
+            summary: data.evaluation.summary || '',
+            strengths: data.evaluation.strengths || [],
+            improvements: data.evaluation.improvements || [],
+            detailedFeedback: data.evaluation.detailedFeedback || {
+              communication: '',
+              medicalInfo: '',
+              overall: ''
+            }
+          }
+        };
+        onSave(evaluationWithDetails);
       }
     } catch (err) {
       console.error('AI evaluation error:', err);

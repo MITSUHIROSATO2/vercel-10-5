@@ -5,6 +5,97 @@ import { medicalDictionary } from '@/lib/medicalDictionary';
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID;
 
+// 年を日本語読みに変換する関数
+function convertYearToJapanese(year: string): string {
+  const yearNum = parseInt(year);
+  let result = '';
+
+  // 千の位
+  const thousand = Math.floor(yearNum / 1000);
+  if (thousand === 1) result += 'せん';
+  else if (thousand === 2) result += 'にせん';
+
+  // 百の位
+  const hundred = Math.floor((yearNum % 1000) / 100);
+  if (hundred === 1) result += 'ひゃく';
+  else if (hundred === 2) result += 'にひゃく';
+  else if (hundred === 3) result += 'さんびゃく';
+  else if (hundred === 4) result += 'よんひゃく';
+  else if (hundred === 5) result += 'ごひゃく';
+  else if (hundred === 6) result += 'ろっぴゃく';
+  else if (hundred === 7) result += 'ななひゃく';
+  else if (hundred === 8) result += 'はっぴゃく';
+  else if (hundred === 9) result += 'きゅうひゃく';
+
+  // 十の位
+  const ten = Math.floor((yearNum % 100) / 10);
+  if (ten === 1) result += 'じゅう';
+  else if (ten === 2) result += 'にじゅう';
+  else if (ten === 3) result += 'さんじゅう';
+  else if (ten === 4) result += 'よんじゅう';
+  else if (ten === 5) result += 'ごじゅう';
+  else if (ten === 6) result += 'ろくじゅう';
+  else if (ten === 7) result += 'ななじゅう';
+  else if (ten === 8) result += 'はちじゅう';
+  else if (ten === 9) result += 'きゅうじゅう';
+
+  // 一の位
+  const one = yearNum % 10;
+  if (one === 1) result += 'いち';
+  else if (one === 2) result += 'に';
+  else if (one === 3) result += 'さん';
+  else if (one === 4) result += 'よ';
+  else if (one === 5) result += 'ご';
+  else if (one === 6) result += 'ろく';
+  else if (one === 7) result += 'なな';
+  else if (one === 8) result += 'はち';
+  else if (one === 9) result += 'きゅう';
+
+  result += 'ねん';
+  return result;
+}
+
+// 月の読み方
+const monthReadings: { [key: string]: string } = {
+  '1': 'いちがつ', '2': 'にがつ', '3': 'さんがつ', '4': 'しがつ',
+  '5': 'ごがつ', '6': 'ろくがつ', '7': 'しちがつ', '8': 'はちがつ',
+  '9': 'くがつ', '10': 'じゅうがつ', '11': 'じゅういちがつ', '12': 'じゅうにがつ'
+};
+
+// 日の読み方
+const dayReadings: { [key: string]: string } = {
+  '1': 'ついたち', '2': 'ふつか', '3': 'みっか', '4': 'よっか', '5': 'いつか',
+  '6': 'むいか', '7': 'なのか', '8': 'ようか', '9': 'ここのか', '10': 'とおか',
+  '11': 'じゅういちにち', '12': 'じゅうににち', '13': 'じゅうさんにち',
+  '14': 'じゅうよっか', '15': 'じゅうごにち', '16': 'じゅうろくにち',
+  '17': 'じゅうしちにち', '18': 'じゅうはちにち', '19': 'じゅうくにち',
+  '20': 'はつか', '21': 'にじゅういちにち', '22': 'にじゅうににち',
+  '23': 'にじゅうさんにち', '24': 'にじゅうよっか', '25': 'にじゅうごにち',
+  '26': 'にじゅうろくにち', '27': 'にじゅうしちにち', '28': 'にじゅうはちにち',
+  '29': 'にじゅうくにち', '30': 'さんじゅうにち', '31': 'さんじゅういちにち'
+};
+
+// 動的に日付を変換する関数
+function convertDynamicDates(text: string): string {
+  // YYYY年MM月DD日生まれです のパターン
+  text = text.replace(/(\d{4})年(\d{1,2})月(\d{1,2})日生まれです/g, (match, year, month, day) => {
+    const yearJa = convertYearToJapanese(year);
+    const monthJa = monthReadings[month] || month + 'がつ';
+    const dayJa = dayReadings[day] || day + 'にち';
+    return `${yearJa} ${monthJa} ${dayJa} うまれです`;
+  });
+
+  // YYYY年MM月DD日 のパターン
+  text = text.replace(/(\d{4})年(\d{1,2})月(\d{1,2})日/g, (match, year, month, day) => {
+    const yearJa = convertYearToJapanese(year);
+    const monthJa = monthReadings[month] || month + 'がつ';
+    const dayJa = dayReadings[day] || day + 'にち';
+    return `${yearJa} ${monthJa} ${dayJa}`;
+  });
+
+  return text;
+}
+
 export async function POST(request: NextRequest) {
   console.log('ElevenLabs API called');
   
@@ -58,6 +149,7 @@ export async function POST(request: NextRequest) {
       console.log('生年月日 found in text before conversion');
     }
     
+    // まず辞書ファイルの既存エントリーで変換
     for (const [kanji, hiragana] of sortedWords) {
       // 特殊文字をエスケープ
       const escapedKanji = kanji.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -74,6 +166,9 @@ export async function POST(request: NextRequest) {
         console.log(`Replaced '${kanji}' with '${hiragana}' - Before: "${beforeReplace}" After: "${processedTextForTTS}"`);
       }
     }
+
+    // 年月日の動的変換（辞書にない日付も処理）
+    processedTextForTTS = convertDynamicDates(processedTextForTTS);
 
       // 変換後の生年月日を確認
       if (processedTextForTTS.includes('せいねんがっぴ')) {

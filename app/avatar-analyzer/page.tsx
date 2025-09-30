@@ -100,13 +100,59 @@ const EXPRESSION_PRESETS = {
   }
 };
 
-// 音素プリセット
-const PHONEME_PRESETS = {
+// 日本語音素プリセット
+const PHONEME_PRESETS_JP = {
   a: { name: 'あ', morphs: { 'A25_Jaw_Open': 0.5, 'V_Open': 0.4, 'Mouth_Open': 0.35 } },
   i: { name: 'い', morphs: { 'A25_Jaw_Open': 0.15, 'V_Wide': 0.5, 'A50_Mouth_Stretch_Left': 0.4, 'A51_Mouth_Stretch_Right': 0.4 } },
   u: { name: 'う', morphs: { 'A25_Jaw_Open': 0.2, 'A30_Mouth_Pucker': 0.5, 'A29_Mouth_Funnel': 0.3 } },
   e: { name: 'え', morphs: { 'A25_Jaw_Open': 0.35, 'V_Wide': 0.3, 'Mouth_Open': 0.25 } },
   o: { name: 'お', morphs: { 'A25_Jaw_Open': 0.35, 'V_Open': 0.25, 'A29_Mouth_Funnel': 0.3 } }
+};
+
+// 英語音素プリセット（拡張版）
+const PHONEME_PRESETS_EN = {
+  // 母音
+  AA: { name: 'AA (father)', morphs: { 'A25_Jaw_Open': 0.6, 'V_Open': 0.5, 'Mouth_Open': 0.45 } },
+  AE: { name: 'AE (cat)', morphs: { 'A25_Jaw_Open': 0.5, 'V_Wide': 0.4, 'A50_Mouth_Stretch_Left': 0.3, 'A51_Mouth_Stretch_Right': 0.3 } },
+  AH: { name: 'AH (but)', morphs: { 'A25_Jaw_Open': 0.35, 'V_Open': 0.3, 'Mouth_Open': 0.25 } },
+  AO: { name: 'AO (dog)', morphs: { 'A25_Jaw_Open': 0.45, 'V_Open': 0.35, 'A29_Mouth_Funnel': 0.25 } },
+  AW: { name: 'AW (how)', morphs: { 'A25_Jaw_Open': 0.5, 'A30_Mouth_Pucker': 0.4, 'A29_Mouth_Funnel': 0.35 } },
+  AY: { name: 'AY (hide)', morphs: { 'A25_Jaw_Open': 0.4, 'V_Wide': 0.35, 'A50_Mouth_Stretch_Left': 0.25, 'A51_Mouth_Stretch_Right': 0.25 } },
+  EH: { name: 'EH (bed)', morphs: { 'A25_Jaw_Open': 0.3, 'V_Wide': 0.25, 'Mouth_Open': 0.2 } },
+  ER: { name: 'ER (her)', morphs: { 'A25_Jaw_Open': 0.25, 'A30_Mouth_Pucker': 0.3, 'V_Tight_O': 0.2 } },
+  EY: { name: 'EY (take)', morphs: { 'A25_Jaw_Open': 0.2, 'V_Wide': 0.45, 'A50_Mouth_Stretch_Left': 0.35, 'A51_Mouth_Stretch_Right': 0.35 } },
+  IH: { name: 'IH (it)', morphs: { 'A25_Jaw_Open': 0.15, 'V_Wide': 0.35, 'A50_Mouth_Stretch_Left': 0.25, 'A51_Mouth_Stretch_Right': 0.25 } },
+  IY: { name: 'IY (eat)', morphs: { 'A25_Jaw_Open': 0.1, 'V_Wide': 0.6, 'A50_Mouth_Stretch_Left': 0.5, 'A51_Mouth_Stretch_Right': 0.5 } },
+  OW: { name: 'OW (go)', morphs: { 'A25_Jaw_Open': 0.3, 'A30_Mouth_Pucker': 0.5, 'A29_Mouth_Funnel': 0.4 } },
+  OY: { name: 'OY (toy)', morphs: { 'A25_Jaw_Open': 0.35, 'A30_Mouth_Pucker': 0.35, 'V_Wide': 0.2 } },
+  UH: { name: 'UH (hood)', morphs: { 'A25_Jaw_Open': 0.2, 'A30_Mouth_Pucker': 0.35, 'V_Tight_O': 0.25 } },
+  UW: { name: 'UW (two)', morphs: { 'A25_Jaw_Open': 0.15, 'A30_Mouth_Pucker': 0.6, 'A29_Mouth_Funnel': 0.5 } },
+
+  // 子音
+  B: { name: 'B', morphs: { 'A25_Jaw_Open': 0.05, 'A44_Mouth_Upper_Up_Left': 0.1, 'A45_Mouth_Upper_Up_Right': 0.1 } },
+  CH: { name: 'CH', morphs: { 'A25_Jaw_Open': 0.15, 'A30_Mouth_Pucker': 0.25, 'V_Tight_O': 0.15 } },
+  D: { name: 'D', morphs: { 'A25_Jaw_Open': 0.1, 'V_Wide': 0.15, 'Mouth_Open': 0.08 } },
+  DH: { name: 'DH (the)', morphs: { 'A25_Jaw_Open': 0.12, 'V_Wide': 0.2, 'Mouth_Open': 0.1 } },
+  F: { name: 'F', morphs: { 'A25_Jaw_Open': 0.08, 'A44_Mouth_Upper_Up_Left': 0.15, 'A45_Mouth_Upper_Up_Right': 0.15 } },
+  G: { name: 'G', morphs: { 'A25_Jaw_Open': 0.15, 'V_Open': 0.1, 'Mouth_Open': 0.12 } },
+  HH: { name: 'HH', morphs: { 'A25_Jaw_Open': 0.2, 'V_Open': 0.15, 'Mouth_Open': 0.15 } },
+  JH: { name: 'JH', morphs: { 'A25_Jaw_Open': 0.15, 'A30_Mouth_Pucker': 0.3, 'V_Tight_O': 0.2 } },
+  K: { name: 'K', morphs: { 'A25_Jaw_Open': 0.12, 'V_Open': 0.08, 'Mouth_Open': 0.1 } },
+  L: { name: 'L', morphs: { 'A25_Jaw_Open': 0.18, 'V_Wide': 0.25, 'Mouth_Open': 0.15 } },
+  M: { name: 'M', morphs: { 'A25_Jaw_Open': 0.02, 'A44_Mouth_Upper_Up_Left': 0.05, 'A45_Mouth_Upper_Up_Right': 0.05 } },
+  N: { name: 'N', morphs: { 'A25_Jaw_Open': 0.08, 'V_Wide': 0.1, 'Mouth_Open': 0.05 } },
+  NG: { name: 'NG', morphs: { 'A25_Jaw_Open': 0.1, 'V_Open': 0.12, 'Mouth_Open': 0.08 } },
+  P: { name: 'P', morphs: { 'A25_Jaw_Open': 0.03, 'A44_Mouth_Upper_Up_Left': 0.08, 'A45_Mouth_Upper_Up_Right': 0.08 } },
+  R: { name: 'R', morphs: { 'A25_Jaw_Open': 0.2, 'A30_Mouth_Pucker': 0.25, 'V_Tight_O': 0.18 } },
+  S: { name: 'S', morphs: { 'A25_Jaw_Open': 0.1, 'V_Wide': 0.3, 'A50_Mouth_Stretch_Left': 0.2, 'A51_Mouth_Stretch_Right': 0.2 } },
+  SH: { name: 'SH', morphs: { 'A25_Jaw_Open': 0.12, 'A30_Mouth_Pucker': 0.35, 'V_Tight_O': 0.25 } },
+  T: { name: 'T', morphs: { 'A25_Jaw_Open': 0.08, 'V_Wide': 0.12, 'Mouth_Open': 0.06 } },
+  TH: { name: 'TH', morphs: { 'A25_Jaw_Open': 0.1, 'V_Wide': 0.18, 'Mouth_Open': 0.08 } },
+  V: { name: 'V', morphs: { 'A25_Jaw_Open': 0.1, 'A44_Mouth_Upper_Up_Left': 0.12, 'A45_Mouth_Upper_Up_Right': 0.12 } },
+  W: { name: 'W', morphs: { 'A25_Jaw_Open': 0.12, 'A30_Mouth_Pucker': 0.45, 'A29_Mouth_Funnel': 0.35 } },
+  Y: { name: 'Y', morphs: { 'A25_Jaw_Open': 0.15, 'V_Wide': 0.4, 'A50_Mouth_Stretch_Left': 0.3, 'A51_Mouth_Stretch_Right': 0.3 } },
+  Z: { name: 'Z', morphs: { 'A25_Jaw_Open': 0.12, 'V_Wide': 0.25, 'A50_Mouth_Stretch_Left': 0.18, 'A51_Mouth_Stretch_Right': 0.18 } },
+  ZH: { name: 'ZH', morphs: { 'A25_Jaw_Open': 0.15, 'A30_Mouth_Pucker': 0.3, 'V_Tight_O': 0.22 } }
 };
 
 function AvatarModel({ 
@@ -399,6 +445,7 @@ export default function FacialExpressionAnalyzer() {
   const [showWireframe, setShowWireframe] = useState(false);
   const [activeTab, setActiveTab] = useState<'preset' | 'custom' | 'phoneme'>('preset');
   const [morphList, setMorphList] = useState<string[]>([]);
+  const [phonemeLanguage, setPhonemeLanguage] = useState<'jp' | 'en'>('jp');
 
   const modelPath = 
     selectedAvatar === 'adult' ? '/models/成人男性.glb' :

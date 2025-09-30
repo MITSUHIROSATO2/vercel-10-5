@@ -32,23 +32,14 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
   const handleGenerate = () => {
     let newScenario: PatientScenario;
 
-    if (language === 'en') {
-      // Use English generator
-      const { generateRandomScenarioEn, generateThemedScenarioEn } = require('@/lib/scenarioGeneratorEnglish');
-      if (selectedTheme === 'random') {
-        newScenario = generateRandomScenarioEn();
-      } else {
-        newScenario = generateThemedScenarioEn(selectedTheme as any);
-      }
+    // Always use Japanese generator for now
+    if (selectedTheme === 'random') {
+      newScenario = generateRandomScenario();
     } else {
-      // Use Japanese generator
-      if (selectedTheme === 'random') {
-        newScenario = generateRandomScenario();
-      } else {
-        newScenario = generateThemedScenario(selectedTheme as any);
-      }
+      newScenario = generateThemedScenario(selectedTheme as any);
     }
 
+    // The scenario will be automatically translated in the OpenAI API when language is 'en'
     onGenerate(newScenario);
   };
 

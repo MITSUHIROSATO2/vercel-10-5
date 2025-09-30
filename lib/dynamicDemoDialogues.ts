@@ -285,73 +285,299 @@ function generateSummary(scenario: PatientScenario): string {
          `${scenario.presentIllness.nature}ということですね。`;
 }
 
-// ショートデモ用の対話生成
+// ショートデモ用の対話生成（demoDialoguesと同じ52対話）
 export function generateShortDemoDialogues(scenario: PatientScenario, language: 'ja' | 'en' = 'ja'): DemoDialogue[] {
+  if (language === 'en') {
+    return generateDemoDialoguesEnglish(scenario); // Use full English demo (52 dialogues)
+  }
+
+  // generateDemoDialoguesと同じ内容を返す（52対話のフルデモ）
+  return generateDemoDialogues(scenario);
+}
+
+// 追加のヘルパー関数
+function generateOnsetDetail(trigger: string | undefined): string {
+  if (!trigger) return '特にきっかけはありませんが、徐々に悪化しています。';
+  if (trigger.includes('食事')) return '木曜日の夕方、食事中に突然痛み始めました。';
+  if (trigger.includes('冷たい')) return '冷たいものを飲んだ時に急に痛くなりました。';
+  if (trigger.includes('噛')) return '固いものを噛んだ時に痛み始めました。';
+  return '朝起きた時から痛みがありました。';
+}
+
+function generatePainTrigger(trigger: string | undefined): string {
+  if (!trigger) return '噛むと痛みます。';
+  if (trigger.includes('冷たい')) return '冷たいものを飲むと痛みます。';
+  if (trigger.includes('熱い')) return '熱いものを飲むと痛みます。';
+  if (trigger.includes('甘い')) return '甘いものを食べると痛みます。';
+  return '噛むと痛みます。';
+}
+
+function generateAdditionalTrigger(trigger: string | undefined): string {
+  if (!trigger) return '何もしていない時も痛いです。';
+  if (trigger.includes('冷たい')) return '噛む時も痛いです。';
+  if (trigger.includes('噛')) return '何もしていない時も痛いです。';
+  return '噛む時も痛いです。';
+}
+
+function generatePainQuality(nature: string): string {
+  if (nature.includes('ズキズキ')) return 'ズキズキする痛みです。';
+  if (nature.includes('鋭い')) return '鋭い痛みです。';
+  if (nature.includes('鈍い')) return '鈍い痛みです。';
+  if (nature.includes('しみる')) return 'しみる痛みです。';
+  return 'ズキズキする痛みです。';
+}
+
+function generateDetailedSymptom(nature: string): string {
+  if (nature.includes('ズキズキ')) {
+    return '脈打つような、うずくような痛みです。';
+  } else if (nature.includes('しみる')) {
+    return '冷たいものがしみて、キーンとする痛みです。';
+  } else if (nature.includes('出血')) {
+    return '歯磨きの時に特にひどく、朝起きた時も血の味がします。';
+  }
+  return '持続的で鈍い痛みです。';
+}
+
+function generateDetailedSeverity(severity: string | undefined): string {
+  if (!severity) return '7くらいです。日常生活に支障があります。';
+  if (severity.includes('ロキソニン')) {
+    return '8くらいです。夜も眠れないくらい痛いです。';
+  }
+  if (severity.includes('軽減')) {
+    return '5くらいです。我慢はできますが、気になります。';
+  }
+  return '8くらいです。夜も眠れないくらい痛いです。';
+}
+
+function generateMedicationResponse(medication: string | undefined): string {
+  if (!medication) return '市販の鎮痛薬を飲みましたが、あまり効きませんでした。';
+  if (medication.includes('ロキソニン')) return 'ロキソニンを飲みましたが、あまり効きませんでした。';
+  if (medication.includes('効果')) return '痛み止めを飲んで少し楽になりました。';
+  return '市販の鎮痛薬を飲みましたが、あまり効きませんでした。';
+}
+
+function generateSystemicDiseaseFirst(disease: string | undefined): string {
+  if (!disease) return '特にありません。';
+  const diseases = disease.split('、');
+  if (diseases.length > 0) {
+    return `${diseases[0]}があります。`;
+  }
+  return '特にありません。';
+}
+
+function generateSystemicDiseaseSecond(disease: string): string {
+  const diseases = disease.split('、');
+  if (diseases.length > 1) {
+    return `あと、${diseases.slice(1).join('と')}もあります。`;
+  }
+  return '特に他はありません。';
+}
+
+function generateMedicationFirst(medication: string | undefined): string {
+  if (!medication) return '特に飲んでいません。';
+  const meds = medication.split('、');
+  if (meds.length > 0) {
+    return '血圧の薬を飲んでいます。';
+  }
+  return '特に飲んでいません。';
+}
+
+function generateMedicationDetail(medication: string): string {
+  const meds = medication.split('、');
+  if (meds.length > 0) {
+    return `えーと、${meds[0]}だったと思います。`;
+  }
+  return '薬の名前はちょっと覚えていません。';
+}
+
+function generateAllergyResponse(allergies: string | undefined): string {
+  if (!allergies || allergies === 'なし') return '特にありません。';
+  if (allergies.includes('ペニシリン')) return 'ペニシリンで蕁麻疹が出たことがあります。';
+  if (allergies.includes('キシロカイン')) return 'キシロカインでめまいがしたことがあります。';
+  return `${allergies}で蕁麻疹が出たことがあります。`;
+}
+
+function generateDentalHistoryFirst(extraction: string | undefined): string {
+  if (!extraction) return '特にありません。';
+  if (extraction.includes('親知らず')) return '10年前に親知らずを抜きました。';
+  if (extraction.includes('虫歯')) return '5年前に虫歯の治療をしました。';
+  if (extraction.includes('歯周病')) return '歯周病の治療を受けたことがあります。';
+  return extraction;
+}
+
+function generateDentalComplication(complications: string | undefined, anesthesia: string | undefined): string {
+  if (anesthesia && anesthesia.includes('効きにくい')) {
+    return '麻酔が効きにくくて追加してもらいました。';
+  }
+  if (complications) {
+    return complications;
+  }
+  return '特に問題ありませんでした。';
+}
+
+function generateDailyImpactDetail(impact: string | undefined): string {
+  if (!impact) return '食事が思うようにできません。';
+  if (impact.includes('食事')) return '仕事に集中できなくて困っています。';
+  if (impact.includes('睡眠')) return '夜も眠れなくて困っています。';
+  if (impact.includes('会話')) return '人と話すのも辛いです。';
+  return '仕事に集中できなくて困っています。';
+}
+
+function generateConcernDetail(concerns: string | undefined): string {
+  if (!concerns) return '抜歯になるんじゃないかと心配です。';
+  if (concerns.includes('抜歯')) return '抜歯になるんじゃないかと心配です。';
+  if (concerns.includes('費用')) return '治療費がどのくらいかかるか心配です。';
+  if (concerns.includes('期間')) return '治療期間が長くなるのが心配です。';
+  return concerns;
+}
+
+function generateRequestDetail(requests: string | undefined): string {
+  if (!requests) return 'できれば歯を残したいです。';
+  if (requests.includes('痛くない')) return 'できるだけ痛くない治療をお願いします。';
+  if (requests.includes('早く')) return '早く痛みを取ってほしいです。';
+  return requests;
+}
+
+function generateAdditionalConcernDetail(complaint: string): string {
+  if (complaint.includes('歯茎')) {
+    return 'そういえば、口臭も気になります。';
+  } else if (complaint.includes('痛')) {
+    return 'そういえば、歯ぐきから血も出ます。';
+  }
+  return '特にありません。';
+}
+
+function generateAdditionalDiseases(systemicDisease: string): string {
+  if (systemicDisease.includes('高血圧') && systemicDisease.includes('糖尿病')) {
+    return 'この2つだけです。';
+  } else if (systemicDisease.includes('高血圧')) {
+    return 'あと、軽い糖尿病もあります。';
+  }
+  return '特に他はありません。';
+}
+
+function generateDailyImpact(impact: string | undefined): string {
+  if (!impact) return '食事が思うようにできません。';
+  if (impact.includes('食事')) {
+    return '仕事に集中できなくて困っています。';
+  }
+  return impact;
+}
+
+function generateAdditionalConcern(complaint: string): string {
+  if (complaint.includes('歯茎')) {
+    return 'そういえば、口臭も気になります。';
+  } else if (complaint.includes('痛')) {
+    return 'そういえば、歯ぐきから血も出ます。';
+  }
+  return '特にありません。';
+}
+
+// 英語版の対話生成（通常版 - 40対話）
+export function generateDemoDialoguesEnglish(scenario: PatientScenario): DemoDialogue[] {
   const dialogues: DemoDialogue[] = [];
 
-  // ===== 簡潔版：主要な質問のみ =====
-
-  // 導入
+  // ===== Introduction =====
   dialogues.push(
-    { speaker: 'doctor', text: doctorQuestions.greeting, delay: 3000 },
-    { speaker: 'patient', text: 'こんにちは、よろしくお願いします。', delay: 2500 },
-
-    { speaker: 'doctor', text: doctorQuestions.nameConfirmation, delay: 2000 },
-    { speaker: 'patient', text: `${scenario.basicInfo.name}です。`, delay: 2000 }
+    { speaker: 'doctor', text: "Hello. I'm Dr. Tanaka, and I'll be taking care of you today.", delay: 2000 },
+    { speaker: 'patient', text: 'Hello. Nice to meet you, doctor.', delay: 2000 },
+    { speaker: 'doctor', text: 'May I have your full name, please?', delay: 2000 },
+    { speaker: 'patient', text: 'My name is Taro Yamada.', delay: 2000 },
+    { speaker: 'doctor', text: 'Could you tell me your date of birth as well?', delay: 2000 },
+    { speaker: 'patient', text: 'May 15th, 1990.', delay: 2500 }
   );
 
-  // 主訴
+  // ===== Chief Complaint =====
   dialogues.push(
-    { speaker: 'doctor', text: doctorQuestions.chiefComplaint, delay: 2500 },
-    { speaker: 'patient', text: `${scenario.chiefComplaint.complaint}で来ました。`, delay: 2500 }
+    { speaker: 'doctor', text: 'What brings you in today?', delay: 2000 },
+    { speaker: 'patient', text: 'I have pain in my lower right back tooth.', delay: 2500 }
   );
 
-  // 現病歴（主要な項目のみ）
+  // ===== Present Illness (OPQRST) =====
   dialogues.push(
-    { speaker: 'doctor', text: doctorQuestions.onset, delay: 2000 },
-    { speaker: 'patient', text: scenario.chiefComplaint.since, delay: 2000 },
-
-    { speaker: 'doctor', text: doctorQuestions.quality, delay: 2500 },
-    { speaker: 'patient', text: scenario.presentIllness.nature, delay: 2500 },
-
-    { speaker: 'doctor', text: doctorQuestions.severity, delay: 2500 },
-    { speaker: 'patient', text: generateSeverityResponse(scenario.presentIllness.severity), delay: 3000 }
+    { speaker: 'doctor', text: 'When did the pain start?', delay: 2000 },
+    { speaker: 'patient', text: 'About three days ago.', delay: 2000 },
+    { speaker: 'doctor', text: 'Could you tell me more about how it started?', delay: 2000 },
+    { speaker: 'patient', text: 'It started suddenly during dinner on Thursday evening.', delay: 3000 }
   );
 
-  // 既往歴（簡潔に）
   dialogues.push(
-    { speaker: 'doctor', text: doctorQuestions.currentDiseases, delay: 2000 },
-    { speaker: 'patient', text: scenario.medicalHistory.systemicDisease || 'ありません。', delay: 2000 },
-
-    { speaker: 'doctor', text: doctorQuestions.allergies, delay: 2000 },
-    { speaker: 'patient', text: scenario.medicalHistory.allergies || 'ありません。', delay: 2500 }
+    { speaker: 'doctor', text: 'When does the tooth hurt?', delay: 2000 },
+    { speaker: 'patient', text: 'It hurts when I drink something cold.', delay: 2500 },
+    { speaker: 'doctor', text: 'Are there other times when it hurts?', delay: 2000 },
+    { speaker: 'patient', text: 'Yes, it also hurts when I chew.', delay: 2000 }
   );
 
-  // 心理社会的側面
   dialogues.push(
-    { speaker: 'doctor', text: doctorQuestions.concerns, delay: 2500 },
-    { speaker: 'patient', text: scenario.psychosocial.concerns || '特にありません。', delay: 2500 }
+    { speaker: 'doctor', text: 'What kind of pain is it?', delay: 2000 },
+    { speaker: 'patient', text: 'It\'s a throbbing pain.', delay: 2000 },
+    { speaker: 'doctor', text: 'Could you describe it in more detail?', delay: 2000 },
+    { speaker: 'patient', text: 'It\'s like a pulsing, aching sensation.', delay: 2500 }
   );
 
-  // まとめ
   dialogues.push(
-    { speaker: 'doctor', text: doctorQuestions.additionalConcerns, delay: 2500 },
-    { speaker: 'patient', text: '大丈夫です。', delay: 2000 },
+    { speaker: 'doctor', text: 'Where exactly is the pain?', delay: 2000 },
+    { speaker: 'patient', text: 'In my lower right back tooth.', delay: 2000 },
+    { speaker: 'doctor', text: 'Does the pain spread to other areas?', delay: 2000 },
+    { speaker: 'patient', text: 'Yes, it radiates to my cheek.', delay: 2500 }
+  );
 
-    { speaker: 'doctor', text: doctorQuestions.conclusion, delay: 2500 }
+  dialogues.push(
+    { speaker: 'doctor', text: 'How severe is the pain on a scale of 1 to 10?', delay: 2500 },
+    { speaker: 'patient', text: 'About 8. It\'s so bad I can\'t sleep at night.', delay: 3000 }
+  );
+
+  dialogues.push(
+    { speaker: 'doctor', text: 'Have you taken any pain medication?', delay: 2000 },
+    { speaker: 'patient', text: 'I took over-the-counter painkillers, but they didn\'t help much.', delay: 3000 }
+  );
+
+  // ===== Medical History & Allergies =====
+  dialogues.push(
+    { speaker: 'doctor', text: 'Do you have any medical conditions?', delay: 2000 },
+    { speaker: 'patient', text: 'I have high blood pressure.', delay: 2000 },
+    { speaker: 'doctor', text: 'Anything else?', delay: 2000 },
+    { speaker: 'patient', text: 'I also have diabetes.', delay: 2000 }
+  );
+
+  dialogues.push(
+    { speaker: 'doctor', text: 'Are you taking any medications?', delay: 2000 },
+    { speaker: 'patient', text: 'Yes, I take medication for blood pressure.', delay: 2000 },
+    { speaker: 'doctor', text: 'Do you know the name of the medication?', delay: 2000 },
+    { speaker: 'patient', text: 'Um, I think it\'s amlodipine.', delay: 2500 }
+  );
+
+  dialogues.push(
+    { speaker: 'doctor', text: 'Do you have any allergies?', delay: 2000 },
+    { speaker: 'patient', text: 'I once got hives from penicillin.', delay: 2500 }
+  );
+
+  // ===== Dental History =====
+  dialogues.push(
+    { speaker: 'doctor', text: 'Have you had any dental treatment before?', delay: 2500 },
+    { speaker: 'patient', text: 'I had my wisdom teeth removed 10 years ago.', delay: 2500 },
+    { speaker: 'doctor', text: 'Were there any problems during that procedure?', delay: 2000 },
+    { speaker: 'patient', text: 'The anesthesia didn\'t work well at first, so they had to give me more.', delay: 2500 }
+  );
+
+  // ===== Psychosocial Aspects =====
+  dialogues.push(
+    { speaker: 'doctor', text: 'Is this pain affecting your daily life?', delay: 3000 },
+    { speaker: 'patient', text: 'Yes, I can\'t concentrate at work.', delay: 2500 },
+    { speaker: 'doctor', text: 'Are you concerned about anything?', delay: 2000 },
+    { speaker: 'patient', text: 'I\'m worried I might need to have the tooth extracted.', delay: 2500 },
+    { speaker: 'doctor', text: 'Do you have any preferences for treatment?', delay: 2500 },
+    { speaker: 'patient', text: 'I\'d like to keep the tooth if possible.', delay: 2000 }
+  );
+
+  // ===== Conclusion =====
+  dialogues.push(
+    { speaker: 'doctor', text: 'Is there anything else you\'d like to tell me?', delay: 2000 },
+    { speaker: 'patient', text: 'Oh, I just remembered - my gums bleed sometimes too.', delay: 2500 },
+    { speaker: 'doctor', text: 'I understand. Now, let me examine your teeth.', delay: 3000 },
+    { speaker: 'patient', text: 'Yes, please do.', delay: 2000 }
   );
 
   return dialogues;
 }
 
-// 英語版の対話生成（将来的な拡張用）
-export function generateDemoDialoguesEnglish(scenario: PatientScenario): DemoDialogue[] {
-  // 英語版の実装は後で追加
-  return [];
-}
-
-// 英語版ショートデモ（将来的な拡張用）
-export function generateShortDemoDialoguesEnglish(scenario: PatientScenario): DemoDialogue[] {
-  // 英語版の実装は後で追加
-  return [];
-}
