@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { generateRandomScenario, generateThemedScenario } from '@/lib/scenarioGenerator';
 import type { PatientScenario } from '@/lib/scenarioTypes';
 
 interface ScenarioGeneratorProps {
@@ -12,6 +11,7 @@ interface ScenarioGeneratorProps {
 
 export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja' }: ScenarioGeneratorProps) {
   const [selectedTheme, setSelectedTheme] = useState<string>('random');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const themes = language === 'ja' ? [
     { id: 'random', label: '完全ランダム', icon: '🎲', description: 'すべての要素をランダムに生成' },
@@ -29,18 +29,33 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
     { id: 'elderly', label: 'Elderly Patient', icon: '👴', description: 'Senior with multiple conditions' }
   ];
 
-  const handleGenerate = () => {
-    let newScenario: PatientScenario;
+  const handleGenerate = async () => {
+    setIsGenerating(true);
 
-    // Always use Japanese generator for now
-    if (selectedTheme === 'random') {
-      newScenario = generateRandomScenario();
-    } else {
-      newScenario = generateThemedScenario(selectedTheme as any);
+    try {
+      const response = await fetch('/api/generate-scenario', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          theme: selectedTheme,
+          language: language
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate scenario');
+      }
+
+      const data = await response.json();
+      onGenerate(data.scenario);
+    } catch (error) {
+      console.error('Error generating scenario:', error);
+      alert(language === 'ja' ? 'シナリオの生成に失敗しました' : 'Failed to generate scenario');
+    } finally {
+      setIsGenerating(false);
     }
-
-    // The scenario will be automatically translated in the OpenAI API when language is 'en'
-    onGenerate(newScenario);
   };
 
   return (
@@ -50,7 +65,7 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
         <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 p-6 border-b border-cyan-500/30">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-              {language === 'ja' ? 'シナリオ新規自動生成' : 'Generate New Scenario'}
+              {language === 'ja' ? 'シナリオ新規自動生成 by OpenAI GPT-5' : 'Generate New Scenario by OpenAI GPT-5'}
             </h2>
             <div className="flex gap-2">
               <button
@@ -61,10 +76,20 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
               </button>
               <button
                 onClick={handleGenerate}
-                className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all flex items-center gap-2"
+                disabled={isGenerating}
+                className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span>🎲</span>
-                {language === 'ja' ? '生成' : 'Generate'}
+                {isGenerating ? (
+                  <>
+                    <span className="animate-spin">⏳</span>
+                    {language === 'ja' ? '生成中...' : 'Generating...'}
+                  </>
+                ) : (
+                  <>
+                    <span>🎲</span>
+                    {language === 'ja' ? '生成' : 'Generate'}
+                  </>
+                )}
               </button>
             </div>
           </div>

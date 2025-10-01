@@ -24,7 +24,7 @@ export const getModelPath = (modelType: 'adult' | 'adult_improved' | 'boy' | 'bo
       adult_improved: '/models/成人男性改アバター.glb',
       boy: '/models/少年アバター.glb',
       boy_improved: '/models/少年改アバター.glb',
-      female: '/models/Hayden_059d-NO-GUI.glb'
+      female: '/models/Mother.glb'
     };
     return localPaths[modelType];
   }
@@ -51,7 +51,7 @@ export const getModelPath = (modelType: 'adult' | 'adult_improved' | 'boy' | 'bo
       adult_improved: `${cdnBase}/成人男性改アバター.glb`,
       boy: `${cdnBase}/少年アバター.glb`,
       boy_improved: `${cdnBase}/少年改アバター.glb`,
-      female: `${cdnBase}/Hayden_059d-NO-GUI.glb`
+      female: `${cdnBase}/Mother.glb`
     };
     return cdnPaths[modelType];
   }
@@ -62,9 +62,9 @@ export const getModelPath = (modelType: 'adult' | 'adult_improved' | 'boy' | 'bo
     adult_improved: '/models/成人男性改アバター.glb',
     boy: '/models/少年アバター.glb',
     boy_improved: '/models/少年改アバター.glb',
-    female: '/models/Hayden_059d-NO-GUI.glb'
+    female: '/models/Mother.glb'
   };
-  
+
   return localPaths[modelType];
 };
 

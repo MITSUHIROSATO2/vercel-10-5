@@ -205,16 +205,122 @@ function AvatarModel({
       }
     });
     
-    // 女性アバターの場合、メッシュ情報をコンソールに出力
-    if (modelPath.includes('Hayden')) {
-      console.log('=== 女性アバター メッシュ分析 ===');
-      console.log('メッシュ総数:', meshInfo.length);
-      meshInfo.forEach((info, index) => {
-        console.log(`メッシュ ${index + 1}:`, info);
+    // 女性アバター（Mother.glb）の場合、詳細分析
+    if (modelPath.includes('Mother') || modelPath.includes('female')) {
+      console.log('=== 女性アバター 詳細分析 ===');
+      const femaleAvatarAnalysis: any = {
+        timestamp: new Date().toISOString(),
+        modelPath: modelPath,
+        allMeshes: [],
+        materials: [],
+        summary: {
+          totalMeshes: 0,
+          totalMaterials: 0,
+          visibleMeshes: 0,
+          hiddenMeshes: 0,
+          meshesWithVertexColors: 0
+        }
+      };
+
+      const processedMaterials = new Set<string>();
+
+      scene.traverse((child: any) => {
+        if (child.isMesh) {
+          const meshData: any = {
+            name: child.name,
+            visible: child.visible,
+            hasVertexColors: false,
+            position: child.position ? { x: child.position.x, y: child.position.y, z: child.position.z } : null,
+            geometry: {
+              verticesCount: child.geometry?.attributes?.position?.count || 0,
+              hasUV: !!child.geometry?.attributes?.uv,
+              hasMorphTargets: !!child.morphTargetInfluences,
+              morphTargetCount: child.morphTargetInfluences?.length || 0
+            },
+            materials: []
+          };
+
+          // マテリアル情報を詳細に収集
+          const materials = Array.isArray(child.material) ? child.material : [child.material];
+          materials.forEach((mat: any) => {
+            if (mat) {
+              const matData = {
+                name: mat.name || 'unnamed',
+                type: mat.type,
+                color: mat.color ? `#${mat.color.getHexString()}` : null,
+                emissive: mat.emissive ? `#${mat.emissive.getHexString()}` : null,
+                emissiveIntensity: mat.emissiveIntensity,
+                vertexColors: mat.vertexColors,
+                transparent: mat.transparent,
+                opacity: mat.opacity,
+                depthWrite: mat.depthWrite,
+                renderOrder: mat.renderOrder,
+                side: mat.side === THREE.FrontSide ? 'FrontSide' : mat.side === THREE.BackSide ? 'BackSide' : 'DoubleSide',
+                map: !!mat.map,
+                normalMap: !!mat.normalMap,
+                aoMap: !!mat.aoMap,
+                emissiveMap: !!mat.emissiveMap,
+                roughness: mat.roughness,
+                metalness: mat.metalness,
+                // MeshPhysicalMaterial固有のプロパティ
+                clearcoat: mat.clearcoat,
+                clearcoatRoughness: mat.clearcoatRoughness,
+                sheen: mat.sheen,
+                transmission: mat.transmission,
+                reflectivity: mat.reflectivity,
+                ior: mat.ior
+              };
+
+              meshData.materials.push(matData);
+
+              if (mat.vertexColors) {
+                meshData.hasVertexColors = true;
+                femaleAvatarAnalysis.summary.meshesWithVertexColors++;
+              }
+
+              // ユニークなマテリアルを記録
+              const matKey = `${mat.name}_${mat.uuid}`;
+              if (!processedMaterials.has(matKey)) {
+                processedMaterials.add(matKey);
+                femaleAvatarAnalysis.materials.push({
+                  ...matData,
+                  uuid: mat.uuid,
+                  usedInMeshes: [child.name]
+                });
+              }
+            }
+          });
+
+          femaleAvatarAnalysis.allMeshes.push(meshData);
+          femaleAvatarAnalysis.summary.totalMeshes++;
+
+          if (child.visible) {
+            femaleAvatarAnalysis.summary.visibleMeshes++;
+          } else {
+            femaleAvatarAnalysis.summary.hiddenMeshes++;
+          }
+        }
       });
-      
+
+      femaleAvatarAnalysis.summary.totalMaterials = femaleAvatarAnalysis.materials.length;
+
+      // コンソールに概要を表示
+      console.log('メッシュ総数:', femaleAvatarAnalysis.summary.totalMeshes);
+      console.log('マテリアル総数:', femaleAvatarAnalysis.summary.totalMaterials);
+      console.log('表示メッシュ:', femaleAvatarAnalysis.summary.visibleMeshes);
+      console.log('非表示メッシュ:', femaleAvatarAnalysis.summary.hiddenMeshes);
+
+      console.log('\n=== マテリアル一覧 ===');
+      femaleAvatarAnalysis.materials.forEach((mat: any, index: number) => {
+        console.log(`${index + 1}. ${mat.name} (${mat.type})`);
+        console.log(`   色: ${mat.color}, エミッシブ: ${mat.emissive}`);
+        console.log(`   使用メッシュ:`, mat.usedInMeshes);
+      });
+
       // グローバル変数に保存（JSON出力用）
-      (window as any).femaleAvatarMeshInfo = meshInfo;
+      (window as any).femaleAvatarAnalysis = femaleAvatarAnalysis;
+      console.log('\n✅ 分析データを window.femaleAvatarAnalysis に保存しました');
+      console.log('💡 JSONファイルをダウンロードするには「マテリアル情報をJSON出力」ボタンをクリックしてください');
     }
     
     setMorphTargets(meshes);
@@ -447,11 +553,11 @@ export default function FacialExpressionAnalyzer() {
   const [morphList, setMorphList] = useState<string[]>([]);
   const [phonemeLanguage, setPhonemeLanguage] = useState<'jp' | 'en'>('jp');
 
-  const modelPath = 
+  const modelPath =
     selectedAvatar === 'adult' ? '/models/成人男性.glb' :
     selectedAvatar === 'boy' ? '/models/少年アバター.glb' :
     selectedAvatar === 'boy_improved' ? '/models/少年改アバター.glb' :
-    '/models/Hayden_059d-NO-GUI.glb';
+    '/models/Mother.glb';
 
   // 共通のモーフターゲット名（ARKit準拠）
   const commonMorphTargets = [
@@ -490,9 +596,15 @@ export default function FacialExpressionAnalyzer() {
     setSelectedExpression('neutral');
   };
 
-  const applyPhoneme = (phoneme: keyof typeof PHONEME_PRESETS) => {
-    setCustomMorphs(PHONEME_PRESETS[phoneme].morphs);
-    setSelectedExpression('custom');
+  // 現在の言語に応じた音素プリセットを取得
+  const PHONEME_PRESETS = phonemeLanguage === 'jp' ? PHONEME_PRESETS_JP : PHONEME_PRESETS_EN;
+
+  const applyPhoneme = (phoneme: string) => {
+    const preset = PHONEME_PRESETS[phoneme as keyof typeof PHONEME_PRESETS];
+    if (preset) {
+      setCustomMorphs(preset.morphs);
+      setSelectedExpression('custom');
+    }
   };
 
   const exportToJSON = () => {
@@ -519,10 +631,30 @@ export default function FacialExpressionAnalyzer() {
     URL.revokeObjectURL(url);
   };
 
+  const exportMaterialInfoToJSON = () => {
+    const analysisData = (window as any).femaleAvatarAnalysis;
+    if (!analysisData) {
+      alert('女性アバターを選択してマテリアル情報を読み込んでください');
+      return;
+    }
+
+    const blob = new Blob([JSON.stringify(analysisData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `female_avatar_materials_${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    console.log('✅ マテリアル情報をJSONファイルとして出力しました');
+  };
+
   const exportMeshInfoToJSON = () => {
     const meshInfo = (window as any).femaleAvatarMeshInfo;
     if (!meshInfo) {
-      alert('女性アバターを選択してメッシュ情報を読み込んでください');
+      alert('メッシュ情報を読み込んでください');
       return;
     }
 
@@ -748,13 +880,13 @@ export default function FacialExpressionAnalyzer() {
                 </button>
                 {selectedAvatar === 'female' && (
                   <button
-                    onClick={exportMeshInfoToJSON}
+                    onClick={exportMaterialInfoToJSON}
                     className="px-3 py-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-lg hover:from-pink-600 hover:to-rose-700 transition-all shadow-lg flex items-center gap-2 text-sm"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                     </svg>
-                    メッシュ情報
+                    マテリアル情報
                   </button>
                 )}
                 {selectedAvatar === 'boy' && (
@@ -835,7 +967,7 @@ export default function FacialExpressionAnalyzer() {
                   {Object.entries(PHONEME_PRESETS).map(([key, preset]) => (
                     <button
                       key={key}
-                      onClick={() => applyPhoneme(key as keyof typeof PHONEME_PRESETS)}
+                      onClick={() => applyPhoneme(key)}
                       className="px-4 py-3 bg-green-700 hover:bg-green-600 text-white rounded-lg font-bold text-lg transition-all"
                     >
                       {preset.name}

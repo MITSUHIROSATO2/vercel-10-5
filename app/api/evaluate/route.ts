@@ -9,42 +9,43 @@ interface EvaluationCriteria {
   category: string;
   subcategory?: string;
   item: string;
+  itemEn: string;
   priority: 'high' | 'medium' | 'low';
 }
 
 const evaluationCriteria: EvaluationCriteria[] = [
   // （１）対人関係能力：患者との良好な関係の構築
-  { category: 'interpersonal', item: '言語的コミュニケーションを適切に行う', priority: 'high' },
-  
+  { category: 'interpersonal', item: '言語的コミュニケーションを適切に行う', itemEn: 'Conduct appropriate verbal communication', priority: 'high' },
+
   // （２）全体をとおして
-  { category: 'overall', item: '順序立った面接を行う', priority: 'high' },
-  { category: 'overall', item: '話題を変えるときには、唐突でなく適切な声かけをする', priority: 'high' },
-  
+  { category: 'overall', item: '順序立った面接を行う', itemEn: 'Conduct a well-structured interview', priority: 'high' },
+  { category: 'overall', item: '話題を変えるときには、唐突でなく適切な声かけをする', itemEn: 'Use appropriate transitions when changing topics', priority: 'high' },
+
   // （３）導入部分：オープニング
-  { category: 'opening', item: '挨拶を行う', priority: 'high' },
-  { category: 'opening', item: '本人確認と自己紹介を適切に行う', priority: 'high' },
-  { category: 'opening', item: '面接の概要説明と同意を取得する', priority: 'high' },
-  
+  { category: 'opening', item: '挨拶を行う', itemEn: 'Greet the patient', priority: 'high' },
+  { category: 'opening', item: '本人確認と自己紹介を適切に行う', itemEn: 'Verify patient identity and introduce yourself appropriately', priority: 'high' },
+  { category: 'opening', item: '面接の概要説明と同意を取得する', itemEn: 'Explain interview overview and obtain consent', priority: 'high' },
+
   // （４）患者に聞く：歯科医学的情報
-  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '主訴を聞く', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '主訴の現病歴を聞く', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'history', item: '歯科的既往歴を聞く', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'history', item: '全身的既往歴を聞く', priority: 'high' },
-  { category: 'medicalInfo', subcategory: 'lifestyle', item: '口腔衛生習慣(歯磨きの頻度など)を聞く', priority: 'low' },
-  { category: 'medicalInfo', subcategory: 'lifestyle', item: '患者の食習慣や嗜好を聞く', priority: 'low' },
-  { category: 'medicalInfo', subcategory: 'lifestyle', item: '患者の家族歴や社会歴を聞く', priority: 'low' },
-  
+  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '主訴を聞く', itemEn: 'Ask about chief complaint', priority: 'high' },
+  { category: 'medicalInfo', subcategory: 'chiefComplaint', item: '主訴の現病歴を聞く', itemEn: 'Ask about present illness history', priority: 'high' },
+  { category: 'medicalInfo', subcategory: 'history', item: '歯科的既往歴を聞く', itemEn: 'Ask about dental history', priority: 'high' },
+  { category: 'medicalInfo', subcategory: 'history', item: '全身的既往歴を聞く', itemEn: 'Ask about medical history', priority: 'high' },
+  { category: 'medicalInfo', subcategory: 'lifestyle', item: '口腔衛生習慣(歯磨きの頻度など)を聞く', itemEn: 'Ask about oral hygiene habits (brushing frequency, etc.)', priority: 'low' },
+  { category: 'medicalInfo', subcategory: 'lifestyle', item: '患者の食習慣や嗜好を聞く', itemEn: 'Ask about dietary habits and preferences', priority: 'low' },
+  { category: 'medicalInfo', subcategory: 'lifestyle', item: '患者の家族歴や社会歴を聞く', itemEn: 'Ask about family and social history', priority: 'low' },
+
   // （５）患者に聞く：心理・社会的情報
-  { category: 'psychosocial', item: '解釈モデルを聞く', priority: 'high' },
-  { category: 'psychosocial', item: '来院動機を聞く', priority: 'low' },
-  { category: 'psychosocial', item: '心理的状況を聞く', priority: 'low' },
-  { category: 'psychosocial', item: '検査や治療に関する要望を聞く', priority: 'low' },
-  { category: 'psychosocial', item: '患者背景に関わる通院条件、健康･受療行動、生活･社会･心理的背景などを聞く', priority: 'low' },
-  
+  { category: 'psychosocial', item: '解釈モデルを聞く', itemEn: 'Ask about patient\'s explanatory model', priority: 'high' },
+  { category: 'psychosocial', item: '来院動機を聞く', itemEn: 'Ask about reason for visit', priority: 'low' },
+  { category: 'psychosocial', item: '心理的状況を聞く', itemEn: 'Ask about psychological status', priority: 'low' },
+  { category: 'psychosocial', item: '検査や治療に関する要望を聞く', itemEn: 'Ask about preferences for examination and treatment', priority: 'low' },
+  { category: 'psychosocial', item: '患者背景に関わる通院条件、健康･受療行動、生活･社会･心理的背景などを聞く', itemEn: 'Ask about visit conditions, health behaviors, and life/social/psychological background', priority: 'low' },
+
   // （６）締めくくり部分：クロージング
-  { category: 'closing', item: '要約と確認を行う', priority: 'high' },
-  { category: 'closing', item: '言い忘れの確認を行う', priority: 'high' },
-  { category: 'closing', item: '面接終了後、患者が次にどうしたら良いかを適切に伝える', priority: 'high' },
+  { category: 'closing', item: '要約と確認を行う', itemEn: 'Summarize and confirm', priority: 'high' },
+  { category: 'closing', item: '言い忘れの確認を行う', itemEn: 'Ask if anything was forgotten', priority: 'high' },
+  { category: 'closing', item: '面接終了後、患者が次にどうしたら良いかを適切に伝える', itemEn: 'Explain next steps appropriately after interview', priority: 'high' },
 ];
 
 export async function POST(request: NextRequest) {
@@ -113,7 +114,7 @@ You are a dental medical interview evaluator. Analyze the following medical inte
 ${conversationText}
 
 [Evaluation Criteria]
-${criteriaToUse.map((c: EvaluationCriteria) => `- ${c.item} (Priority: ${c.priority})`).join('\n')}
+${criteriaToUse.map((c: EvaluationCriteria) => `- ${c.itemEn || c.item} (Priority: ${c.priority})`).join('\n')}
 
 [Evaluation Method]
 1. Determine whether each evaluation item was performed in the conversation
@@ -148,7 +149,7 @@ Please output in the following JSON format:
 }`;
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-5',
       messages: [
         {
           role: 'system',
@@ -161,7 +162,7 @@ Please output in the following JSON format:
           content: evaluationPrompt
         }
       ],
-      temperature: 0.3, // 評価の一貫性のため低めに設定
+      // GPT-5はtemperature=1のみサポート
       response_format: { type: "json_object" }
     });
 

@@ -23,6 +23,7 @@ export interface InterviewEvaluation {
   totalScore: number;
   maxScore: number;
   categories: {
+    procedure?: EvaluationItem[];
     communication: {
       verbal: EvaluationItem[];
       overall: EvaluationItem[];

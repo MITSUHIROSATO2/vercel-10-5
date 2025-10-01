@@ -1,0 +1,1423 @@
+{
+  "timestamp": "2025-09-30T09:26:05.740Z",
+  "modelPath": "/models/Mother.glb",
+  "allMeshes": [
+    {
+      "name": "Eyebrows",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 1435,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 159
+      },
+      "materials": [
+        {
+          "name": "initialShadingGroup_Transparency",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "Hair",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 12286,
+        "hasUV": true,
+        "hasMorphTargets": false,
+        "morphTargetCount": 0
+      },
+      "materials": [
+        {
+          "name": "Hair",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 1,
+          "transmission": 0,
+          "reflectivity": 0.5,
+          "ior": 1.5
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_1",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 4354,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 121
+      },
+      "materials": [
+        {
+          "name": "NUG_Skin_Head",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 1,
+          "transmission": 0,
+          "reflectivity": 0.4591837131892669,
+          "ior": 1.4500000476837158
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_2",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 2060,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 121
+      },
+      "materials": [
+        {
+          "name": "NUG_Skin_Body",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 1,
+          "transmission": 0,
+          "reflectivity": 0.5,
+          "ior": 1.5
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_3",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 4738,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 121
+      },
+      "materials": [
+        {
+          "name": "NUG_Skin_Arm",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 1,
+          "transmission": 0,
+          "reflectivity": 0.5,
+          "ior": 1.5
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_4",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 2590,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 121
+      },
+      "materials": [
+        {
+          "name": "NUG_Skin_Leg",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 1,
+          "transmission": 0,
+          "reflectivity": 0.5,
+          "ior": 1.5
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_5",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 1112,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 121
+      },
+      "materials": [
+        {
+          "name": "NUG_Nails",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 1,
+          "transmission": 0,
+          "reflectivity": 0.5,
+          "ior": 1.5
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Body_6",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 748,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 121
+      },
+      "materials": [
+        {
+          "name": "NUG_Eyelash",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Eye_1",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 165,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 1
+      },
+      "materials": [
+        {
+          "name": "NUG_Eye_R",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Eye_2",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 165,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 1
+      },
+      "materials": [
+        {
+          "name": "NUG_Cornea_R",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": false,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Eye_3",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 165,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 1
+      },
+      "materials": [
+        {
+          "name": "NUG_Eye_L",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Eye_4",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 165,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 1
+      },
+      "materials": [
+        {
+          "name": "NUG_Cornea_L",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": false,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_EyeONUGlusion_1",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 91,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 80
+      },
+      "materials": [
+        {
+          "name": "NUG_Eye_ONUDlusion_R",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#000000",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "FrontSide",
+          "map": false,
+          "normalMap": false,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 0,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 0,
+          "transmission": 0,
+          "reflectivity": 0.4591837131892669,
+          "ior": 1.4500000476837158
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_EyeONUGlusion_2",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 91,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 80
+      },
+      "materials": [
+        {
+          "name": "NUG_Eye_ONUDlusion_L",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#000000",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "FrontSide",
+          "map": false,
+          "normalMap": false,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 0,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 0,
+          "transmission": 0,
+          "reflectivity": 0.4591837131892669,
+          "ior": 1.4500000476837158
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_TearLine_1",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 98,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 78
+      },
+      "materials": [
+        {
+          "name": "NUG_Tearline_R",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#000000",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "FrontSide",
+          "map": false,
+          "normalMap": false,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 0
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_TearLine_2",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 98,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 78
+      },
+      "materials": [
+        {
+          "name": "NUG_Tearline_L",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#000000",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "FrontSide",
+          "map": false,
+          "normalMap": false,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 0
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Teeth_1",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 1403,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 1
+      },
+      "materials": [
+        {
+          "name": "NUG_Upper_Teeth",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 0,
+          "transmission": 0,
+          "reflectivity": 0.4591837131892669,
+          "ior": 1.4500000476837158
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Teeth_2",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 1474,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 1
+      },
+      "materials": [
+        {
+          "name": "NUG_Lower_Teeth",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 0,
+          "transmission": 0,
+          "reflectivity": 0.4591837131892669,
+          "ior": 1.4500000476837158
+        }
+      ]
+    },
+    {
+      "name": "NUG_Base_Tongue",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 331,
+        "hasUV": true,
+        "hasMorphTargets": true,
+        "morphTargetCount": 19
+      },
+      "materials": [
+        {
+          "name": "NUG_Tongue",
+          "type": "MeshPhysicalMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": false,
+          "opacity": 1,
+          "depthWrite": true,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1,
+          "clearcoat": 0,
+          "clearcoatRoughness": 0,
+          "sheen": 0,
+          "transmission": 0,
+          "reflectivity": 0.4591837131892669,
+          "ior": 1.4500000476837158
+        }
+      ]
+    },
+    {
+      "name": "Slim_fit_pants",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 3571,
+        "hasUV": true,
+        "hasMorphTargets": false,
+        "morphTargetCount": 0
+      },
+      "materials": [
+        {
+          "name": "Slim_fit_pants",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "Sport_sneakers",
+      "visible": true,
+      "hasVertexColors": true,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 4297,
+        "hasUV": true,
+        "hasMorphTargets": false,
+        "morphTargetCount": 0
+      },
+      "materials": [
+        {
+          "name": "Sport_sneakers",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": true,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": false,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    },
+    {
+      "name": "Turtleneck_sweater",
+      "visible": true,
+      "hasVertexColors": false,
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "geometry": {
+        "verticesCount": 4343,
+        "hasUV": true,
+        "hasMorphTargets": false,
+        "morphTargetCount": 0
+      },
+      "materials": [
+        {
+          "name": "Turtleneck_sweater",
+          "type": "MeshStandardMaterial",
+          "color": "#ffffff",
+          "emissive": "#ffffff",
+          "emissiveIntensity": 1,
+          "vertexColors": false,
+          "transparent": true,
+          "opacity": 1,
+          "depthWrite": false,
+          "side": "DoubleSide",
+          "map": true,
+          "normalMap": true,
+          "aoMap": false,
+          "emissiveMap": true,
+          "roughness": 1,
+          "metalness": 1
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "initialShadingGroup_Transparency",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "a574831e-f09c-4659-a4ba-c9a6df32c3c5",
+      "usedInMeshes": [
+        "Eyebrows"
+      ]
+    },
+    {
+      "name": "Hair",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 1,
+      "transmission": 0,
+      "reflectivity": 0.5,
+      "ior": 1.5,
+      "uuid": "0f35661e-d7ba-4a66-a42c-2101d36f3775",
+      "usedInMeshes": [
+        "Hair"
+      ]
+    },
+    {
+      "name": "NUG_Skin_Head",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": false,
+      "opacity": 1,
+      "depthWrite": true,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 1,
+      "transmission": 0,
+      "reflectivity": 0.4591837131892669,
+      "ior": 1.4500000476837158,
+      "uuid": "e6f3fcd6-2db2-4894-bc77-27f20d2b8276",
+      "usedInMeshes": [
+        "NUG_Base_Body_1"
+      ]
+    },
+    {
+      "name": "NUG_Skin_Body",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": false,
+      "opacity": 1,
+      "depthWrite": true,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 1,
+      "transmission": 0,
+      "reflectivity": 0.5,
+      "ior": 1.5,
+      "uuid": "9bff1ddc-e610-492f-9914-462cb89402b7",
+      "usedInMeshes": [
+        "NUG_Base_Body_2"
+      ]
+    },
+    {
+      "name": "NUG_Skin_Arm",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": false,
+      "opacity": 1,
+      "depthWrite": true,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 1,
+      "transmission": 0,
+      "reflectivity": 0.5,
+      "ior": 1.5,
+      "uuid": "4e6f4c99-93cf-43aa-b852-afa8c31e160e",
+      "usedInMeshes": [
+        "NUG_Base_Body_3"
+      ]
+    },
+    {
+      "name": "NUG_Skin_Leg",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": false,
+      "opacity": 1,
+      "depthWrite": true,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 1,
+      "transmission": 0,
+      "reflectivity": 0.5,
+      "ior": 1.5,
+      "uuid": "eb5ee00b-e2af-4338-89ac-ebb2d87d4ceb",
+      "usedInMeshes": [
+        "NUG_Base_Body_4"
+      ]
+    },
+    {
+      "name": "NUG_Nails",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": false,
+      "opacity": 1,
+      "depthWrite": true,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 1,
+      "transmission": 0,
+      "reflectivity": 0.5,
+      "ior": 1.5,
+      "uuid": "172fe0a5-ba8a-498e-91aa-7b6e0426d67e",
+      "usedInMeshes": [
+        "NUG_Base_Body_5"
+      ]
+    },
+    {
+      "name": "NUG_Eyelash",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "756143d1-8fb7-4a5c-ae50-597a6c5912f4",
+      "usedInMeshes": [
+        "NUG_Base_Body_6"
+      ]
+    },
+    {
+      "name": "NUG_Eye_R",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "8434c9f9-7c87-408b-8579-7652115ac635",
+      "usedInMeshes": [
+        "NUG_Base_Eye_1"
+      ]
+    },
+    {
+      "name": "NUG_Cornea_R",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": false,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "dd82aad1-05c7-45fa-8d73-14bbb0a45e34",
+      "usedInMeshes": [
+        "NUG_Base_Eye_2"
+      ]
+    },
+    {
+      "name": "NUG_Eye_L",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "20b71998-d139-4512-930c-97c89bfbcd94",
+      "usedInMeshes": [
+        "NUG_Base_Eye_3"
+      ]
+    },
+    {
+      "name": "NUG_Cornea_L",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": false,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "b0d98055-23f6-4ae8-862f-a03a6ecec9f0",
+      "usedInMeshes": [
+        "NUG_Base_Eye_4"
+      ]
+    },
+    {
+      "name": "NUG_Eye_ONUDlusion_R",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#000000",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "FrontSide",
+      "map": false,
+      "normalMap": false,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 0,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 0,
+      "transmission": 0,
+      "reflectivity": 0.4591837131892669,
+      "ior": 1.4500000476837158,
+      "uuid": "fed6b4cc-f241-4bae-8b22-5f1833709364",
+      "usedInMeshes": [
+        "NUG_Base_EyeONUGlusion_1"
+      ]
+    },
+    {
+      "name": "NUG_Eye_ONUDlusion_L",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#000000",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "FrontSide",
+      "map": false,
+      "normalMap": false,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 0,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 0,
+      "transmission": 0,
+      "reflectivity": 0.4591837131892669,
+      "ior": 1.4500000476837158,
+      "uuid": "2caffb53-2bcc-49a0-895e-18e3d7e6d655",
+      "usedInMeshes": [
+        "NUG_Base_EyeONUGlusion_2"
+      ]
+    },
+    {
+      "name": "NUG_Tearline_R",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#000000",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "FrontSide",
+      "map": false,
+      "normalMap": false,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 0,
+      "uuid": "4bb3b579-b548-4e4c-b8ae-6c358d3b3f56",
+      "usedInMeshes": [
+        "NUG_Base_TearLine_1"
+      ]
+    },
+    {
+      "name": "NUG_Tearline_L",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#000000",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "FrontSide",
+      "map": false,
+      "normalMap": false,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 0,
+      "uuid": "06bfb841-8a6d-4b0c-8f3a-3d1e399cd9cc",
+      "usedInMeshes": [
+        "NUG_Base_TearLine_2"
+      ]
+    },
+    {
+      "name": "NUG_Upper_Teeth",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": false,
+      "opacity": 1,
+      "depthWrite": true,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 0,
+      "transmission": 0,
+      "reflectivity": 0.4591837131892669,
+      "ior": 1.4500000476837158,
+      "uuid": "9186a37a-e53a-4e6a-9458-34b8eba763d6",
+      "usedInMeshes": [
+        "NUG_Base_Teeth_1"
+      ]
+    },
+    {
+      "name": "NUG_Lower_Teeth",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": false,
+      "opacity": 1,
+      "depthWrite": true,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 0,
+      "transmission": 0,
+      "reflectivity": 0.4591837131892669,
+      "ior": 1.4500000476837158,
+      "uuid": "dc9d3ad7-38c1-461d-9b41-6fec7b2c4ffb",
+      "usedInMeshes": [
+        "NUG_Base_Teeth_2"
+      ]
+    },
+    {
+      "name": "NUG_Tongue",
+      "type": "MeshPhysicalMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": false,
+      "opacity": 1,
+      "depthWrite": true,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "clearcoat": 0,
+      "clearcoatRoughness": 0,
+      "sheen": 0,
+      "transmission": 0,
+      "reflectivity": 0.4591837131892669,
+      "ior": 1.4500000476837158,
+      "uuid": "f5de10c2-f6d1-4954-a458-d765cbe30005",
+      "usedInMeshes": [
+        "NUG_Base_Tongue"
+      ]
+    },
+    {
+      "name": "Slim_fit_pants",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "7bff20a8-059a-4b79-ba30-939c55cdecfd",
+      "usedInMeshes": [
+        "Slim_fit_pants"
+      ]
+    },
+    {
+      "name": "Sport_sneakers",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": true,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": false,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "df929e55-c838-4fe3-8c79-1e4f02e8bf28",
+      "usedInMeshes": [
+        "Sport_sneakers"
+      ]
+    },
+    {
+      "name": "Turtleneck_sweater",
+      "type": "MeshStandardMaterial",
+      "color": "#ffffff",
+      "emissive": "#ffffff",
+      "emissiveIntensity": 1,
+      "vertexColors": false,
+      "transparent": true,
+      "opacity": 1,
+      "depthWrite": false,
+      "side": "DoubleSide",
+      "map": true,
+      "normalMap": true,
+      "aoMap": false,
+      "emissiveMap": true,
+      "roughness": 1,
+      "metalness": 1,
+      "uuid": "53804a5b-1bac-480e-9f2a-b4c04221e79e",
+      "usedInMeshes": [
+        "Turtleneck_sweater"
+      ]
+    }
+  ],
+  "summary": {
+    "totalMeshes": 22,
+    "totalMaterials": 22,
+    "visibleMeshes": 22,
+    "hiddenMeshes": 0,
+    "meshesWithVertexColors": 1
+  }
+}

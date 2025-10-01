@@ -542,7 +542,7 @@ Hesitation expressions:
 You are a simulated patient cooperating with medical education. Provide information gradually to help learners practice appropriate questioning skills and offer good interview practice opportunities.`;
 
     const completion = await openai.chat.completions.create({
-      model: process.env.OPENAI_API_MODEL || 'gpt-4o-mini',  // 環境変数からモデルを取得
+      model: process.env.OPENAI_API_MODEL || 'gpt-5',  // 環境変数からモデルを取得（デフォルト: GPT-5）
       messages: [
         { role: 'system', content: systemPrompt },
         ...messages
@@ -596,7 +596,7 @@ ${patientScenario}
 × 同じ情報の繰り返し`;
 
         const completion = await openai.chat.completions.create({
-          model: process.env.OPENAI_API_MODEL || 'gpt-4o-mini',
+          model: process.env.OPENAI_API_MODEL || 'gpt-5',
           messages: [
             { role: 'system', content: systemPrompt },
             ...messages

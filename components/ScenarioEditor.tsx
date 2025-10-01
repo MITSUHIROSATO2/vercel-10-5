@@ -20,13 +20,21 @@ export default function ScenarioEditor({ scenario, onSave, onCancel, language = 
   }, [scenario]);
 
   const handleFieldChange = (category: string, field: string, value: string) => {
-    setEditedScenario(prev => ({
-      ...prev,
-      [category]: {
-        ...(prev[category as keyof PatientScenario] as any || {}),
-        [field]: value
-      }
-    }));
+    // specialCircumstances は直接フィールドとして扱う
+    if (category === 'specialCircumstances') {
+      setEditedScenario(prev => ({
+        ...prev,
+        specialCircumstances: value
+      }));
+    } else {
+      setEditedScenario(prev => ({
+        ...prev,
+        [category]: {
+          ...(prev[category as keyof PatientScenario] as any || {}),
+          [field]: value
+        }
+      }));
+    }
   };
 
 
@@ -38,7 +46,8 @@ export default function ScenarioEditor({ scenario, onSave, onCancel, language = 
     { id: 'medicalHistory', label: '全身既往歴', icon: '💊' },
     { id: 'lifestyle', label: '生活歴', icon: '🏠' },
     { id: 'psychosocial', label: '心理社会的情報', icon: '💭' },
-    { id: 'interviewEvaluation', label: '面接技法評価', icon: '✅' }
+    { id: 'interviewEvaluation', label: '面接技法評価', icon: '✅' },
+    { id: 'specialCircumstances', label: '特殊事情', icon: '⚠️' }
   ] : [
     { id: 'basicInfo', label: 'Basic Info', icon: '👤' },
     { id: 'chiefComplaint', label: 'Chief Complaint', icon: '🦷' },
@@ -47,7 +56,8 @@ export default function ScenarioEditor({ scenario, onSave, onCancel, language = 
     { id: 'medicalHistory', label: 'Medical History', icon: '💊' },
     { id: 'lifestyle', label: 'Lifestyle', icon: '🏠' },
     { id: 'psychosocial', label: 'Psychosocial', icon: '💭' },
-    { id: 'interviewEvaluation', label: 'Interview Evaluation', icon: '✅' }
+    { id: 'interviewEvaluation', label: 'Interview Evaluation', icon: '✅' },
+    { id: 'specialCircumstances', label: 'Special Circumstances', icon: '⚠️' }
   ];
 
   const fieldConfigs: Record<string, Array<{field: string, label: string, placeholder: string}>> = language === 'ja' ? {
@@ -94,6 +104,9 @@ export default function ScenarioEditor({ scenario, onSave, onCancel, language = 
     interviewEvaluation: [
       { field: 'summarization', label: '主訴の要約確認', placeholder: '面接終盤での再確認' },
       { field: 'additionalCheck', label: '言い忘れの確認', placeholder: '例：『他に気になることは？』' }
+    ],
+    specialCircumstances: [
+      { field: 'specialCircumstances', label: '特殊事情', placeholder: '特別な配慮が必要な場合、もしくは特殊事項を試したい場合は記入\n例：男性歯科医師が苦手、日本語がまだ流暢ではない外国からの患者さんとして振る舞ってほしい場合など' }
     ]
   } : {
     basicInfo: [
@@ -139,6 +152,9 @@ export default function ScenarioEditor({ scenario, onSave, onCancel, language = 
     interviewEvaluation: [
       { field: 'summarization', label: 'Summary Confirmation', placeholder: 'Reconfirm at interview end' },
       { field: 'additionalCheck', label: 'Additional Check', placeholder: 'e.g., "Anything else concerning you?"' }
+    ],
+    specialCircumstances: [
+      { field: 'specialCircumstances', label: 'Special Circumstances', placeholder: 'Enter if special considerations or specific scenarios needed\ne.g., uncomfortable with male dentists, non-native speaker with limited language proficiency, etc.' }
     ]
   };
 
@@ -221,7 +237,31 @@ export default function ScenarioEditor({ scenario, onSave, onCancel, language = 
                   {/* フィールド */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {fieldConfigs[cat.id]?.map(config => {
-                      const categoryData = editedScenario[cat.id as keyof PatientScenario] as any;
+                      const categoryData = cat.id === 'specialCircumstances'
+                        ? editedScenario
+                        : editedScenario[cat.id as keyof PatientScenario] as any;
+                      const value = cat.id === 'specialCircumstances'
+                        ? categoryData?.specialCircumstances || ''
+                        : categoryData?.[config.field] || '';
+
+                      // 特殊事情は大きなテキストエリアとして表示
+                      if (cat.id === 'specialCircumstances') {
+                        return (
+                          <div key={config.field} className="col-span-full space-y-2">
+                            <label className="block text-sm font-medium text-cyan-300">
+                              {config.label}
+                            </label>
+                            <textarea
+                              value={value}
+                              onChange={(e) => handleFieldChange(cat.id, config.field, e.target.value)}
+                              placeholder={config.placeholder}
+                              rows={4}
+                              className="w-full p-2.5 bg-slate-800/50 border border-slate-600 rounded-lg text-white text-sm focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20 transition-all resize-y"
+                            />
+                          </div>
+                        );
+                      }
+
                       return (
                         <div key={config.field} className="space-y-2">
                           <label className="block text-sm font-medium text-cyan-300">
@@ -229,7 +269,7 @@ export default function ScenarioEditor({ scenario, onSave, onCancel, language = 
                           </label>
                           <input
                             type="text"
-                            value={categoryData?.[config.field] || ''}
+                            value={value}
                             onChange={(e) => handleFieldChange(cat.id, config.field, e.target.value)}
                             placeholder={config.placeholder}
                             className="w-full p-2.5 bg-slate-800/50 border border-slate-600 rounded-lg text-white text-sm focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/20 transition-all"

@@ -62,6 +62,9 @@ export interface PatientScenario {
     summarization: string; // 主訴の要約確認
     additionalCheck: string; // 言い忘れの確認
   };
+
+  // 特殊事情（通常は空欄）
+  specialCircumstances?: string;
 }
 
 // サンプルシナリオテンプレート

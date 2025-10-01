@@ -11,13 +11,8 @@ import { audioService } from '@/lib/audioService';
 // リップシンクアバターを動的インポート（SSRを無効化）
 const FinalLipSyncAvatar = dynamic(
   () => import('@/components/FinalLipSyncAvatar'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-[400px]">
-        <div className="text-cyan-400 animate-pulse">モデルを読み込み中...</div>
-      </div>
-    )
+  {
+    ssr: false
   }
 );
 import { patientScenarios, formatScenarioForAI } from '@/lib/scenarios';
@@ -31,6 +26,7 @@ import EvaluationList from '@/components/EvaluationList';
 import InterviewEvaluation from '@/components/InterviewEvaluation';
 import ScenarioEditor from '@/components/ScenarioEditor';
 import ScenarioGenerator from '@/components/ScenarioGenerator';
+import PatientInfoModal from '@/components/PatientInfoModal';
 import { demoDialogues, shortDemoDialogues } from '@/lib/demoDialogues';
 import { improvedDemoDialogues, shortImprovedDemoDialogues, DemoDialogue } from '@/lib/improvedDemoDialogues';
 import { improvedDemoDialoguesEn, shortImprovedDemoDialoguesEn } from '@/lib/improvedDemoDialoguesEnglish';
@@ -48,7 +44,7 @@ export default function Home() {
   const [isLoadingResponse, setIsLoadingResponse] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [isPatientInfoVisible, setIsPatientInfoVisible] = useState(false);
+  const [showPatientInfoModal, setShowPatientInfoModal] = useState(false);
   const [isEditingScenario, setIsEditingScenario] = useState(false);
   const [isGeneratingScenario, setIsGeneratingScenario] = useState(false);
   const [showAIEvaluation, setShowAIEvaluation] = useState(false);
@@ -97,11 +93,14 @@ export default function Home() {
     }
   };
   
-  // onLoaded コールバックをメモ化
+  // onLoaded コールバックをメモ化（selectedAvatarへの依存を削除）
   const handleAvatarLoaded = React.useCallback(() => {
-    console.log(`[Avatar Loaded] Avatar ${selectedAvatar} loaded successfully`);
+    console.log(`[Avatar Loaded] Avatar loaded successfully`);
     setIsAvatarLoaded(true);
-  }, [selectedAvatar]);
+  }, []);
+
+  // modelPathをメモ化
+  const memoizedModelPath = React.useMemo(() => getModelPath(selectedAvatar), [selectedAvatar]);
 
   // デモが再生中かどうかを追跡するためのref
   const isDemoPlayingRef = useRef(false);
@@ -142,6 +141,25 @@ export default function Home() {
     console.log('🌐 Language changed to:', language);
     languageRef.current = language; // useRefも更新
   }, [language]);
+
+  // シナリオの性別に応じてアバターを自動切り替え
+  useEffect(() => {
+    if (selectedScenario?.basicInfo?.gender) {
+      const gender = selectedScenario.basicInfo.gender.toLowerCase();
+      // 日本語と英語両方に対応
+      if (gender.includes('女') || gender.includes('female')) {
+        if (selectedAvatar !== 'female') {
+          console.log(`🎭 Auto-switching to female avatar based on scenario gender: ${selectedScenario.basicInfo.gender}`);
+          handleAvatarChange('female');
+        }
+      } else if (gender.includes('男') || gender.includes('male')) {
+        if (selectedAvatar !== 'boy') {
+          console.log(`🎭 Auto-switching to male avatar based on scenario gender: ${selectedScenario.basicInfo.gender}`);
+          handleAvatarChange('boy');
+        }
+      }
+    }
+  }, [selectedScenario]);
 
   // デモ開始時に最初の発話を開始
   useEffect(() => {
@@ -230,7 +248,10 @@ export default function Home() {
       // 最新の応答を保存（アバターのリップシンク用）
       setLatestResponse(dialogue.text);
       
-      const patientVoiceId = 'j9jfwdrw7BRfcR43Qohk'; // AI患者用のElevenLabs voice ID
+      // アバターに応じたElevenLabs voice IDを選択
+      const patientVoiceId = selectedAvatar === 'female'
+        ? '4lOQ7A2l7HPuG7UIHiKA'  // 女性アバター用voice ID
+        : 'j9jfwdrw7BRfcR43Qohk'; // 男性アバター用voice ID
       
       try {
         // リップシンクを開始
@@ -762,7 +783,7 @@ export default function Home() {
                           : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
                       }`}
                     >
-                      {language === 'ja' ? '男性1' : 'Male 1'}
+                      {language === 'ja' ? '男性A' : 'Male A'}
                     </button>
                     <button
                       onClick={() => handleAvatarChange('adult')}
@@ -784,47 +805,31 @@ export default function Home() {
                     >
                       {language === 'ja' ? '女性' : 'Female'}
                     </button>
-                    <button
-                      onClick={() => handleAvatarChange('boy_improved')}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                        selectedAvatar === 'boy_improved'
-                          ? 'bg-cyan-600 text-white shadow-lg'
-                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-                      }`}
-                    >
-                      {language === 'ja' ? '青年改' : 'Young Male'}
-                    </button>
                   </div>
                 </>
               )}
               {/* リップシンク対応アバター表示部分 */}
               <div className="scan-overlay" style={{ minHeight: '400px' }}>
-                <React.Suspense fallback={
-                  <div className="flex items-center justify-center h-[400px]">
-                    <div className="text-cyan-400 animate-pulse">モデルを読み込み中...</div>
-                  </div>
-                }>
-                  <FinalLipSyncAvatar 
-                    key={selectedAvatar} // アバター変更時に完全に再マウント
-                    isSpeaking={isSpeaking || isCurrentlySpeaking || isDemoAudioPlaying} 
-                    currentWord={isDemoAudioPlaying ? demoCurrentWord : currentWord}
-                    audioLevel={isDemoAudioPlaying ? demoAudioLevel : audioLevel}
-                    currentPhoneme={currentPhoneme}
-                    speechProgress={speechProgress}
-                    modelPath={getModelPath(selectedAvatar)}
-                    selectedAvatar={selectedAvatar}
-                    onLoaded={handleAvatarLoaded}
-                  />
-                </React.Suspense>
+                <FinalLipSyncAvatar
+                  key={selectedAvatar} // アバター変更時に完全に再マウント
+                  isSpeaking={isSpeaking || isCurrentlySpeaking || isDemoAudioPlaying}
+                  currentWord={isDemoAudioPlaying ? demoCurrentWord : currentWord}
+                  audioLevel={isDemoAudioPlaying ? demoAudioLevel : audioLevel}
+                  currentPhoneme={currentPhoneme}
+                  speechProgress={speechProgress}
+                  modelPath={memoizedModelPath}
+                  selectedAvatar={selectedAvatar}
+                  onLoaded={handleAvatarLoaded}
+                />
               </div>
             </div>
           </div>
 
           {/* 下部：シナリオ選択、AI患者情報、医療面接 */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* 左側：シナリオ選択とAI患者情報 */}
+            {/* 左側：シナリオ選択とAI患者情報ボタン */}
             <div className="flex flex-col h-[400px] gap-4">
-            <div className="glass-effect rounded-2xl p-4 border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300 h-[140px]">
+            <div className="glass-effect rounded-2xl p-4 border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-lg font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                   {language === 'ja' ? 'シナリオ選択' : 'Scenario Selection'}
@@ -847,7 +852,7 @@ export default function Home() {
                         });
                       }
                     }}
-                    className="px-3 py-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all flex items-center gap-2"
+                    className="px-2.5 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all flex items-center gap-1.5"
                   >
                     <span>{isDemoPlaying && demoType === 'short' ? '⏸️' : '▶️'}</span>
                     {isDemoPlaying && demoType === 'short' ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'デモ' : 'Demo')}
@@ -867,21 +872,21 @@ export default function Home() {
                         });
                       }
                     }}
-                    className="px-3 py-1 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white text-sm rounded-lg hover:from-cyan-700 hover:to-cyan-800 transition-all flex items-center gap-2"
+                    className="px-2.5 py-1.5 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white text-sm rounded-lg hover:from-cyan-700 hover:to-cyan-800 transition-all flex items-center gap-1.5"
                   >
                     <span>{isDemoPlaying && demoType === 'full' ? '⏸️' : '▶️'}</span>
                     {isDemoPlaying && demoType === 'full' ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'フルデモ' : 'Full Demo')}
                   </button>
                   <button
                     onClick={() => setIsGeneratingScenario(true)}
-                    className="px-3 py-1 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-sm rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all flex items-center gap-2"
+                    className="px-2.5 py-1.5 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-sm rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all flex items-center gap-1.5 whitespace-nowrap"
                   >
                     <span>🎲</span>
                     {language === 'ja' ? 'シナリオ新規自動生成' : 'Generate New Scenario'}
                   </button>
                   <button
                     onClick={() => setIsEditingScenario(true)}
-                    className="px-3 py-1 bg-gradient-to-r from-slate-600 to-slate-700 text-white text-sm rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all flex items-center gap-2"
+                    className="px-2.5 py-1.5 bg-gradient-to-r from-slate-600 to-slate-700 text-white text-sm rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all flex items-center gap-1.5"
                   >
                     <span>✏️</span>
                     {language === 'ja' ? '編集' : 'Edit'}
@@ -922,90 +927,15 @@ export default function Home() {
                   );
                 })}
               </select>
-            </div>
 
-            <div className="glass-effect rounded-2xl p-4 border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300 flex-1 overflow-hidden">
-              <div 
-                className="flex items-center justify-between mb-3 cursor-pointer select-none"
-                onClick={() => setIsPatientInfoVisible(!isPatientInfoVisible)}
+              {/* AI患者情報ボタン */}
+              <button
+                onClick={() => setShowPatientInfoModal(true)}
+                className="w-full mt-3 px-4 py-3 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all flex items-center justify-center gap-2 font-medium"
               >
-                <h2 className="text-lg font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-                  {language === 'ja' ? 'AI患者情報' : 'AI Patient Information'}
-                </h2>
-                <span className={`text-cyan-400 transition-transform duration-300 ${isPatientInfoVisible ? 'rotate-180' : ''}`}>
-                  ▼
-                </span>
-              </div>
-              
-              <div className={`space-y-2 text-xs overflow-hidden transition-all duration-500 ${isPatientInfoVisible ? 'h-[calc(100%-3rem)] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'}`}>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <strong className="text-gray-400">{language === 'ja' ? '氏名' : 'Name'}：</strong> {getTranslatedScenario(selectedScenario, language).basicInfo.name}
-                  </div>
-                  <div>
-                    <strong className="text-gray-400">{language === 'ja' ? '年齢' : 'Age'}：</strong> {getTranslatedScenario(selectedScenario, language).basicInfo.age}
-                  </div>
-                  <div>
-                    <strong className="text-gray-400">{language === 'ja' ? '性別' : 'Gender'}：</strong> {getTranslatedScenario(selectedScenario, language).basicInfo.gender}
-                  </div>
-                  <div>
-                    <strong className="text-gray-400">{language === 'ja' ? '職業' : 'Occupation'}：</strong> {getTranslatedScenario(selectedScenario, language).basicInfo.occupation}
-                  </div>
-                </div>
-                <div className="border-t border-gray-700 pt-3">
-                  <div className="flex items-start gap-3">
-                    <span className="text-cyan-400 mt-1">▶</span>
-                    <div>
-                      <strong className="text-gray-400">{language === 'ja' ? '主訴' : 'Chief Complaint'}：</strong> {getTranslatedScenario(selectedScenario, language).chiefComplaint.complaint}
-                      <div className="text-xs text-gray-500 mt-1">
-                        {language === 'ja' ? '部位' : 'Location'}：{getTranslatedScenario(selectedScenario, language).chiefComplaint.location} / {getTranslatedScenario(selectedScenario, language).chiefComplaint.since}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="border-t border-gray-700 pt-3">
-                  <div className="flex items-start gap-3">
-                    <span className="text-blue-400 mt-1">▶</span>
-                    <div>
-                      <strong className="text-gray-400">{language === 'ja' ? '現病歴' : 'Present Illness'}：</strong>
-                      <div className="text-xs text-gray-300 mt-1 space-y-1">
-                        <div>・{getTranslatedScenario(selectedScenario, language).presentIllness.nature}</div>
-                        <div>・{getTranslatedScenario(selectedScenario, language).presentIllness.severity}</div>
-                        <div>・{getTranslatedScenario(selectedScenario, language).presentIllness.dailyImpact}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="border-t border-gray-700 pt-3">
-                  <div className="flex items-start gap-3">
-                    <span className="text-teal-400 mt-1">▶</span>
-                    <div>
-                      <strong className="text-gray-400">{language === 'ja' ? '全身既往歴' : 'Medical History'}：</strong>
-                      <div className="text-xs text-gray-300 mt-1">
-                        {getTranslatedScenario(selectedScenario, language).medicalHistory.systemicDisease || (language === 'ja' ? 'なし' : 'None')}
-                        {getTranslatedScenario(selectedScenario, language).medicalHistory.allergies && ` / ${language === 'ja' ? 'アレルギー' : 'Allergies'}：${getTranslatedScenario(selectedScenario, language).medicalHistory.allergies}`}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="border-t border-gray-700 pt-3">
-                  <div className="flex items-start gap-3">
-                    <span className="text-sky-400 mt-1">▶</span>
-                    <div>
-                      <strong className="text-gray-400">{language === 'ja' ? '心理社会的情報' : 'Psychosocial Info'}：</strong>
-                      <div className="text-xs text-gray-300 mt-1">
-                        {getTranslatedScenario(selectedScenario, language).psychosocial.concerns}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {!isPatientInfoVisible && (
-                <div className="text-center text-gray-500 text-sm">
-                  {language === 'ja' ? 'クリックして詳細を表示' : 'Click to show details'}
-                </div>
-              )}
+                <span>📋</span>
+                {language === 'ja' ? 'AI患者情報' : 'AI Patient Information'}
+              </button>
             </div>
             </div>
 
@@ -1246,15 +1176,39 @@ export default function Home() {
           scenarioId={selectedScenario.id}
           onClose={() => setShowAIEvaluation(false)}
           language={language}
+          availableScenarios={[...patientScenarios, ...customScenarios].map(s => {
+            const displayScenario = editedScenarios[s.id] || s;
+            const translatedScenario = getTranslatedScenario(displayScenario, language);
+            return {
+              id: s.id,
+              name: `${translatedScenario.name} - ${translatedScenario.basicInfo.name}`
+            };
+          })}
+          onScenarioSelect={(scenarioId) => {
+            handleScenarioChange(scenarioId);
+            setMessages([]);
+            setIsTimerRunning(false);
+            setInterviewTime(0);
+          }}
           onSave={(evaluation) => {
             // AI評価を保存
             const updatedEvaluations = [...evaluations, evaluation];
             setEvaluations(updatedEvaluations);
-            
+
             // localStorageに保存
             const storedEvaluations = localStorage.getItem('evaluations');
             const allEvaluations = storedEvaluations ? JSON.parse(storedEvaluations) : [];
             localStorage.setItem('evaluations', JSON.stringify([...allEvaluations, evaluation]));
+          }}
+          onRetry={() => {
+            // 同じシナリオで再度練習
+            setShowAIEvaluation(false);
+            setMessages([]);
+            setIsTimerRunning(false);
+            setInterviewTime(0);
+          }}
+          onNewScenario={() => {
+            // シナリオ選択機能を有効化（ボタンのクリックで処理）
           }}
         />
       )}
@@ -1276,6 +1230,14 @@ export default function Home() {
             // console.log('評価項目が更新されました');
           }}
           language={language}
+        />
+      )}
+
+      {showPatientInfoModal && (
+        <PatientInfoModal
+          scenario={selectedScenario}
+          language={language}
+          onClose={() => setShowPatientInfoModal(false)}
         />
       )}
 

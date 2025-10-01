@@ -181,6 +181,19 @@ export async function applyFemaleAvatarTexturesLipSyncFixed(scene: THREE.Object3
       }
       return;
     }
+
+    // Eye Occlusion（目の影）とTearlineを非表示
+    if (materialName.includes('Occlusion') ||
+        materialName.includes('ONUDlusion') || // タイプミスのケース
+        materialName.includes('Tearline') ||
+        meshName.includes('occlusion') ||
+        meshName.includes('tearline')) {
+      child.visible = false;
+      if (enableLogging) {
+        console.log(`  -> ${child.name} (${materialName}) を非表示`);
+      }
+      return;
+    }
     
     // マテリアルの配列化
     const materialsList = Array.isArray(child.material) ? child.material : [child.material];

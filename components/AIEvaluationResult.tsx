@@ -8,7 +8,11 @@ interface AIEvaluationResultProps {
   scenarioId: string;
   onClose: () => void;
   onSave?: (evaluation: any) => void;
+  onRetry?: () => void;
+  onNewScenario?: () => void;
   language?: 'ja' | 'en';
+  availableScenarios?: Array<{ id: string; name: string }>;
+  onScenarioSelect?: (scenarioId: string) => void;
 }
 
 interface EvaluationResult {
@@ -37,12 +41,17 @@ export default function AIEvaluationResult({
   scenarioId,
   onClose,
   onSave,
-  language = 'ja'
+  onRetry,
+  onNewScenario,
+  language = 'ja',
+  availableScenarios = [],
+  onScenarioSelect
 }: AIEvaluationResultProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showScenarioSelector, setShowScenarioSelector] = useState(false);
 
   useEffect(() => {
     generateEvaluation();
@@ -77,8 +86,101 @@ export default function AIEvaluationResult({
 
       // 評価を保存（会話ログとAI評価を含む）
       if (onSave && data.evaluation) {
+        // evaluatedItemsをcategories構造に変換
+        const categories = {
+          communication: {
+            verbal: data.evaluation.evaluatedItems
+              .filter((item: any) => item.category === 'interpersonal')
+              .map((item: any) => ({
+                id: item.item,
+                label: item.item,
+                checked: item.checked,
+                category: 'communication',
+                subcategory: 'verbal',
+                priority: item.priority
+              })),
+            overall: data.evaluation.evaluatedItems
+              .filter((item: any) => item.category === 'overall')
+              .map((item: any) => ({
+                id: item.item,
+                label: item.item,
+                checked: item.checked,
+                category: 'communication',
+                subcategory: 'overall',
+                priority: item.priority
+              }))
+          },
+          introduction: data.evaluation.evaluatedItems
+            .filter((item: any) => item.category === 'opening')
+            .map((item: any) => ({
+              id: item.item,
+              label: item.item,
+              checked: item.checked,
+              category: 'introduction',
+              priority: item.priority
+            })),
+          medicalInfo: {
+            chiefComplaint: data.evaluation.evaluatedItems
+              .filter((item: any) => item.category === 'medicalInfo' && item.subcategory === 'chiefComplaint')
+              .map((item: any) => ({
+                id: item.item,
+                label: item.item,
+                checked: item.checked,
+                category: 'medicalInfo',
+                subcategory: item.subcategory,
+                priority: item.priority
+              })),
+            history: data.evaluation.evaluatedItems
+              .filter((item: any) => item.category === 'medicalInfo' && item.subcategory === 'history')
+              .map((item: any) => ({
+                id: item.item,
+                label: item.item,
+                checked: item.checked,
+                category: 'medicalInfo',
+                subcategory: item.subcategory,
+                priority: item.priority
+              })),
+            lifestyle: data.evaluation.evaluatedItems
+              .filter((item: any) => item.category === 'medicalInfo' && item.subcategory === 'lifestyle')
+              .map((item: any) => ({
+                id: item.item,
+                label: item.item,
+                checked: item.checked,
+                category: 'medicalInfo',
+                subcategory: item.subcategory,
+                priority: item.priority
+              }))
+          },
+          psychosocial: data.evaluation.evaluatedItems
+            .filter((item: any) => item.category === 'psychosocial')
+            .map((item: any) => ({
+              id: item.item,
+              label: item.item,
+              checked: item.checked,
+              category: 'psychosocial',
+              priority: item.priority
+            })),
+          closing: data.evaluation.evaluatedItems
+            .filter((item: any) => item.category === 'closing')
+            .map((item: any) => ({
+              id: item.item,
+              label: item.item,
+              checked: item.checked,
+              category: 'closing',
+              priority: item.priority
+            }))
+        };
+
         const evaluationWithDetails = {
-          ...data.evaluation,
+          id: `eval_${Date.now()}`,
+          scenarioId,
+          timestamp: new Date(),
+          totalScore: data.evaluation.totalScore || 0,
+          maxScore: data.evaluation.maxScore || 100,
+          evaluatorName: data.evaluation.evaluatorName || 'AI自動評価システム',
+          // evaluatedItems を保存（EvaluationListで後方互換性のため）
+          evaluatedItems: data.evaluation.evaluatedItems,
+          categories,
           conversationLog: messages.map((msg, index) => ({
             role: msg.role === 'user' ? 'student' : 'patient',
             content: msg.content,
@@ -127,6 +229,7 @@ export default function AIEvaluationResult({
   ];
 
   const categoryLabels: { [key: string]: { ja: string; en: string } } = {
+    procedure: { ja: '手順・手続き', en: 'Procedure' },
     communication: { ja: 'コミュニケーション', en: 'Communication' },
     introduction: { ja: '導入', en: 'Introduction' },
     medicalInfo: { ja: '医学的情報', en: 'Medical Information' },
@@ -144,8 +247,8 @@ export default function AIEvaluationResult({
               <h2 className="text-2xl font-bold text-cyan-400 flex items-center gap-2" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                 <span>🤖</span> {language === 'ja' ? 'AI医療面接評価' : 'AI Medical Interview Evaluation'}
               </h2>
-              <p className="text-gray-400 mt-1">
-                {language === 'ja' ? 'AIによる自動評価結果' : 'Automatic Evaluation by AI'}
+              <p className="text-gray-400 mt-1 text-sm">
+                {language === 'ja' ? 'OpenAI GPT-5 による自動評価結果' : 'Automatic Evaluation by OpenAI GPT-5'}
               </p>
             </div>
             <button
@@ -337,12 +440,62 @@ export default function AIEvaluationResult({
             <div className="text-sm text-gray-500">
               {language === 'ja' ? '評価日時' : 'Evaluation Date'}: {new Date().toLocaleString(language === 'ja' ? 'ja-JP' : 'en-US')}
             </div>
-            <button
-              onClick={onClose}
-              className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
-            >
-              {language === 'ja' ? '閉じる' : 'Close'}
-            </button>
+            <div className="flex items-center gap-3">
+              {onRetry && (
+                <button
+                  onClick={onRetry}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all flex items-center gap-2"
+                >
+                  <span>🔄</span>
+                  {language === 'ja' ? 'もう一度練習' : 'Practice Again'}
+                </button>
+              )}
+              {onNewScenario && (
+                <button
+                  onClick={() => setShowScenarioSelector(!showScenarioSelector)}
+                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all flex items-center gap-2"
+                >
+                  <span>📋</span>
+                  {language === 'ja' ? '新しいシナリオで練習' : 'Practice with New Scenario'}
+                </button>
+              )}
+              {showScenarioSelector && availableScenarios.length > 0 && (
+                <div className="absolute bottom-16 right-6 bg-slate-800 rounded-lg border border-cyan-500/30 shadow-xl max-h-80 overflow-y-auto min-w-[300px]">
+                  <div className="p-3 border-b border-cyan-500/30 flex items-center justify-between">
+                    <p className="text-sm text-gray-400">{language === 'ja' ? 'シナリオを選択' : 'Select Scenario'}</p>
+                    <button
+                      onClick={() => setShowScenarioSelector(false)}
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div className="p-2">
+                    {availableScenarios.map((scenario) => (
+                      <button
+                        key={scenario.id}
+                        onClick={() => {
+                          if (onScenarioSelect) {
+                            onScenarioSelect(scenario.id);
+                          }
+                          setShowScenarioSelector(false);
+                          onClose();
+                        }}
+                        className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-cyan-600/20 rounded transition-colors"
+                      >
+                        {scenario.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <button
+                onClick={onClose}
+                className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
+              >
+                {language === 'ja' ? '閉じる' : 'Close'}
+              </button>
+            </div>
           </div>
         )}
       </div>
