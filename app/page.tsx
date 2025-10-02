@@ -793,7 +793,7 @@ export default function Home() {
                           : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
                       }`}
                     >
-                      {language === 'ja' ? '男性2' : 'Male 2'}
+                      {language === 'ja' ? '男性B' : 'Male B'}
                     </button>
                     <button
                       onClick={() => handleAvatarChange('female')}
@@ -804,6 +804,16 @@ export default function Home() {
                       }`}
                     >
                       {language === 'ja' ? '女性' : 'Female'}
+                    </button>
+                    <button
+                      onClick={() => handleAvatarChange('boy_improved')}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                        selectedAvatar === 'boy_improved'
+                          ? 'bg-cyan-600 text-white shadow-lg'
+                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                      }`}
+                    >
+                      {language === 'ja' ? '小児' : 'Pediatric'}
                     </button>
                   </div>
                 </>

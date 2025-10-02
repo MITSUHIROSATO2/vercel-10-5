@@ -20,12 +20,33 @@ export async function POST(request: Request) {
       periodontal: language === 'ja'
         ? '歯周病の症状を持つ中高年患者のシナリオを生成してください。'
         : 'Generate a middle-aged patient scenario with periodontal disease.',
+      caries: language === 'ja'
+        ? 'むし歯による痛みや知覚過敏を主訴とする患者のシナリオを生成してください。'
+        : 'Generate a patient scenario with cavity-related pain or tooth sensitivity.',
+      trauma: language === 'ja'
+        ? '転倒やスポーツによる歯の外傷を持つ患者のシナリオを生成してください。'
+        : 'Generate a patient scenario involving dental trauma from accidents or sports.',
+      orthodontic: language === 'ja'
+        ? '歯並びや咬み合わせの矯正相談を希望する患者のシナリオを生成してください。'
+        : 'Generate a patient scenario seeking orthodontic consultation for alignment or bite issues.',
       aesthetic: language === 'ja'
         ? '見た目の改善を希望する審美患者のシナリオを生成してください。'
         : 'Generate a patient scenario seeking cosmetic dental improvement.',
       pediatric: language === 'ja'
         ? '歯科恐怖を持つ小児患者のシナリオを生成してください。'
         : 'Generate a pediatric patient scenario with dental anxiety.',
+      pregnant: language === 'ja'
+        ? '妊娠中で歯科治療の安全性を心配している患者のシナリオを生成してください。'
+        : 'Generate a pregnant patient scenario focused on safe dental care during pregnancy.',
+      implant: language === 'ja'
+        ? '欠損部位へのインプラント治療を希望する患者のシナリオを生成してください。'
+        : 'Generate a patient scenario considering implant treatment for missing teeth.',
+      maintenance: language === 'ja'
+        ? '定期健診やクリーニングで来院するメンテナンス患者のシナリオを生成してください。'
+        : 'Generate a patient scenario attending a routine recall or cleaning visit.',
+      tmj: language === 'ja'
+        ? '顎関節症による顎の痛みや開口障害を訴える患者のシナリオを生成してください。'
+        : 'Generate a patient scenario with temporomandibular joint pain or limited mouth opening.',
       elderly: language === 'ja'
         ? '複数の疾患を持つ高齢患者のシナリオを生成してください。'
         : 'Generate an elderly patient scenario with multiple medical conditions.',

@@ -18,9 +18,9 @@ export const MODEL_CONFIG = {
       name: '少年'
     },
     boy_improved: {
-      path: '/models/少年改アバター.glb',
+      path: '/models/Baby main.glb',
       fallbackPath: null,
-      name: '少年改'
+      name: '小児'
     }
   },
   

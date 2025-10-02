@@ -170,7 +170,8 @@ function AvatarModel({
 }) {
   const group = useRef<THREE.Group>(null);
   const [morphTargets, setMorphTargets] = useState<any[]>([]);
-  const { scene } = useGLTF(modelPath);
+  const safeModelPath = encodeURI(modelPath);
+  const { scene } = useGLTF(safeModelPath);
 
   // モーフターゲットの初期化とテクスチャ適用
   useEffect(() => {
@@ -489,8 +490,8 @@ function AvatarModel({
       console.log('avatar-analyzer: 少年アバターのテクスチャ適用をスキップ（分析モード）');
     } else if (modelPath.includes('少年改') && !scene.userData[textureAppliedKey]) {
       scene.userData[textureAppliedKey] = true;
-      // 少年改アバターはテクスチャ適用をスキップ（FinalLipSyncAvatarで専用処理）
-      console.log('avatar-analyzer: 少年改アバターのテクスチャ適用をスキップ');
+      // 小児アバターはテクスチャ適用をスキップ（FinalLipSyncAvatarで専用処理）
+      console.log('avatar-analyzer: 小児アバターのテクスチャ適用をスキップ');
     } else if (modelPath.includes('Hayden') && !scene.userData[textureAppliedKey]) {
       scene.userData[textureAppliedKey] = true;
       // テクスチャ適用を一時的に無効化
@@ -556,7 +557,7 @@ export default function FacialExpressionAnalyzer() {
   const modelPath =
     selectedAvatar === 'adult' ? '/models/成人男性.glb' :
     selectedAvatar === 'boy' ? '/models/少年アバター.glb' :
-    selectedAvatar === 'boy_improved' ? '/models/少年改アバター.glb' :
+    selectedAvatar === 'boy_improved' ? '/models/Baby%20main.glb' :
     '/models/Mother.glb';
 
   // 共通のモーフターゲット名（ARKit準拠）
@@ -1156,4 +1157,4 @@ export default function FacialExpressionAnalyzer() {
 // モデルのプリロード
 useGLTF.preload('/models/成人男性.glb');
 useGLTF.preload('/models/少年アバター.glb');
-useGLTF.preload('/models/少年改アバター.glb');
+useGLTF.preload(encodeURI('/models/Baby main.glb'));

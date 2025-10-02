@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
       if (modelName === 'boy') {
         fileName = '少年アバター.glb';
       } else if (modelName === 'boy_improved') {
-        fileName = '少年改アバター.glb';
+        fileName = 'Baby main.glb';
       } else if (modelName === 'adult_improved') {
         fileName = '成人男性.glb';
       } else {

@@ -42,7 +42,8 @@ if (typeof window !== 'undefined') {
   modelTypes.forEach(type => {
     try {
       const modelPath = getModelPath(type);
-      useGLTF.preload(modelPath);
+      const safePath = encodeURI(modelPath);
+      useGLTF.preload(safePath);
       // console.log(`Preloading model ${type}: ${modelPath}`);
     } catch (error) {
       console.warn(`Model preload skipped for ${type}:`, error);
@@ -1445,6 +1446,403 @@ function isJapaneseCharacter(char: string): boolean {
 }
 
 
+function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): boolean {
+  if (!scene || scene.userData.texturesApplied) {
+    return false;
+  }
+
+  try {
+    const originalVisibility = scene.visible;
+    const hiddenOralMeshes: any[] = [];
+    const hideOralMesh = (mesh: any) => {
+      if (!mesh) return;
+      if (!hiddenOralMeshes.includes(mesh)) {
+        hiddenOralMeshes.push(mesh);
+      }
+      mesh.visible = false;
+    };
+
+    scene.visible = false;
+    const applyBoyOralBase = () => {
+      scene.traverse((child: any) => {
+        if (!child.isMesh) return;
+        const materials = Array.isArray(child.material) ? child.material : [child.material];
+        const lowerName = child.name?.toLowerCase?.() || '';
+        if (
+          lowerName.includes('nug_base_teeth') ||
+          lowerName.includes('nug_base_tongue') ||
+          lowerName.includes('nug_teeth') ||
+          lowerName.includes('tongue')
+        ) {
+          hideOralMesh(child);
+        }
+        materials.forEach((material: THREE.Material) => {
+          if (!material) return;
+          const mat = material as any;
+          const matName = material.name?.toLowerCase() || '';
+
+          if (matName.includes('nug_upper_teeth')) {
+            mat.color = new THREE.Color(0xe7d2ba);
+            mat.roughness = 0.22;
+            mat.metalness = 0.0;
+            if (mat.emissive) {
+              mat.emissive = new THREE.Color(0x1f120c);
+              mat.emissiveIntensity = 0.03;
+            }
+            mat.needsUpdate = true;
+          } else if (matName.includes('nug_lower_teeth')) {
+            mat.color = new THREE.Color(0xe3cab3);
+            mat.roughness = 0.24;
+            mat.metalness = 0.0;
+            if (mat.emissive) {
+              mat.emissive = new THREE.Color(0x1b110c);
+              mat.emissiveIntensity = 0.03;
+            }
+            mat.needsUpdate = true;
+          } else if (matName.includes('nug_tongue')) {
+            mat.color = new THREE.Color(0xd36a7a);
+            mat.roughness = 0.32;
+            mat.metalness = 0.0;
+            if (mat.emissive) {
+              mat.emissive = new THREE.Color(0x6b1c2c);
+              mat.emissiveIntensity = 0.08;
+            }
+            mat.needsUpdate = true;
+          }
+        });
+      });
+    };
+
+    const processBoyMaterials = () => {
+      const materialsToUpdate: Set<THREE.Material> = new Set();
+
+      scene.traverse((child: any) => {
+        if (!child.isMesh) return;
+
+        const meshName = child.name;
+        const lowerMeshName = meshName.toLowerCase();
+
+        if (
+          lowerMeshName.includes('beard') ||
+          lowerMeshName.includes('mustache') ||
+          lowerMeshName.includes('goatee') ||
+          lowerMeshName.includes('stubble')
+        ) {
+          child.visible = false;
+          console.log(`  -> 非表示: ${meshName}`);
+          return;
+        }
+
+        if (lowerMeshName.includes('cornea')) {
+          child.visible = false;
+          console.log(`  -> 角膜を非表示: ${meshName}`);
+          return;
+        }
+
+        const materials = Array.isArray(child.material) ? child.material : [child.material];
+        const lowerName = child.name?.toLowerCase?.() || '';
+        if (
+          lowerName.includes('nug_base_teeth') ||
+          lowerName.includes('nug_base_tongue') ||
+          lowerName.includes('nug_teeth') ||
+          lowerName.includes('tongue')
+        ) {
+          hideOralMesh(child);
+        }
+
+        materials.forEach((material: THREE.Material) => {
+          if (!material) return;
+          materialsToUpdate.add(material);
+        });
+      });
+
+      console.log(`マテリアル総数: ${materialsToUpdate.size}`);
+
+      materialsToUpdate.forEach((material: THREE.Material) => {
+        const mat = material as any;
+        const matName = material.name?.toLowerCase() || '';
+
+        console.log(`マテリアル処理: ${material.name} (type: ${material.type})`);
+
+        mat.vertexColors = false;
+        mat.side = THREE.DoubleSide;
+
+        if (
+          !matName.includes('nug_eye_r') &&
+          !matName.includes('nug_eye_l') &&
+          !matName.includes('nug_cornea_r') &&
+          !matName.includes('nug_cornea_l')
+        ) {
+          if (mat.map) {
+            mat.map.dispose?.();
+            mat.map = null;
+          }
+          mat.normalMap = null;
+          mat.aoMap = null;
+          mat.emissiveMap = null;
+        }
+
+        if (!matName.includes('nug_cornea_r') && !matName.includes('nug_cornea_l')) {
+          mat.transparent = false;
+          mat.opacity = 1.0;
+        }
+
+        if (material.type === 'MeshPhysicalMaterial') {
+          mat.clearcoat = 0;
+          mat.clearcoatRoughness = 1;
+          mat.sheen = 0;
+          mat.sheenColor = new THREE.Color(0x000000);
+          mat.sheenRoughness = 1;
+          mat.transmission = 0;
+          mat.reflectivity = 0;
+          mat.ior = 1.0;
+        }
+
+        switch (matName) {
+          case 'hair_transparency':
+            mat.color = new THREE.Color(0x1a1511);
+            mat.emissive = new THREE.Color(0x0a0806);
+            mat.emissiveIntensity = 0.05;
+            mat.roughness = 0.95;
+            mat.metalness = 0.0;
+            console.log(`  -> 髪: 茶色（マット）`);
+            break;
+
+          case 'eyebrow_transparency':
+            mat.color = new THREE.Color(0x1a1511);
+            mat.emissive = new THREE.Color(0x1a1511);
+            mat.emissiveIntensity = 0.2;
+            mat.roughness = 0.7;
+            mat.metalness = 0.0;
+            console.log(`  -> 眉毛: 茶色`);
+            break;
+
+          case 'nug_eye_r': {
+            mat.color = new THREE.Color(0x8b6f47);
+            mat.emissive = new THREE.Color(0x443322);
+            mat.emissiveIntensity = 0.15;
+            mat.transparent = false;
+            mat.opacity = 1.0;
+            mat.roughness = 0.3;
+            mat.metalness = 0.0;
+            mat.depthWrite = true;
+            mat.side = THREE.FrontSide;
+
+            const textureLoaderR = new THREE.TextureLoader();
+            textureLoaderR.load(
+              '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
+              (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                mat.map = texture;
+                mat.color = new THREE.Color(0xffffff);
+                mat.needsUpdate = true;
+                console.log(`  -> 右目: テクスチャ読み込み完了`);
+              },
+              undefined,
+              (error) => {
+                console.error(`  -> 右目: テクスチャ読み込みエラー`, error);
+              }
+            );
+            console.log(`  -> 右目: 茶色虹彩（フォールバック色設定）`);
+            break;
+          }
+
+          case 'nug_eye_l': {
+            mat.color = new THREE.Color(0x8b6f47);
+            mat.emissive = new THREE.Color(0x443322);
+            mat.emissiveIntensity = 0.15;
+            mat.transparent = false;
+            mat.opacity = 1.0;
+            mat.roughness = 0.3;
+            mat.metalness = 0.0;
+            mat.depthWrite = true;
+            mat.side = THREE.FrontSide;
+
+            const textureLoaderL = new THREE.TextureLoader();
+            textureLoaderL.load(
+              '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
+              (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                mat.map = texture;
+                mat.color = new THREE.Color(0xffffff);
+                mat.needsUpdate = true;
+                console.log(`  -> 左目: テクスチャ読み込み完了`);
+              },
+              undefined,
+              (error) => {
+                console.error(`  -> 左目: テクスチャ読み込みエラー`, error);
+              }
+            );
+            console.log(`  -> 左目: 茶色虹彩（フォールバック色設定）`);
+            break;
+          }
+
+          case 'nug_cornea_r':
+          case 'nug_cornea_l':
+            mat.map = null;
+            mat.transparent = true;
+            mat.opacity = 0.0;
+            mat.roughness = 0.05;
+            mat.metalness = 0.0;
+            mat.depthWrite = false;
+            mat.visible = false;
+            console.log(`  -> 角膜: 完全透明（非表示）`);
+            break;
+
+          case 'nug_skin_head':
+          case 'nug_skin_body':
+          case 'nug_skin_arm':
+          case 'nug_skin_leg':
+            mat.color = new THREE.Color(0xc08870);
+            mat.emissive = new THREE.Color(0xc08870);
+            mat.emissiveIntensity = 0.2;
+            mat.roughness = 0.45;
+            mat.metalness = 0.0;
+            console.log(`  -> 肌: ベージュ`);
+            break;
+
+          case 'nug_upper_teeth':
+          case 'nug_lower_teeth':
+            mat.color = new THREE.Color(0xe6cfb8);
+            if (mat.emissive) {
+              mat.emissive = new THREE.Color(0x1f130d);
+              mat.emissiveIntensity = 0.03;
+            }
+            mat.roughness = 0.24;
+            mat.metalness = 0.0;
+            mat.transparent = false;
+            mat.opacity = 1.0;
+            console.log(`  -> 歯: アイボリー`);
+            break;
+
+          case 'nug_tongue':
+            mat.color = new THREE.Color(0xd87282);
+            if (mat.emissive) {
+              mat.emissive = new THREE.Color(0x662030);
+              mat.emissiveIntensity = 0.08;
+            }
+            mat.roughness = 0.32;
+            mat.metalness = 0.0;
+            mat.transparent = false;
+            mat.opacity = 1.0;
+            console.log(`  -> 舌: 落ち着いたピンク`);
+            break;
+
+          case 'nug_nails':
+            mat.color = new THREE.Color(0xf5c9a6);
+            mat.roughness = 0.3;
+            mat.metalness = 0.0;
+            console.log(`  -> 爪: 薄いベージュ`);
+            break;
+
+          case 'fit_shirts':
+            mat.color = new THREE.Color(0x4a7c59);
+            mat.emissive = new THREE.Color(0x4a7c59);
+            mat.emissiveIntensity = 0.1;
+            mat.roughness = 0.7;
+            mat.metalness = 0.0;
+            console.log(`  -> シャツ: 緑`);
+            break;
+
+          case 'pants':
+            mat.color = new THREE.Color(0x3b4c5a);
+            mat.emissive = new THREE.Color(0x3b4c5a);
+            mat.emissiveIntensity = 0.1;
+            mat.roughness = 0.6;
+            mat.metalness = 0.0;
+            console.log(`  -> パンツ: 青`);
+            break;
+
+          case 'boat_shoes':
+            mat.color = new THREE.Color(0x4a3c28);
+            mat.roughness = 0.4;
+            mat.metalness = 0.1;
+            console.log(`  -> 靴: 茶色`);
+            break;
+
+          case 'nug_eyelash':
+          case 'nug_tearline_r':
+          case 'nug_tearline_l':
+            mat.color = new THREE.Color(0xc08870);
+            mat.emissive = new THREE.Color(0xc08870);
+            mat.emissiveIntensity = 0.15;
+            mat.roughness = 0.5;
+            mat.metalness = 0.0;
+            console.log(`  -> まつ毛/ティアライン: 肌色`);
+            break;
+
+          case 'beard_base_transparency':
+          case 'nug_eye_onuglusion_r':
+          case 'nug_eye_onuglusion_l':
+            console.log(`  -> スキップ: ${matName}`);
+            break;
+
+          default:
+            mat.color = new THREE.Color(0xc08870);
+            mat.roughness = 0.5;
+            mat.metalness = 0.0;
+            console.log(`  -> デフォルト肌色: ${matName}`);
+            break;
+        }
+
+        mat.needsUpdate = true;
+
+        if (mat.color) {
+          console.log(`  最終的な色: #${mat.color.getHexString()}`);
+        }
+      });
+
+      scene.traverse((child: any) => {
+        if (!child.isMesh) return;
+        const lowerMeshName = child.name.toLowerCase();
+
+        if (lowerMeshName.includes('occlusion') || lowerMeshName.includes('onuglusion')) {
+          child.visible = false;
+          console.log(`  -> 非表示設定: ${child.name}`);
+        }
+
+        if (lowerMeshName.includes('nug_base_eye') && !lowerMeshName.includes('onuglusion')) {
+          child.visible = true;
+          console.log(`  -> 目を表示: ${child.name}`);
+        }
+
+        if (lowerMeshName.includes('cornea')) {
+          child.visible = true;
+          console.log(`  -> 角膜を表示: ${child.name}`);
+        }
+      });
+    };
+
+    applyBoyOralBase();
+    processBoyMaterials();
+
+    console.log('[AvatarModel] 少年アバターの色設定完了');
+    scene.userData.texturesApplied = true;
+    const restoreVisibility = () => {
+      hiddenOralMeshes.forEach(mesh => {
+        mesh.visible = true;
+      });
+      scene.visible = originalVisibility;
+      onReady?.();
+    };
+    if (typeof window !== 'undefined') {
+      window.requestAnimationFrame(restoreVisibility);
+    } else {
+      restoreVisibility();
+    }
+    return true;
+  } catch (error) {
+    console.warn('[AvatarModel] 少年アバターのマテリアル処理でエラー（初期化時）:', error);
+    hiddenOralMeshes.forEach(mesh => {
+      mesh.visible = true;
+    });
+    scene.visible = originalVisibility;
+    onReady?.();
+    return false;
+  }
+}
+
+
 function adjustEnglishMorphs(
   phoneme: string | null,
   baseMapping: { [key: string]: number }
@@ -1514,11 +1912,18 @@ function AvatarModel({
   // モデルタイプの判定（URLエンコードされた文字列も考慮）
   const decodedModelPath = decodeURIComponent(modelPath);
 
-  const isBoyImprovedModel = decodedModelPath.includes('少年改アバター') || decodedModelPath.includes('少年改') || modelPath.includes('ClassicMan-3のコピー');
+  const isBoyImprovedModel =
+    decodedModelPath.includes('少年改アバター') ||
+    decodedModelPath.includes('少年改') ||
+    decodedModelPath.includes('Baby main') ||
+    decodedModelPath.includes('baby') ||
+    modelPath.includes('Baby%20main') ||
+    modelPath.includes('ClassicMan-3のコピー');
   const isBoyModel = !isBoyImprovedModel && (decodedModelPath.includes('少年アバター') || modelPath.includes('ClassicMan') || modelPath.includes('BOY_4'));
   const isAdultImprovedModel = decodedModelPath.includes('成人男性改');
   const isAdultModel = !isAdultImprovedModel && (decodedModelPath.includes('成人男性') || modelPath.includes('man-grey-suit'));
   const isFemaleModel = modelPath.includes('Hayden') || modelPath.includes('female') || modelPath.includes('Mother');
+  const isChildModel = decodedModelPath.includes('Baby main') || decodedModelPath.includes('baby') || modelPath.includes('Baby%20main');
 
   // モデル別のリップシンク設定
   const lipSyncConfig = {
@@ -1570,11 +1975,12 @@ function AvatarModel({
     console.log(`[FinalLipSyncAvatar] Loading model: ${modelPath} for avatar: ${selectedAvatar}`);
     hasLoggedRef.current = true;
   }
-  const gltf = useGLTF(modelPath);
+  const safeModelPath = encodeURI(modelPath);
+  const gltf = useGLTF(safeModelPath);
   const scene = gltf.scene;
 
   const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
-  
+
   useIsomorphicLayoutEffect(() => {
     if (!scene) return;
 
@@ -1584,6 +1990,47 @@ function AvatarModel({
       }
     };
 
+    if (isChildModel && !scene.userData.childAvatarAdjusted) {
+      try {
+        // ステージ装飾など不要なメッシュを非表示
+        const hiddenKeywords = ['Backdrop', 'Joystic'];
+        scene.traverse((child: any) => {
+          if (child.isMesh) {
+            const name = child.name || '';
+            if (hiddenKeywords.some(keyword => name.includes(keyword))) {
+              child.visible = false;
+            }
+          }
+        });
+
+        // 身長を大きめに正規化（上半身が強調されるサイズ）
+        const targetHeight = 6;
+        scene.updateMatrixWorld(true);
+        const rigRoot = scene.getObjectByName('bb_Rigify') || scene;
+        const initialBox = new THREE.Box3().setFromObject(rigRoot);
+        const size = new THREE.Vector3();
+        initialBox.getSize(size);
+        if (size.y > 0.0001) {
+          const scaleFactor = targetHeight / size.y;
+          scene.scale.setScalar(scaleFactor);
+          scene.updateMatrixWorld(true);
+        }
+
+        // 床位置を原点に合わせ、中心をX/Z原点へ移動
+        const scaledBox = new THREE.Box3().setFromObject(rigRoot);
+        const center = new THREE.Vector3();
+        scaledBox.getCenter(center);
+        scene.position.x -= center.x;
+        scene.position.z -= center.z;
+        scene.position.y = 0.2;
+        scene.updateMatrixWorld(true);
+      } catch (error) {
+        console.warn('[AvatarModel] 小児アバターの正規化中にエラー:', error);
+      }
+
+      scene.userData.childAvatarAdjusted = true;
+    }
+
     // 少年アバターの場合のみログ出力
     const isBoyAvatar = modelPath.includes('少年');
     
@@ -1592,404 +2039,9 @@ function AvatarModel({
     const decodedPath = decodeURIComponent(modelPath);
     
     if (modelPath.includes('少年アバター') || modelPath.includes('%E5%B0%91%E5%B9%B4%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC')) {
-      // 少年アバター - 非同期で色を設定（WebGLコンテキストロスト対策）
-      // 初回のみログ出力（音声認識時の重複処理を防ぐ）
-      if (!scene.userData.texturesApplied) {
-        console.log('[AvatarModel] 少年アバターの色を非同期的に設定（WebGLコンテキストロスト対策）');
-
-        const applyBoyOralBase = () => {
-          scene.traverse((child: any) => {
-            if (!child.isMesh) return;
-            const materials = Array.isArray(child.material) ? child.material : [child.material];
-            materials.forEach((material: THREE.Material) => {
-              if (!material) return;
-              const mat = material as any;
-              const matName = material.name?.toLowerCase() || '';
-
-              if (matName.includes('nug_upper_teeth')) {
-                mat.color = new THREE.Color(0xfaf3e8);
-                mat.roughness = 0.18;
-                mat.metalness = 0.03;
-                if (mat.emissive) {
-                  mat.emissive = new THREE.Color(0x241910);
-                  mat.emissiveIntensity = 0.05;
-                }
-                mat.needsUpdate = true;
-              } else if (matName.includes('nug_lower_teeth')) {
-                mat.color = new THREE.Color(0xf8efe3);
-                mat.roughness = 0.2;
-                mat.metalness = 0.03;
-                if (mat.emissive) {
-                  mat.emissive = new THREE.Color(0x20160f);
-                  mat.emissiveIntensity = 0.045;
-                }
-                mat.needsUpdate = true;
-              } else if (matName.includes('nug_tongue')) {
-                mat.color = new THREE.Color(0xbf5f70);
-                mat.roughness = 0.38;
-                mat.metalness = 0.02;
-                if (mat.emissive) {
-                  mat.emissive = new THREE.Color(0x671d2b);
-                  mat.emissiveIntensity = 0.1;
-                }
-                mat.needsUpdate = true;
-              }
-            });
-          });
-        };
-
-        // 即座にベース色を適用（初期表示の白飛びを防ぐ）
-        applyBoyOralBase();
-
-        // 全マテリアルを即時に処理
-        const processBoyMaterials = () => {
-          try {
-            // 全体のマテリアルを収集して変更
-            const materialsToUpdate: Set<THREE.Material> = new Set();
-
-            scene.traverse((child: any) => {
-              if (!child.isMesh) return;
-
-              const meshName = child.name;
-              const lowerMeshName = meshName.toLowerCase();
-
-              // 不要なメッシュを非表示
-              if (
-                lowerMeshName.includes('beard') ||
-                lowerMeshName.includes('mustache') ||
-                lowerMeshName.includes('goatee') ||
-                lowerMeshName.includes('stubble')
-              ) {
-                child.visible = false;
-                console.log(`  -> 非表示: ${meshName}`);
-                return;
-              }
-
-              // 角膜メッシュを非表示（白い層の原因）
-              if (lowerMeshName.includes('cornea')) {
-                child.visible = false;
-                console.log(`  -> 角膜を非表示: ${meshName}`);
-                return;
-              }
-
-              // マテリアルの処理
-              const materials = Array.isArray(child.material) ? child.material : [child.material];
-
-              materials.forEach((material: THREE.Material) => {
-                if (!material) return;
-                materialsToUpdate.add(material);
-              });
-            });
-
-            // 収集したマテリアルを一括更新
-            console.log(`マテリアル総数: ${materialsToUpdate.size}`);
-
-            materialsToUpdate.forEach((material: THREE.Material) => {
-              // すべてのMaterialタイプに対応
-              const mat = material as any;
-              const matName = material.name?.toLowerCase() || '';
-
-              console.log(`マテリアル処理: ${material.name} (type: ${material.type})`);
-
-              // 基本設定
-              mat.vertexColors = false;
-              mat.side = THREE.DoubleSide;
-              // 目と角膜以外のテクスチャをクリアして色ベースにする
-              if (
-                !matName.includes('nug_eye_r') &&
-                !matName.includes('nug_eye_l') &&
-                !matName.includes('nug_cornea_r') &&
-                !matName.includes('nug_cornea_l')
-              ) {
-                mat.map = null; // テクスチャをクリアして色を適用
-                mat.normalMap = null; // ノーマルマップもクリア
-                mat.aoMap = null; // AOマップもクリア
-                mat.emissiveMap = null; // エミッシブマップもクリア
-              }
-              // 角膜以外は不透明に設定
-              if (!matName.includes('nug_cornea_r') && !matName.includes('nug_cornea_l')) {
-                mat.transparent = false;
-                mat.opacity = 1.0;
-              }
-
-              // MeshPhysicalMaterialの場合の追加リセット
-              if (material.type === 'MeshPhysicalMaterial') {
-                mat.clearcoat = 0;
-                mat.clearcoatRoughness = 1; // クリアコートをラフに
-                mat.sheen = 0; // シーン（光沢）を無効
-                mat.sheenColor = new THREE.Color(0x000000);
-                mat.sheenRoughness = 1; // シーンラフネスを最大に
-                mat.transmission = 0;
-                mat.reflectivity = 0; // 反射率を0に
-                mat.ior = 1.0; // 屈折率を最小に
-              }
-
-              // マテリアル名によって色を設定
-              switch (matName) {
-          case 'hair_transparency':
-            mat.color = new THREE.Color(0x1a1511);
-            mat.emissive = new THREE.Color(0x0a0806);  // より暗いエミッシブ
-            mat.emissiveIntensity = 0.05;  // エミッシブを大幅に減らす
-            mat.roughness = 0.95;  // ラフネスを最大近くに（マット感）
-            mat.metalness = 0.0;  // 金属感なし
-            console.log(`  -> 髪: 茶色（マット）`);
-            break;
-            
-          case 'eyebrow_transparency':
-            mat.color = new THREE.Color(0x1a1511);
-            mat.emissive = new THREE.Color(0x1a1511);
-            mat.emissiveIntensity = 0.2;
-            mat.roughness = 0.7;
-            mat.metalness = 0.0;
-            console.log(`  -> 眉毛: 茶色`);
-            break;
-            
-          case 'nug_eye_r':
-            // 右目に茶色の虹彩テクスチャを適用（Cornea_R使用）
-            // まずフォールバック色を設定（テクスチャが読み込まれるまで）
-            mat.color = new THREE.Color(0x8b6f47);  // 茶色
-            mat.emissive = new THREE.Color(0x443322);  // わずかな茶色のエミッシブ
-            mat.emissiveIntensity = 0.15;  // エミッシブ強度を上げて暗くならないように
-            mat.transparent = false;
-            mat.opacity = 1.0;
-            mat.roughness = 0.3;
-            mat.metalness = 0.0;
-            mat.depthWrite = true;
-            mat.side = THREE.FrontSide;
-            
-            // テクスチャを非同期で読み込み
-            const textureLoaderR = new THREE.TextureLoader();
-            textureLoaderR.load(
-              '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
-              (texture) => {
-                texture.colorSpace = THREE.SRGBColorSpace;
-                mat.map = texture;
-                mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
-                mat.needsUpdate = true;
-                console.log(`  -> 右目: テクスチャ読み込み完了`);
-              },
-              undefined,
-              (error) => {
-                console.error(`  -> 右目: テクスチャ読み込みエラー`, error);
-                // エラー時はフォールバック色のまま
-              }
-            );
-            console.log(`  -> 右目: 茶色虹彩（フォールバック色設定）`);
-            break;
-            
-          case 'nug_eye_l':
-            // 左目に茶色の虹彩テクスチャを適用（Cornea_R使用 - 両目同じ）
-            // まずフォールバック色を設定（テクスチャが読み込まれるまで）
-            mat.color = new THREE.Color(0x8b6f47);  // 茶色
-            mat.emissive = new THREE.Color(0x443322);  // わずかな茶色のエミッシブ
-            mat.emissiveIntensity = 0.15;  // エミッシブ強度を上げて暗くならないように
-            mat.transparent = false;
-            mat.opacity = 1.0;
-            mat.roughness = 0.3;
-            mat.metalness = 0.0;
-            mat.depthWrite = true;
-            mat.side = THREE.FrontSide;
-            
-            // テクスチャを非同期で読み込み
-            const textureLoaderL = new THREE.TextureLoader();
-            textureLoaderL.load(
-              '/models/ClassicMan.fbm/Std_Cornea_R_Pbr_Diffuse.jpg',
-              (texture) => {
-                texture.colorSpace = THREE.SRGBColorSpace;
-                mat.map = texture;
-                mat.color = new THREE.Color(0xffffff);  // テクスチャが読み込まれたら白に
-                mat.needsUpdate = true;
-                console.log(`  -> 左目: テクスチャ読み込み完了`);
-              },
-              undefined,
-              (error) => {
-                console.error(`  -> 左目: テクスチャ読み込みエラー`, error);
-                // エラー時はフォールバック色のまま
-              }
-            );
-            console.log(`  -> 左目: 茶色虹彩（フォールバック色設定）`);
-            break;
-            
-          case 'nug_cornea_r':
-          case 'nug_cornea_l':
-            // 角膜を完全に透明にして無効化
-            mat.map = null;  // テクスチャなし
-            mat.transparent = true;
-            mat.opacity = 0.0;  // 完全に透明
-            mat.roughness = 0.05;
-            mat.metalness = 0.0;
-            mat.depthWrite = false;
-            mat.visible = false;  // 角膜を非表示
-            console.log(`  -> 角膜: 完全透明（非表示）`);
-            break;
-            
-          case 'nug_skin_head':
-          case 'nug_skin_body':
-          case 'nug_skin_arm':
-          case 'nug_skin_leg':
-            mat.color = new THREE.Color(0xc08870);
-            mat.emissive = new THREE.Color(0xc08870);
-            mat.emissiveIntensity = 0.2;
-            mat.roughness = 0.45;
-            mat.metalness = 0.0;
-            console.log(`  -> 肌: ベージュ`);
-            break;
-            
-          case 'nug_upper_teeth':
-          case 'nug_lower_teeth':
-            mat.color = new THREE.Color(0xfbf3e6);
-            if (mat.emissive) {
-              mat.emissive = new THREE.Color(0x2a1f15);
-              mat.emissiveIntensity = 0.06;
-            }
-            mat.roughness = 0.18;
-            mat.metalness = 0.03;
-            mat.transparent = false;
-            mat.opacity = 1.0;
-            console.log(`  -> 歯: アイボリー`);
-            break;
-            
-          case 'nug_tongue':
-            mat.color = new THREE.Color(0xc96574);
-            if (mat.emissive) {
-              mat.emissive = new THREE.Color(0x611a29);
-              mat.emissiveIntensity = 0.14;
-            }
-            mat.roughness = 0.36;
-            mat.metalness = 0.02;
-            mat.transparent = false;
-            mat.opacity = 1.0;
-            console.log(`  -> 舌: 落ち着いたピンク`);
-            break;
-            
-          case 'nug_nails':
-            mat.color = new THREE.Color(0xf5c9a6);
-            mat.roughness = 0.3;
-            mat.metalness = 0.0;
-            console.log(`  -> 爪: 薄いベージュ`);
-            break;
-            
-          case 'fit_shirts':
-            mat.color = new THREE.Color(0x4a7c59);
-            mat.emissive = new THREE.Color(0x4a7c59);
-            mat.emissiveIntensity = 0.1;
-            mat.roughness = 0.7;
-            mat.metalness = 0.0;
-            console.log(`  -> シャツ: 緑`);
-            break;
-            
-          case 'pants':
-            mat.color = new THREE.Color(0x3b4c5a);
-            mat.emissive = new THREE.Color(0x3b4c5a);
-            mat.emissiveIntensity = 0.1;
-            mat.roughness = 0.6;
-            mat.metalness = 0.0;
-            console.log(`  -> パンツ: 青`);
-            break;
-            
-          case 'boat_shoes':
-            mat.color = new THREE.Color(0x4a3c28);
-            mat.roughness = 0.4;
-            mat.metalness = 0.1;
-            console.log(`  -> 靴: 茶色`);
-            break;
-            
-          case 'nug_cornea_r':
-          case 'nug_cornea_l':
-            // 角膜マテリアルが存在する場合の処理（通常は存在しない）
-            mat.transparent = true;
-            mat.opacity = 0.0;  // 完全に透明
-            mat.color = new THREE.Color(0xffffff);
-            mat.roughness = 0.0;
-            mat.metalness = 0.0;
-            mat.depthWrite = false;
-            mat.renderOrder = 1;
-            console.log(`  -> 角膜: 完全透明（存在する場合）`);
-            break;
-            
-          case 'nug_eyelash':
-          case 'nug_tearline_r':
-          case 'nug_tearline_l':
-            // まつ毛とティアラインは肌色に設定
-            mat.color = new THREE.Color(0xc08870);
-            mat.emissive = new THREE.Color(0xc08870);
-            mat.emissiveIntensity = 0.15;
-            mat.roughness = 0.5;
-            mat.metalness = 0.0;
-            console.log(`  -> まつ毛/ティアライン: 肌色`);
-            break;
-            
-          case 'beard_base_transparency':
-          case 'nug_eye_onuglusion_r':
-          case 'nug_eye_onuglusion_l':
-            // これらは非表示にする
-            console.log(`  -> スキップ: ${matName}`);
-            break;
-            
-          default:
-            // デフォルトは肌色
-            mat.color = new THREE.Color(0xc08870);
-            mat.roughness = 0.5;
-            mat.metalness = 0.0;
-            console.log(`  -> デフォルト肌色: ${matName}`);
-            break;
-        }
-        
-        // 強制的に更新
-        mat.needsUpdate = true;
-        
-        // デバッグ: 実際の色を確認
-        if (mat.color) {
-          console.log(`  最終的な色: #${mat.color.getHexString()}`);
-        }
-      });
-      
-      // 非表示メッシュを再度確認と目の表示確認
-      scene.traverse((child: any) => {
-        if (!child.isMesh) return;
-        const lowerMeshName = child.name.toLowerCase();
-        
-        // オクルージョンのみ非表示（角膜は表示）
-        if (lowerMeshName.includes('occlusion') || 
-            lowerMeshName.includes('onuglusion')) {
-          child.visible = false;
-          console.log(`  -> 非表示設定: ${child.name}`);
-        }
-        
-        // 目と角膜は必ず表示
-        if (lowerMeshName.includes('nug_base_eye') && !lowerMeshName.includes('onuglusion')) {
-          child.visible = true;
-          console.log(`  -> 目を表示: ${child.name}`);
-        }
-        
-        // 角膜も表示（透明だが必要）
-        if (lowerMeshName.includes('cornea')) {
-          child.visible = true;
-          console.log(`  -> 角膜を表示: ${child.name}`);
-        }
-      });
-      
-            console.log('[AvatarModel] 少年アバターの色設定完了');
-
-            // 処理完了フラグを設定（重複処理を防ぐ）
-            scene.userData.texturesApplied = true;
-
-            notifyLoaded();
-
-          } catch (error) {
-            console.warn('[AvatarModel] 少年アバターのマテリアル処理でエラー（WebGLコンテキストロスト？）:', error);
-            // エラーが発生してもアバターは表示されているのでOK
-            notifyLoaded();
-          }
-        };
-
-        processBoyMaterials();
-      } else {
-        // 既に処理済みの場合は即座にonLoadedを呼ぶ
-        if (onLoaded) {
-          console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
-          notifyLoaded();
-        }
+      const applied = setupBoyAvatarMaterials(scene, notifyLoaded);
+      if (!applied) {
+        notifyLoaded();
       }
     } else if (modelPath.includes('少年改') || modelPath.includes('%E5%B0%91%E5%B9%B4%E6%94%B9') || decodedPath.includes('少年改') || isBoyImprovedModel) {
       // 少年改アバターのテクスチャ適用を一時的にスキップ
@@ -3466,6 +3518,8 @@ function AvatarModel({
               maxLimit = 0.5; // 少年アバターは0.5に制限
             } else if (selectedAvatar === 'boy_improved') {
               maxLimit = 0.4; // 少年改アバターはさらに控えめに0.4に制限
+            } else if (selectedAvatar === 'female') {
+              maxLimit = 0.88; // 女性アバターは男性Aと同程度のナチュラルな閉眼に制限
             }
             
             // 最大値を制限（自然な動きのため）
@@ -3523,6 +3577,12 @@ function AvatarModel({
               Cheek/Brow: ${(blinkValue * 0.25).toFixed(2)} / ${(blinkValue * 0.1).toFixed(2)}`); */
             (window as any).blinkDebugLogged = true;
           }
+        } else if (selectedAvatar === 'female') {
+          // 女性アバターは男性Aとほぼ同設定でごくわずかに補強
+          applyMorph('A14_Eye_Blink_Left', blinkValue);
+          applyMorph('A15_Eye_Blink_Right', blinkValue);
+          applyMorph('Eye_Blink_L', blinkValue);
+          applyMorph('Eye_Blink_R', blinkValue);
         } else {
           // 成人アバター
           applyMorph('A14_Eye_Blink_Left', blinkValue);
@@ -3728,11 +3788,18 @@ function FinalLipSyncAvatarComponent({
   // モデルタイプの判定（URLエンコードされた文字列も考慮）
   const decodedModelPath = decodeURIComponent(modelPath);
 
-  const isBoyImprovedModel = decodedModelPath.includes('少年改アバター') || decodedModelPath.includes('少年改') || modelPath.includes('ClassicMan-3のコピー');
+  const isBoyImprovedModel =
+    decodedModelPath.includes('少年改アバター') ||
+    decodedModelPath.includes('少年改') ||
+    decodedModelPath.includes('Baby main') ||
+    decodedModelPath.includes('baby') ||
+    modelPath.includes('Baby%20main') ||
+    modelPath.includes('ClassicMan-3のコピー');
   const isBoyModel = !isBoyImprovedModel && (decodedModelPath.includes('少年アバター') || modelPath.includes('ClassicMan') || modelPath.includes('BOY_4'));
   const isAdultImprovedModel = decodedModelPath.includes('成人男性改');
   const isAdultModel = !isAdultImprovedModel && (decodedModelPath.includes('成人男性') || modelPath.includes('man-grey-suit'));
   const isFemaleModel = modelPath.includes('Hayden') || modelPath.includes('female') || modelPath.includes('Mother');
+  const isChildModel = decodedModelPath.includes('Baby main') || decodedModelPath.includes('baby') || modelPath.includes('Baby%20main');
 
   // selectedAvatarの判定（propSelectedAvatarを優先）
   const selectedAvatar = propSelectedAvatar || (
@@ -3744,7 +3811,9 @@ function FinalLipSyncAvatarComponent({
   );
   
   // カメラ設定（モデルごとに調整）
-  const cameraSettings = (isBoyModel || isBoyImprovedModel)
+  const cameraSettings = isChildModel
+    ? { position: [0, 0.7, 0.25], fov: 16, target: [0, 0.55, 0] }
+    : (isBoyModel || isBoyImprovedModel)
     ? { position: [0, 1.72, 0.8], fov: 30, target: [0, 1.72, 0] } // 少年用：水平視点
     : isFemaleModel
     ? { position: [0, 1.485, 0.8], fov: 30, target: [0, 1.485, 0] } // 女性用：水平視点

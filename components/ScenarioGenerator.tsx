@@ -17,15 +17,29 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
     { id: 'random', label: '完全ランダム', icon: '🎲', description: 'すべての要素をランダムに生成' },
     { id: 'emergency', label: '緊急患者', icon: '🆘', description: '激痛や急性症状を持つ患者' },
     { id: 'periodontal', label: '歯周病患者', icon: '🦷', description: '歯周病の症状を持つ中高年患者' },
+    { id: 'caries', label: 'むし歯患者', icon: '🍬', description: 'むし歯による痛みや冷たいものでしみる患者' },
+    { id: 'trauma', label: '外傷患者', icon: '🤕', description: '転倒や事故による歯の外傷を持つ患者' },
+    { id: 'orthodontic', label: '矯正相談患者', icon: '😬', description: '歯並びや咬み合わせの改善を相談する患者' },
     { id: 'aesthetic', label: '審美希望患者', icon: '✨', description: '見た目の改善を希望する患者' },
     { id: 'pediatric', label: '小児患者', icon: '👶', description: '歯科恐怖を持つ子供の患者' },
+    { id: 'pregnant', label: '妊婦患者', icon: '🤰', description: '妊娠中の安全な歯科治療を希望する患者' },
+    { id: 'implant', label: 'インプラント希望者', icon: '🔩', description: '欠損部位にインプラント治療を望む患者' },
+    { id: 'maintenance', label: 'メンテナンス患者', icon: '🪥', description: '定期健診やクリーニングを希望する患者' },
+    { id: 'tmj', label: '顎関節症患者', icon: '🦴', description: '顎の痛みや開口障害を訴える患者' },
     { id: 'elderly', label: '高齢患者', icon: '👴', description: '複数の疾患を持つ高齢者' }
   ] : [
     { id: 'random', label: 'Fully Random', icon: '🎲', description: 'Generate all elements randomly' },
     { id: 'emergency', label: 'Emergency Patient', icon: '🆘', description: 'Patient with severe pain or acute symptoms' },
     { id: 'periodontal', label: 'Periodontal Patient', icon: '🦷', description: 'Middle-aged patient with gum disease' },
+    { id: 'caries', label: 'Caries Patient', icon: '🍬', description: 'Patient with cavity-related pain or sensitivity' },
+    { id: 'trauma', label: 'Trauma Patient', icon: '🤕', description: 'Patient with dental injury from accidents or sports' },
+    { id: 'orthodontic', label: 'Orthodontic Patient', icon: '😬', description: 'Patient seeking alignment or bite correction' },
     { id: 'aesthetic', label: 'Aesthetic Patient', icon: '✨', description: 'Patient seeking cosmetic improvement' },
     { id: 'pediatric', label: 'Pediatric Patient', icon: '👶', description: 'Child patient with dental anxiety' },
+    { id: 'pregnant', label: 'Pregnant Patient', icon: '🤰', description: 'Expectant patient concerned about safe dental care' },
+    { id: 'implant', label: 'Implant Patient', icon: '🔩', description: 'Patient considering implant restoration' },
+    { id: 'maintenance', label: 'Maintenance Patient', icon: '🪥', description: 'Patient coming for recall checkups or cleaning' },
+    { id: 'tmj', label: 'TMJ Disorder Patient', icon: '🦴', description: 'Patient with jaw pain or limited opening' },
     { id: 'elderly', label: 'Elderly Patient', icon: '👴', description: 'Senior with multiple conditions' }
   ];
 
