@@ -249,9 +249,9 @@ export default function Home() {
       setLatestResponse(dialogue.text);
       
       // アバターに応じたElevenLabs voice IDを選択
-      const patientVoiceId = selectedAvatar === 'female'
-        ? '4lOQ7A2l7HPuG7UIHiKA'  // 女性アバター用voice ID
-        : 'j9jfwdrw7BRfcR43Qohk'; // 男性アバター用voice ID
+      const patientVoiceRole = selectedAvatar === 'female'
+        ? 'patient_female'
+        : 'patient_male';
       
       try {
         // リップシンクを開始
@@ -261,7 +261,7 @@ export default function Home() {
         console.log('🔊 ElevenLabs APIを呼び出し中...');
         const requestBody = {
           text: dialogue.text,
-          voiceId: patientVoiceId,
+          voiceRole: patientVoiceRole,
           emotion: 'neutral', // デモでは感情をニュートラルに設定
           language: demoLanguage // demoLanguageを使用
         };
@@ -347,7 +347,7 @@ export default function Home() {
       }
     } else {
       // 医師の発話の場合は、アバターを動かさない
-      const doctorVoiceId = 'PmgfHCGeS5b7sH90BOOJ'; // 医師用のElevenLabs voice ID
+      const doctorVoiceRole = 'doctor';
       
       let audioPlayed = false;
       
@@ -360,7 +360,7 @@ export default function Home() {
           },
           body: JSON.stringify({
             text: dialogue.text,
-            voiceId: doctorVoiceId,
+            voiceRole: doctorVoiceRole,
             emotion: 'neutral', // 医師も感情をニュートラルに
             language: demoLanguage // demoLanguageを使用
           })

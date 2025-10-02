@@ -202,13 +202,14 @@ const EnglishPhonemeToMorphs: { [key: string]: { [morphName: string]: number } }
   // === 子音 (Consonants) ===
   // B - boy, cab
   'B': {
-    'A25_Jaw_Open': 0,
-    'V_Explosive': 0.4,
-    'A44_Mouth_Upper_Up_Left': 0,
-    'A45_Mouth_Upper_Up_Right': 0,
-    'A48_Mouth_Press_Left': 0.35,
-    'A49_Mouth_Press_Right': 0.35,
-    'Mouth_Lips_Part': 0
+    'A25_Jaw_Open': 0.02,
+    'V_Explosive': 0.35,
+    'A44_Mouth_Upper_Up_Left': 0.05,
+    'A45_Mouth_Upper_Up_Right': 0.05,
+    'A48_Mouth_Press_Left': 0.28,
+    'A49_Mouth_Press_Right': 0.28,
+    'A37_Mouth_Close': 0.32,
+    'Mouth_Lips_Part': 0.05
   },
   // CH - chair, match
   'CH': {
@@ -283,13 +284,13 @@ const EnglishPhonemeToMorphs: { [key: string]: { [morphName: string]: number } }
   },
   // M - man, sum
   'M': {
-    'A25_Jaw_Open': 0,
-    'A44_Mouth_Upper_Up_Left': 0,
-    'A45_Mouth_Upper_Up_Right': 0,
-    'A37_Mouth_Close': 0.5,
-    'A48_Mouth_Press_Left': 0.3,
-    'A49_Mouth_Press_Right': 0.3,
-    'Mouth_Lips_Part': 0
+    'A25_Jaw_Open': 0.02,
+    'A44_Mouth_Upper_Up_Left': 0.05,
+    'A45_Mouth_Upper_Up_Right': 0.05,
+    'A37_Mouth_Close': 0.38,
+    'A48_Mouth_Press_Left': 0.24,
+    'A49_Mouth_Press_Right': 0.24,
+    'Mouth_Lips_Part': 0.05
   },
   // N - no, sun
   'N': {
@@ -309,14 +310,15 @@ const EnglishPhonemeToMorphs: { [key: string]: { [morphName: string]: number } }
   },
   // P - pen, top
   'P': {
-    'A25_Jaw_Open': 0,
+    'A25_Jaw_Open': 0.02,
     'A44_Mouth_Upper_Up_Left': 0,
     'A45_Mouth_Upper_Up_Right': 0,
     'V_Explosive': 0.4,
     'A48_Mouth_Press_Left': 0.32,
     'A49_Mouth_Press_Right': 0.32,
     'A37_Mouth_Close': 0.28,
-    'Mouth_Plosive': 0.35
+    'Mouth_Plosive': 0.35,
+    'Mouth_Lips_Part': 0.05
   },
   // R - run, car
   'R': {
@@ -1143,6 +1145,63 @@ const FEMALE_EYELASH_TEXTURES = {
   normal: '/models/textures/Base/Std_Eyelash_Normal.png',
   alpha: '/models/textures/Base/Std_Eyelash_Opacity.jpg',
 } as const;
+
+const ENGLISH_BILABIAL_PHONEMES = new Set(['M', 'B', 'P']);
+const ENGLISH_ROUNDED_VOWELS = new Set(['UW', 'OW', 'UH', 'AO', 'OO', 'OY']);
+
+function adjustEnglishMorphs(
+  phoneme: string | null,
+  baseMapping: { [key: string]: number }
+): { [key: string]: number } {
+  if (!phoneme) {
+    return baseMapping;
+  }
+
+  const mapping: { [key: string]: number } = { ...baseMapping };
+
+  if (ENGLISH_BILABIAL_PHONEMES.has(phoneme)) {
+    if (mapping['A37_Mouth_Close'] !== undefined) {
+      mapping['A37_Mouth_Close'] = Math.min(mapping['A37_Mouth_Close'], 0.36);
+    }
+    if (mapping['A48_Mouth_Press_Left'] !== undefined) {
+      mapping['A48_Mouth_Press_Left'] = Math.min(mapping['A48_Mouth_Press_Left'], 0.3);
+    }
+    if (mapping['A49_Mouth_Press_Right'] !== undefined) {
+      mapping['A49_Mouth_Press_Right'] = Math.min(mapping['A49_Mouth_Press_Right'], 0.3);
+    }
+    if (mapping['Mouth_Lips_Part'] !== undefined) {
+      mapping['Mouth_Lips_Part'] = Math.max(mapping['Mouth_Lips_Part'], 0.08);
+    } else {
+      mapping['Mouth_Lips_Part'] = 0.08;
+    }
+  } else if (ENGLISH_ROUNDED_VOWELS.has(phoneme)) {
+    if (mapping['A30_Mouth_Pucker'] !== undefined) {
+      mapping['A30_Mouth_Pucker'] = Math.min(mapping['A30_Mouth_Pucker'] * 1.1, 0.45);
+    }
+    if (mapping['V_Tight_O'] !== undefined) {
+      mapping['V_Tight_O'] = Math.min(mapping['V_Tight_O'] * 1.1, 0.45);
+    }
+    mapping['Mouth_Lips_Part'] = Math.max((mapping['Mouth_Lips_Part'] ?? 0.1), 0.1);
+  }
+
+  const cornerLimitKeys: [string, number][] = [
+    ['A50_Mouth_Stretch_Left', 0.35],
+    ['A51_Mouth_Stretch_Right', 0.35],
+    ['A38_Mouth_Smile_Left', 0.25],
+    ['A39_Mouth_Smile_Right', 0.25],
+    ['Mouth_Widen', 0.35],
+    ['Mouth_Widen_Sides', 0.3],
+  ];
+
+  cornerLimitKeys.forEach(([key, max]) => {
+    if (mapping[key] !== undefined) {
+      mapping[key] = Math.min(mapping[key], max);
+    }
+  });
+
+  return mapping;
+}
+
 
 function AvatarModel({ 
   isSpeaking, 
@@ -2339,6 +2398,7 @@ function AvatarModel({
     
     // リップシンクの計算（音声波形同期版）
     const targetMorphs: { [key: string]: number } = {};
+    let englishContextActive = false;
     if (isSpeaking) {
       // 実際の音声レベルを使用（スムージング済み）
       const realAudioLevel = smoothedAudioLevel.current || audioLevel || 0.3;
@@ -2365,11 +2425,14 @@ function AvatarModel({
         // Check if current word is an English phoneme (all caps, 1-2 letters)
         const isPhoneme = /^[A-Z]{1,2}$/.test(currentWord);
         const isEnglishText = /^[a-zA-Z\s\d.,!?';:\-()]+$/.test(currentWord);
+        const isEnglishContext = isPhoneme || (isEnglishText && currentWord.length > 1);
 
         let currentMapping: { [key: string]: number } = {};
+        let currentPhonemeLabel: string | null = null;
 
         if (isPhoneme) {
           // Direct phoneme passed from demo hook
+          currentPhonemeLabel = currentWord;
           currentMapping = getPhonemeMapping(currentWord, selectedAvatar);
         } else if (isEnglishText && currentWord.length > 1) {
           // English word - convert to phonemes
@@ -2377,12 +2440,19 @@ function AvatarModel({
           if (phonemes.length > 0) {
             // Use the first phoneme for now (could be improved with timing)
             const firstPhoneme = phonemes[0];
+            currentPhonemeLabel = firstPhoneme.phoneme;
             currentMapping = getPhonemeMapping(firstPhoneme.phoneme, selectedAvatar);
           }
         } else {
           // Single character or Japanese
           const currentChar = currentWord[0];
+          currentPhonemeLabel = currentChar;
           currentMapping = getPhonemeMapping(currentChar, selectedAvatar);
+        }
+
+        if (isEnglishContext) {
+          currentMapping = adjustEnglishMorphs(currentPhonemeLabel, currentMapping);
+          englishContextActive = true;
         }
 
         // 音声レベルに完全に同期した口の動き
@@ -2430,6 +2500,9 @@ function AvatarModel({
         maxLimit = 0.5; // 少年アバターは0.5に制限
       } else if (selectedAvatar === 'boy_improved') {
         maxLimit = 0.4; // 少年改アバターはさらに控えめに0.4に制限
+      }
+      if (englishContextActive) {
+        maxLimit = Math.min(maxLimit, 0.7);
       }
       
       // 最大値を制限（自然な動きのため）
@@ -3377,4 +3450,3 @@ function FinalLipSyncAvatarComponent({
 
 // メモ化してexport（不要な再レンダリングを防ぐ）
 export default React.memo(FinalLipSyncAvatarComponent);
-

@@ -4,6 +4,9 @@ import { medicalDictionary } from '@/lib/medicalDictionary';
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID;
+const ELEVENLABS_VOICE_PATIENT_MALE = process.env.ELEVENLABS_VOICE_PATIENT_MALE;
+const ELEVENLABS_VOICE_PATIENT_FEMALE = process.env.ELEVENLABS_VOICE_PATIENT_FEMALE;
+const ELEVENLABS_VOICE_DOCTOR = process.env.ELEVENLABS_VOICE_DOCTOR;
 
 // 年を日本語読みに変換する関数
 function convertYearToJapanese(year: string): string {
@@ -100,7 +103,7 @@ export async function POST(request: NextRequest) {
   console.log('ElevenLabs API called');
   
   try {
-    const { text, emotion = 'neutral', voiceId, language = 'ja' } = await request.json();
+    const { text, emotion = 'neutral', voiceId, voiceRole, language = 'ja' } = await request.json();
     
     if (!text) {
       return NextResponse.json(
@@ -109,20 +112,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // voiceIdが指定されていればそれを使用、なければ環境変数から取得
-    const selectedVoiceId = voiceId || ELEVENLABS_VOICE_ID;
+    // voiceIdが指定されていればそれを使用。なければロールに応じた環境変数を参照
+    const voiceRoleMap: Record<string, string | undefined> = {
+      patient_male: ELEVENLABS_VOICE_PATIENT_MALE,
+      patient_female: ELEVENLABS_VOICE_PATIENT_FEMALE,
+      doctor: ELEVENLABS_VOICE_DOCTOR,
+    };
+
+    let selectedVoiceId = voiceId || (voiceRole ? voiceRoleMap[voiceRole] : undefined) || ELEVENLABS_VOICE_ID;
 
     if (!ELEVENLABS_API_KEY || !selectedVoiceId) {
       console.error('ElevenLabs configuration check:');
       console.error('- API Key exists:', !!ELEVENLABS_API_KEY);
       console.error('- API Key length:', ELEVENLABS_API_KEY?.length);
       console.error('- Voice ID exists:', !!selectedVoiceId);
-      console.error('- Voice ID:', selectedVoiceId);
+      console.error('- Voice Role:', voiceRole);
       return NextResponse.json(
         { error: 'ElevenLabs APIが設定されていません' },
         { status: 500 }
       );
     }
+
+    console.log(`🎙️ Voice role: ${voiceRole ?? 'default'} (resolved=${selectedVoiceId ? 'yes' : 'no'})`);
 
     // 辞書ベースでテキストを音声用に変換
     let processedTextForTTS: string = text;
