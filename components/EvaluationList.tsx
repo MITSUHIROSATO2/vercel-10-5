@@ -2,7 +2,17 @@
 
 import { useState } from 'react';
 import type { InterviewEvaluation } from '@/lib/evaluationTypes';
-import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, Table, TableRow, TableCell, WidthType, BorderStyle } from 'docx';
+import type { Paragraph as DocxParagraph } from 'docx';
+
+type DocxModule = typeof import('docx');
+
+let docxModulePromise: Promise<DocxModule> | null = null;
+const loadDocxModule = async (): Promise<DocxModule> => {
+  if (!docxModulePromise) {
+    docxModulePromise = import('docx');
+  }
+  return docxModulePromise;
+};
 
 interface EvaluationListProps {
   evaluations: InterviewEvaluation[];
@@ -32,11 +42,13 @@ export default function EvaluationList({
 
   // 評価詳細をDOCXファイルとしてエクスポート
   const exportEvaluation = async (evaluation: InterviewEvaluation) => {
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = await loadDocxModule();
+
     const percentage = evaluation.totalScore && evaluation.maxScore
       ? Math.round((evaluation.totalScore / evaluation.maxScore) * 100)
       : 0;
 
-    const sections: Paragraph[] = [];
+    const sections: DocxParagraph[] = [];
 
     // タイトル
     sections.push(
@@ -434,7 +446,8 @@ export default function EvaluationList({
 
   // すべての評価をDOCXファイルとしてエクスポート
   const exportAllEvaluations = async () => {
-    const allSections: Paragraph[] = [];
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = await loadDocxModule();
+    const allSections: DocxParagraph[] = [];
 
     // タイトル
     allSections.push(

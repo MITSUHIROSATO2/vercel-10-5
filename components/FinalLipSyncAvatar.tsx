@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, useState, Suspense } from 'react';
+import React, { useRef, useEffect, useLayoutEffect, useState, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -1149,6 +1149,302 @@ const FEMALE_EYELASH_TEXTURES = {
 const ENGLISH_BILABIAL_PHONEMES = new Set(['M', 'B', 'P']);
 const ENGLISH_ROUNDED_VOWELS = new Set(['UW', 'OW', 'UH', 'AO', 'OO', 'OY']);
 
+type VisemeProfile = { [morph: string]: number };
+
+const EnglishVisemeProfiles: Record<string, VisemeProfile> = {
+  neutral: {
+    'A25_Jaw_Open': 0.05,
+    'Mouth_Open': 0.05,
+    'Mouth_Lips_Part': 0.1,
+  },
+  bilabial: {
+    'A37_Mouth_Close': 0.5,
+    'A48_Mouth_Press_Left': 0.35,
+    'A49_Mouth_Press_Right': 0.35,
+    'Mouth_Lips_Part': 0.05,
+  },
+  labiodental: {
+    'V_Dental_Lip': 0.55,
+    'A44_Mouth_Upper_Up_Left': 0.18,
+    'A45_Mouth_Upper_Up_Right': 0.18,
+    'Mouth_Bottom_Lip_Bite': 0.35,
+  },
+  dental: {
+    'A25_Jaw_Open': 0.18,
+    'Mouth_Open': 0.22,
+    'T06_Tongue_Tip_Up': 0.35,
+    'Mouth_Lips_Part': 0.2,
+  },
+  alveolar: {
+    'A25_Jaw_Open': 0.15,
+    'Mouth_Open': 0.18,
+    'V_Tongue_up': 0.4,
+    'T06_Tongue_Tip_Up': 0.38,
+    'A50_Mouth_Stretch_Left': 0.25,
+    'A51_Mouth_Stretch_Right': 0.25,
+  },
+  postalveolar: {
+    'A25_Jaw_Open': 0.16,
+    'Mouth_Open': 0.2,
+    'A30_Mouth_Pucker': 0.25,
+    'V_Tongue_Raise': 0.35,
+  },
+  velar: {
+    'A25_Jaw_Open': 0.22,
+    'Mouth_Open': 0.24,
+    'V_Tongue_Lower': 0.3,
+  },
+  glottal: {
+    'A25_Jaw_Open': 0.18,
+    'Mouth_Open': 0.18,
+    'Mouth_Lips_Part': 0.25,
+  },
+  rounded: {
+    'A30_Mouth_Pucker': 0.45,
+    'A29_Mouth_Funnel': 0.35,
+    'V_Tight_O': 0.35,
+    'Mouth_Pucker_Open': 0.25,
+  },
+  spread: {
+    'A25_Jaw_Open': 0.12,
+    'A50_Mouth_Stretch_Left': 0.45,
+    'A51_Mouth_Stretch_Right': 0.45,
+    'Mouth_Widen': 0.35,
+    'A38_Mouth_Smile_Left': 0.3,
+    'A39_Mouth_Smile_Right': 0.3,
+  },
+  open: {
+    'A25_Jaw_Open': 0.65,
+    'Mouth_Open': 0.55,
+    'V_Open': 0.45,
+    'Mouth_Lips_Part': 0.35,
+  },
+  open_mid: {
+    'A25_Jaw_Open': 0.5,
+    'Mouth_Open': 0.45,
+    'V_Open': 0.35,
+  },
+  mid: {
+    'A25_Jaw_Open': 0.35,
+    'Mouth_Open': 0.3,
+    'V_Open': 0.25,
+  },
+  mid_spread: {
+    'A25_Jaw_Open': 0.3,
+    'Mouth_Open': 0.2,
+    'A50_Mouth_Stretch_Left': 0.35,
+    'A51_Mouth_Stretch_Right': 0.35,
+    'Mouth_Widen': 0.25,
+  },
+  mid_rounded: {
+    'A25_Jaw_Open': 0.28,
+    'Mouth_Open': 0.25,
+    'A30_Mouth_Pucker': 0.35,
+    'V_Tight_O': 0.3,
+  },
+  close_spread: {
+    'A25_Jaw_Open': 0.18,
+    'Mouth_Open': 0.15,
+    'A50_Mouth_Stretch_Left': 0.4,
+    'A51_Mouth_Stretch_Right': 0.4,
+    'Mouth_Widen': 0.3,
+  },
+  close_rounded: {
+    'A25_Jaw_Open': 0.12,
+    'A30_Mouth_Pucker': 0.55,
+    'A29_Mouth_Funnel': 0.45,
+    'V_Tight_O': 0.4,
+  },
+  open_rounded: {
+    'A25_Jaw_Open': 0.55,
+    'Mouth_Open': 0.48,
+    'A30_Mouth_Pucker': 0.35,
+    'V_Tight_O': 0.3,
+  },
+  open_to_close: {
+    'A25_Jaw_Open': 0.45,
+    'Mouth_Open': 0.4,
+    'A29_Mouth_Funnel': 0.3,
+    'Mouth_Widen': 0.2,
+  },
+  rounded_to_spread: {
+    'A25_Jaw_Open': 0.35,
+    'A30_Mouth_Pucker': 0.25,
+    'A50_Mouth_Stretch_Left': 0.25,
+    'A51_Mouth_Stretch_Right': 0.25,
+    'Mouth_Widen': 0.2,
+  },
+};
+
+const JapaneseVisemeProfiles: Record<string, VisemeProfile> = {
+  neutral: {
+    'A25_Jaw_Open': 0.1,
+    'Mouth_Open': 0.08,
+    'Mouth_Lips_Part': 0.12,
+  },
+  ja_vowel_a: {
+    'A25_Jaw_Open': 0.6,
+    'Mouth_Open': 0.52,
+    'V_Open': 0.35,
+    'Mouth_Lips_Part': 0.28,
+  },
+  ja_vowel_i: {
+    'A25_Jaw_Open': 0.24,
+    'Mouth_Open': 0.18,
+    'A50_Mouth_Stretch_Left': 0.42,
+    'A51_Mouth_Stretch_Right': 0.42,
+    'Mouth_Widen': 0.32,
+  },
+  ja_vowel_u: {
+    'A25_Jaw_Open': 0.22,
+    'A30_Mouth_Pucker': 0.38,
+    'A29_Mouth_Funnel': 0.3,
+    'V_Tight_O': 0.28,
+  },
+  ja_vowel_e: {
+    'A25_Jaw_Open': 0.32,
+    'Mouth_Open': 0.25,
+    'A50_Mouth_Stretch_Left': 0.32,
+    'A51_Mouth_Stretch_Right': 0.32,
+  },
+  ja_vowel_o: {
+    'A25_Jaw_Open': 0.42,
+    'Mouth_Open': 0.36,
+    'A30_Mouth_Pucker': 0.32,
+    'V_Tight_O': 0.28,
+  },
+  ja_bilabial: {
+    'A37_Mouth_Close': 0.42,
+    'A48_Mouth_Press_Left': 0.28,
+    'A49_Mouth_Press_Right': 0.28,
+    'Mouth_Lips_Part': 0.07,
+  },
+  ja_labiodental: {
+    'V_Dental_Lip': 0.48,
+    'A30_Mouth_Pucker': 0.22,
+    'A25_Jaw_Open': 0.2,
+  },
+  ja_alveolar: {
+    'A25_Jaw_Open': 0.18,
+    'Mouth_Open': 0.2,
+    'V_Tongue_up': 0.38,
+    'T06_Tongue_Tip_Up': 0.34,
+  },
+  ja_postalveolar: {
+    'A25_Jaw_Open': 0.2,
+    'Mouth_Open': 0.22,
+    'A30_Mouth_Pucker': 0.24,
+    'V_Tongue_Raise': 0.32,
+  },
+  ja_velar: {
+    'A25_Jaw_Open': 0.24,
+    'Mouth_Open': 0.26,
+    'V_Tongue_Lower': 0.32,
+  },
+  ja_semivowel: {
+    'A25_Jaw_Open': 0.2,
+    'Mouth_Lips_Part': 0.22,
+    'A30_Mouth_Pucker': 0.3,
+  },
+  ja_nasal: {
+    'A25_Jaw_Open': 0.14,
+    'A37_Mouth_Close': 0.38,
+    'Mouth_Lips_Part': 0.12,
+  },
+  ja_hold: {
+    'A37_Mouth_Close': 0.46,
+    'A48_Mouth_Press_Left': 0.22,
+    'A49_Mouth_Press_Right': 0.22,
+  },
+};
+
+const JapaneseCharToViseme: Record<string, string> = {
+  'あ': 'ja_vowel_a', 'ア': 'ja_vowel_a', 'ぁ': 'ja_vowel_a', 'ァ': 'ja_vowel_a',
+  'い': 'ja_vowel_i', 'イ': 'ja_vowel_i', 'ぃ': 'ja_vowel_i', 'ィ': 'ja_vowel_i',
+  'う': 'ja_vowel_u', 'ウ': 'ja_vowel_u', 'ぅ': 'ja_vowel_u', 'ゥ': 'ja_vowel_u',
+  'え': 'ja_vowel_e', 'エ': 'ja_vowel_e', 'ぇ': 'ja_vowel_e', 'ェ': 'ja_vowel_e',
+  'お': 'ja_vowel_o', 'オ': 'ja_vowel_o', 'ぉ': 'ja_vowel_o', 'ォ': 'ja_vowel_o',
+  'か': 'ja_velar', 'き': 'ja_velar', 'く': 'ja_velar', 'け': 'ja_velar', 'こ': 'ja_velar',
+  'カ': 'ja_velar', 'キ': 'ja_velar', 'ク': 'ja_velar', 'ケ': 'ja_velar', 'コ': 'ja_velar',
+  'が': 'ja_velar', 'ぎ': 'ja_velar', 'ぐ': 'ja_velar', 'げ': 'ja_velar', 'ご': 'ja_velar',
+  'ガ': 'ja_velar', 'ギ': 'ja_velar', 'グ': 'ja_velar', 'ゲ': 'ja_velar', 'ゴ': 'ja_velar',
+  'さ': 'ja_alveolar', 'す': 'ja_alveolar', 'せ': 'ja_alveolar', 'そ': 'ja_alveolar',
+  'サ': 'ja_alveolar', 'ス': 'ja_alveolar', 'セ': 'ja_alveolar', 'ソ': 'ja_alveolar',
+  'ざ': 'ja_alveolar', 'ず': 'ja_alveolar', 'ぜ': 'ja_alveolar', 'ぞ': 'ja_alveolar',
+  'ザ': 'ja_alveolar', 'ズ': 'ja_alveolar', 'ゼ': 'ja_alveolar', 'ゾ': 'ja_alveolar',
+  'し': 'ja_postalveolar', 'シ': 'ja_postalveolar', 'じ': 'ja_postalveolar', 'ジ': 'ja_postalveolar',
+  'ち': 'ja_postalveolar', 'チ': 'ja_postalveolar', 'ぢ': 'ja_postalveolar', 'ヂ': 'ja_postalveolar',
+  'つ': 'ja_postalveolar', 'ツ': 'ja_postalveolar',
+  'た': 'ja_alveolar', 'て': 'ja_alveolar', 'と': 'ja_alveolar', 'だ': 'ja_alveolar', 'で': 'ja_alveolar', 'ど': 'ja_alveolar',
+  'タ': 'ja_alveolar', 'テ': 'ja_alveolar', 'ト': 'ja_alveolar', 'ダ': 'ja_alveolar', 'デ': 'ja_alveolar', 'ド': 'ja_alveolar',
+  'な': 'ja_alveolar', 'に': 'ja_alveolar', 'ぬ': 'ja_alveolar', 'ね': 'ja_alveolar', 'の': 'ja_alveolar',
+  'ナ': 'ja_alveolar', 'ニ': 'ja_alveolar', 'ヌ': 'ja_alveolar', 'ネ': 'ja_alveolar', 'ノ': 'ja_alveolar',
+  'ら': 'ja_alveolar', 'り': 'ja_alveolar', 'る': 'ja_alveolar', 'れ': 'ja_alveolar', 'ろ': 'ja_alveolar',
+  'ラ': 'ja_alveolar', 'リ': 'ja_alveolar', 'ル': 'ja_alveolar', 'レ': 'ja_alveolar', 'ロ': 'ja_alveolar',
+  'は': 'ja_bilabial', 'ひ': 'ja_bilabial', 'へ': 'ja_bilabial', 'ほ': 'ja_bilabial',
+  'ハ': 'ja_bilabial', 'ヒ': 'ja_bilabial', 'ヘ': 'ja_bilabial', 'ホ': 'ja_bilabial',
+  'ば': 'ja_bilabial', 'び': 'ja_bilabial', 'ぶ': 'ja_bilabial', 'べ': 'ja_bilabial', 'ぼ': 'ja_bilabial',
+  'バ': 'ja_bilabial', 'ビ': 'ja_bilabial', 'ブ': 'ja_bilabial', 'ベ': 'ja_bilabial', 'ボ': 'ja_bilabial',
+  'ぱ': 'ja_bilabial', 'ぴ': 'ja_bilabial', 'ぷ': 'ja_bilabial', 'ぺ': 'ja_bilabial', 'ぽ': 'ja_bilabial',
+  'パ': 'ja_bilabial', 'ピ': 'ja_bilabial', 'プ': 'ja_bilabial', 'ペ': 'ja_bilabial', 'ポ': 'ja_bilabial',
+  'ま': 'ja_bilabial', 'み': 'ja_bilabial', 'む': 'ja_bilabial', 'め': 'ja_bilabial', 'も': 'ja_bilabial',
+  'マ': 'ja_bilabial', 'ミ': 'ja_bilabial', 'ム': 'ja_bilabial', 'メ': 'ja_bilabial', 'モ': 'ja_bilabial',
+  'ふ': 'ja_labiodental', 'フ': 'ja_labiodental',
+  'や': 'ja_semivowel', 'ゆ': 'ja_semivowel', 'よ': 'ja_semivowel',
+  'ヤ': 'ja_semivowel', 'ユ': 'ja_semivowel', 'ヨ': 'ja_semivowel',
+  'わ': 'ja_semivowel', 'ゐ': 'ja_semivowel', 'ゑ': 'ja_semivowel', 'を': 'ja_semivowel',
+  'ワ': 'ja_semivowel', 'ヰ': 'ja_semivowel', 'ヱ': 'ja_semivowel', 'ヲ': 'ja_semivowel',
+  'ん': 'ja_nasal', 'ン': 'ja_nasal',
+  'ゃ': 'ja_semivowel', 'ゅ': 'ja_semivowel', 'ょ': 'ja_semivowel',
+  'ャ': 'ja_semivowel', 'ュ': 'ja_semivowel', 'ョ': 'ja_semivowel',
+  'ぁ': 'ja_vowel_a', 'ぃ': 'ja_vowel_i', 'ぅ': 'ja_vowel_u', 'ぇ': 'ja_vowel_e', 'ぉ': 'ja_vowel_o',
+  'ァ': 'ja_vowel_a', 'ィ': 'ja_vowel_i', 'ゥ': 'ja_vowel_u', 'ェ': 'ja_vowel_e', 'ォ': 'ja_vowel_o',
+  'っ': 'ja_hold', 'ッ': 'ja_hold',
+  'ー': 'neutral',
+};
+
+function getJapaneseVisemeKey(char: string): string {
+  return JapaneseCharToViseme[char] || 'neutral';
+}
+
+function adjustJapaneseMorphs(char: string | null, baseMapping: { [key: string]: number }): { [key: string]: number } {
+  const mapping: { [key: string]: number } = { ...baseMapping };
+  const clampList: [string, number][] = [
+    ['A50_Mouth_Stretch_Left', 0.45],
+    ['A51_Mouth_Stretch_Right', 0.45],
+    ['Mouth_Widen', 0.35],
+    ['Mouth_Widen_Sides', 0.3],
+    ['A30_Mouth_Pucker', 0.45],
+    ['A29_Mouth_Funnel', 0.4],
+    ['V_Tight_O', 0.4],
+  ];
+
+  clampList.forEach(([key, max]) => {
+    if (mapping[key] !== undefined) {
+      mapping[key] = Math.min(mapping[key], max);
+    }
+  });
+
+  if (mapping['Mouth_Lips_Part'] !== undefined) {
+    mapping['Mouth_Lips_Part'] = Math.max(0.06, Math.min(mapping['Mouth_Lips_Part'], 0.3));
+  }
+
+  // 鼻音は口の開きを軽減
+  if (char && (char === 'ん' || char === 'ン')) {
+    mapping['A25_Jaw_Open'] = Math.min(mapping['A25_Jaw_Open'] ?? 0.2, 0.2);
+    mapping['Mouth_Open'] = Math.min(mapping['Mouth_Open'] ?? 0.15, 0.15);
+  }
+
+  return mapping;
+}
+
+const JAPANESE_CHAR_REGEX = /[぀-ヿ]/;
+
+function isJapaneseCharacter(char: string): boolean {
+  return JAPANESE_CHAR_REGEX.test(char);
+}
+
+
 function adjustEnglishMorphs(
   phoneme: string | null,
   baseMapping: { [key: string]: number }
@@ -1276,10 +1572,18 @@ function AvatarModel({
   }
   const gltf = useGLTF(modelPath);
   const scene = gltf.scene;
+
+  const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
   
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!scene) return;
-    
+
+    const notifyLoaded = () => {
+      if (onLoaded) {
+        Promise.resolve().then(onLoaded);
+      }
+    };
+
     // 少年アバターの場合のみログ出力
     const isBoyAvatar = modelPath.includes('少年');
     
@@ -1293,92 +1597,135 @@ function AvatarModel({
       if (!scene.userData.texturesApplied) {
         console.log('[AvatarModel] 少年アバターの色を非同期的に設定（WebGLコンテキストロスト対策）');
 
-        // まず onLoaded を呼び出してアバターを表示
-        if (onLoaded) {
-          console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
-          onLoaded();
-        }
+        const applyBoyOralBase = () => {
+          scene.traverse((child: any) => {
+            if (!child.isMesh) return;
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
+            materials.forEach((material: THREE.Material) => {
+              if (!material) return;
+              const mat = material as any;
+              const matName = material.name?.toLowerCase() || '';
 
-        // 少し遅延させてからマテリアル処理を実行（WebGLコンテキストの準備を待つ）
-        setTimeout(() => {
+              if (matName.includes('nug_upper_teeth')) {
+                mat.color = new THREE.Color(0xfaf3e8);
+                mat.roughness = 0.18;
+                mat.metalness = 0.03;
+                if (mat.emissive) {
+                  mat.emissive = new THREE.Color(0x241910);
+                  mat.emissiveIntensity = 0.05;
+                }
+                mat.needsUpdate = true;
+              } else if (matName.includes('nug_lower_teeth')) {
+                mat.color = new THREE.Color(0xf8efe3);
+                mat.roughness = 0.2;
+                mat.metalness = 0.03;
+                if (mat.emissive) {
+                  mat.emissive = new THREE.Color(0x20160f);
+                  mat.emissiveIntensity = 0.045;
+                }
+                mat.needsUpdate = true;
+              } else if (matName.includes('nug_tongue')) {
+                mat.color = new THREE.Color(0xbf5f70);
+                mat.roughness = 0.38;
+                mat.metalness = 0.02;
+                if (mat.emissive) {
+                  mat.emissive = new THREE.Color(0x671d2b);
+                  mat.emissiveIntensity = 0.1;
+                }
+                mat.needsUpdate = true;
+              }
+            });
+          });
+        };
+
+        // 即座にベース色を適用（初期表示の白飛びを防ぐ）
+        applyBoyOralBase();
+
+        // 全マテリアルを即時に処理
+        const processBoyMaterials = () => {
           try {
-        
-        // 全体のマテリアルを収集して変更
-        const materialsToUpdate: Set<THREE.Material> = new Set();
-      
-      scene.traverse((child: any) => {
-        if (!child.isMesh) return;
-        
-        const meshName = child.name;
-        const lowerMeshName = meshName.toLowerCase();
-        
-        // 不要なメッシュを非表示
-        if (lowerMeshName.includes('beard') || 
-            lowerMeshName.includes('mustache') ||
-            lowerMeshName.includes('goatee') ||
-            lowerMeshName.includes('stubble')) {
-          child.visible = false;
-          console.log(`  -> 非表示: ${meshName}`);
-          return;
-        }
-        
-        // 角膜メッシュを非表示（白い層の原因）
-        if (lowerMeshName.includes('cornea')) {
-          child.visible = false;
-          console.log(`  -> 角膜を非表示: ${meshName}`);
-          return;
-        }
-        
-        // マテリアルの処理
-        const materials = Array.isArray(child.material) ? child.material : [child.material];
-        
-        materials.forEach((material: THREE.Material) => {
-          if (!material) return;
-          materialsToUpdate.add(material);
-        });
-      });
-      
-      // 収集したマテリアルを一括更新
-      console.log(`マテリアル総数: ${materialsToUpdate.size}`);
-      
-      materialsToUpdate.forEach((material: THREE.Material) => {
-        // すべてのMaterialタイプに対応
-        const mat = material as any;
-        const matName = material.name?.toLowerCase() || '';
-        
-        console.log(`マテリアル処理: ${material.name} (type: ${material.type})`);
-        
-        // 基本設定
-        mat.vertexColors = false;
-        mat.side = THREE.DoubleSide;
-        // 目と角膜以外のテクスチャをクリアして色ベースにする
-        if (!matName.includes('nug_eye_r') && !matName.includes('nug_eye_l') && 
-            !matName.includes('nug_cornea_r') && !matName.includes('nug_cornea_l')) {
-          mat.map = null;  // テクスチャをクリアして色を適用
-          mat.normalMap = null;  // ノーマルマップもクリア
-          mat.aoMap = null;  // AOマップもクリア
-          mat.emissiveMap = null;  // エミッシブマップもクリア
-        }
-        // 角膜以外は不透明に設定
-        if (!matName.includes('nug_cornea_r') && !matName.includes('nug_cornea_l')) {
-          mat.transparent = false;
-          mat.opacity = 1.0;
-        }
-        
-        // MeshPhysicalMaterialの場合の追加リセット
-        if (material.type === 'MeshPhysicalMaterial') {
-          mat.clearcoat = 0;
-          mat.clearcoatRoughness = 1;  // クリアコートをラフに
-          mat.sheen = 0;  // シーン（光沢）を無効
-          mat.sheenColor = new THREE.Color(0x000000);
-          mat.sheenRoughness = 1;  // シーンラフネスを最大に
-          mat.transmission = 0;
-          mat.reflectivity = 0;  // 反射率を0に
-          mat.ior = 1.0;  // 屈折率を最小に
-        }
-        
-        // マテリアル名によって色を設定
-        switch(matName) {
+            // 全体のマテリアルを収集して変更
+            const materialsToUpdate: Set<THREE.Material> = new Set();
+
+            scene.traverse((child: any) => {
+              if (!child.isMesh) return;
+
+              const meshName = child.name;
+              const lowerMeshName = meshName.toLowerCase();
+
+              // 不要なメッシュを非表示
+              if (
+                lowerMeshName.includes('beard') ||
+                lowerMeshName.includes('mustache') ||
+                lowerMeshName.includes('goatee') ||
+                lowerMeshName.includes('stubble')
+              ) {
+                child.visible = false;
+                console.log(`  -> 非表示: ${meshName}`);
+                return;
+              }
+
+              // 角膜メッシュを非表示（白い層の原因）
+              if (lowerMeshName.includes('cornea')) {
+                child.visible = false;
+                console.log(`  -> 角膜を非表示: ${meshName}`);
+                return;
+              }
+
+              // マテリアルの処理
+              const materials = Array.isArray(child.material) ? child.material : [child.material];
+
+              materials.forEach((material: THREE.Material) => {
+                if (!material) return;
+                materialsToUpdate.add(material);
+              });
+            });
+
+            // 収集したマテリアルを一括更新
+            console.log(`マテリアル総数: ${materialsToUpdate.size}`);
+
+            materialsToUpdate.forEach((material: THREE.Material) => {
+              // すべてのMaterialタイプに対応
+              const mat = material as any;
+              const matName = material.name?.toLowerCase() || '';
+
+              console.log(`マテリアル処理: ${material.name} (type: ${material.type})`);
+
+              // 基本設定
+              mat.vertexColors = false;
+              mat.side = THREE.DoubleSide;
+              // 目と角膜以外のテクスチャをクリアして色ベースにする
+              if (
+                !matName.includes('nug_eye_r') &&
+                !matName.includes('nug_eye_l') &&
+                !matName.includes('nug_cornea_r') &&
+                !matName.includes('nug_cornea_l')
+              ) {
+                mat.map = null; // テクスチャをクリアして色を適用
+                mat.normalMap = null; // ノーマルマップもクリア
+                mat.aoMap = null; // AOマップもクリア
+                mat.emissiveMap = null; // エミッシブマップもクリア
+              }
+              // 角膜以外は不透明に設定
+              if (!matName.includes('nug_cornea_r') && !matName.includes('nug_cornea_l')) {
+                mat.transparent = false;
+                mat.opacity = 1.0;
+              }
+
+              // MeshPhysicalMaterialの場合の追加リセット
+              if (material.type === 'MeshPhysicalMaterial') {
+                mat.clearcoat = 0;
+                mat.clearcoatRoughness = 1; // クリアコートをラフに
+                mat.sheen = 0; // シーン（光沢）を無効
+                mat.sheenColor = new THREE.Color(0x000000);
+                mat.sheenRoughness = 1; // シーンラフネスを最大に
+                mat.transmission = 0;
+                mat.reflectivity = 0; // 反射率を0に
+                mat.ior = 1.0; // 屈折率を最小に
+              }
+
+              // マテリアル名によって色を設定
+              switch (matName) {
           case 'hair_transparency':
             mat.color = new THREE.Color(0x1a1511);
             mat.emissive = new THREE.Color(0x0a0806);  // より暗いエミッシブ
@@ -1490,26 +1837,29 @@ function AvatarModel({
             
           case 'nug_upper_teeth':
           case 'nug_lower_teeth':
-            mat.color = new THREE.Color(0xffffff);
+            mat.color = new THREE.Color(0xfbf3e6);
             if (mat.emissive) {
-              mat.emissive = new THREE.Color(0xffffff);
-              mat.emissiveIntensity = 0.05;
+              mat.emissive = new THREE.Color(0x2a1f15);
+              mat.emissiveIntensity = 0.06;
             }
-            mat.roughness = 0.1;
-            mat.metalness = 0.05;
-            console.log(`  -> 歯: 白`);
+            mat.roughness = 0.18;
+            mat.metalness = 0.03;
+            mat.transparent = false;
+            mat.opacity = 1.0;
+            console.log(`  -> 歯: アイボリー`);
             break;
             
           case 'nug_tongue':
-            mat.color = new THREE.Color(0xff6b6b);
-            // エミッシブを追加して舌の色を確実に表示
+            mat.color = new THREE.Color(0xc96574);
             if (mat.emissive) {
-              mat.emissive = new THREE.Color(0xff6b6b);
-              mat.emissiveIntensity = 0.25;  // 舌のエミッシブを強めに
+              mat.emissive = new THREE.Color(0x611a29);
+              mat.emissiveIntensity = 0.14;
             }
-            mat.roughness = 0.4;
-            mat.metalness = 0.0;
-            console.log(`  -> 舌: ピンク（エミッシブ付き）`);
+            mat.roughness = 0.36;
+            mat.metalness = 0.02;
+            mat.transparent = false;
+            mat.opacity = 1.0;
+            console.log(`  -> 舌: 落ち着いたピンク`);
             break;
             
           case 'nug_nails':
@@ -1619,21 +1969,26 @@ function AvatarModel({
         }
       });
       
-      console.log('[AvatarModel] 少年アバターの色設定完了');
+            console.log('[AvatarModel] 少年アバターの色設定完了');
 
-      // 処理完了フラグを設定（重複処理を防ぐ）
-      scene.userData.texturesApplied = true;
+            // 処理完了フラグを設定（重複処理を防ぐ）
+            scene.userData.texturesApplied = true;
+
+            notifyLoaded();
 
           } catch (error) {
             console.warn('[AvatarModel] 少年アバターのマテリアル処理でエラー（WebGLコンテキストロスト？）:', error);
             // エラーが発生してもアバターは表示されているのでOK
+            notifyLoaded();
           }
-        }, 100); // 100ms遅延でマテリアル処理を実行
+        };
+
+        processBoyMaterials();
       } else {
         // 既に処理済みの場合は即座にonLoadedを呼ぶ
         if (onLoaded) {
           console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
-          onLoaded();
+          notifyLoaded();
         }
       }
     } else if (modelPath.includes('少年改') || modelPath.includes('%E5%B0%91%E5%B9%B4%E6%94%B9') || decodedPath.includes('少年改') || isBoyImprovedModel) {
@@ -1642,23 +1997,83 @@ function AvatarModel({
       
       if (onLoaded) {
         console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
-        setTimeout(() => {
-          onLoaded();
-        }, 100);
+        notifyLoaded();
+      }
+    } else if (isAdultModel) {
+      if (!scene.userData.adultTexturesApplied) {
+        const processAdultMaterials = () => {
+          try {
+            const materialsToUpdate: Set<THREE.Material> = new Set();
+
+            scene.traverse((child: any) => {
+              if (!child.isMesh) return;
+              const materials = Array.isArray(child.material) ? child.material : [child.material];
+              materials.forEach((material: THREE.Material) => {
+                if (!material) return;
+                materialsToUpdate.add(material);
+              });
+            });
+
+            materialsToUpdate.forEach((material: THREE.Material) => {
+              const mat = material as any;
+              const matName = material.name?.toLowerCase() || '';
+
+              if (matName.includes('std_upper_teeth')) {
+                mat.color = new THREE.Color(0xfaf6ef);
+                if (mat.emissive) {
+                  mat.emissive = new THREE.Color(0x2b201a);
+                  mat.emissiveIntensity = 0.06;
+                }
+                mat.roughness = 0.22;
+                mat.metalness = 0.04;
+                mat.transparent = false;
+                mat.opacity = 1.0;
+              } else if (matName.includes('std_lower_teeth')) {
+                mat.color = new THREE.Color(0xf8f2e9);
+                if (mat.emissive) {
+                  mat.emissive = new THREE.Color(0x241a15);
+                  mat.emissiveIntensity = 0.05;
+                }
+                mat.roughness = 0.24;
+                mat.metalness = 0.04;
+                mat.transparent = false;
+                mat.opacity = 1.0;
+              } else if (matName.includes('std_tongue')) {
+                mat.color = new THREE.Color(0xb45b65);
+                mat.roughness = 0.42;
+                mat.metalness = 0.02;
+                if (mat.emissive) {
+                  mat.emissive = new THREE.Color(0x6a1f2b);
+                  mat.emissiveIntensity = 0.12;
+                }
+                mat.transparent = false;
+                mat.opacity = 1.0;
+                mat.depthWrite = true;
+              }
+
+              if (matName.includes('std_upper_teeth') || matName.includes('std_lower_teeth') || matName.includes('std_tongue')) {
+                mat.needsUpdate = true;
+              }
+            });
+
+            scene.userData.adultTexturesApplied = true;
+          } catch (error) {
+            console.warn('[AvatarModel] 成人男性アバターのマテリアル処理でエラー:', error);
+          }
+
+          notifyLoaded();
+        };
+
+        processAdultMaterials();
+      } else if (onLoaded) {
+        notifyLoaded();
       }
     } else if (modelPath.includes('Hayden') || modelPath.includes('female') || modelPath.includes('Mother') || decodedPath.includes('Hayden') || decodedPath.includes('Mother')) {
       // 女性アバター - 男性Aと同じ方式で処理
       if (!scene.userData.texturesApplied) {
         console.log('[AvatarModel] 女性アバターの色を非同期的に設定（WebGLコンテキストロスト対策）');
 
-        // まず onLoaded を呼び出してアバターを表示
-        if (onLoaded) {
-          console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
-          onLoaded();
-        }
-
-        // 少し遅延させてからマテリアル処理を実行（WebGLコンテキストの準備を待つ）
-        setTimeout(() => {
+        const processFemaleMaterials = () => {
           try {
             // 全体のマテリアルを収集して変更
             const materialsToUpdate: Set<THREE.Material> = new Set();
@@ -2052,15 +2467,18 @@ function AvatarModel({
 
             // 処理完了フラグを設定（重複処理を防ぐ）
             scene.userData.texturesApplied = true;
+
+            notifyLoaded();
           } catch (error) {
             console.warn('[AvatarModel] 女性アバターのマテリアル処理でエラー:', error);
+            notifyLoaded();
           }
-        }, 100);
+        };
+
+        processFemaleMaterials();
       } else if (onLoaded) {
         console.log(`[FinalLipSyncAvatar] Female avatar already processed, calling onLoaded for ${selectedAvatar}`);
-        setTimeout(() => {
-          onLoaded();
-        }, 100);
+        notifyLoaded();
       }
       // import('@/utils/applyFemaleAvatarTextures').then(async ({ applyFemaleAvatarTextures }) => {
       //   try {
@@ -2079,9 +2497,7 @@ function AvatarModel({
       // 成人男性モデルの場合はすぐに通知
       if (onLoaded) {
         console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
-        setTimeout(() => {
-          onLoaded();
-        }, 100);
+        notifyLoaded();
       }
     }
     const morphMeshes: any[] = [];
@@ -2398,7 +2814,7 @@ function AvatarModel({
     
     // リップシンクの計算（音声波形同期版）
     const targetMorphs: { [key: string]: number } = {};
-    let englishContextActive = false;
+    let phonemeContext: 'english' | 'japanese' | 'other' = 'other';
     if (isSpeaking) {
       // 実際の音声レベルを使用（スムージング済み）
       const realAudioLevel = smoothedAudioLevel.current || audioLevel || 0.3;
@@ -2451,8 +2867,27 @@ function AvatarModel({
         }
 
         if (isEnglishContext) {
-          currentMapping = adjustEnglishMorphs(currentPhonemeLabel, currentMapping);
-          englishContextActive = true;
+          const visemeKey = currentPhonemeLabel ? phonemeToViseme(currentPhonemeLabel) : 'neutral';
+          const visemeProfile = EnglishVisemeProfiles[visemeKey] || EnglishVisemeProfiles.neutral;
+          const combinedMapping: { [key: string]: number } = { ...visemeProfile };
+
+          Object.entries(currentMapping).forEach(([morphName, value]) => {
+            combinedMapping[morphName] = Math.max(combinedMapping[morphName] ?? 0, value);
+          });
+
+          currentMapping = adjustEnglishMorphs(currentPhonemeLabel, combinedMapping);
+          phonemeContext = 'english';
+        } else if (currentPhonemeLabel && isJapaneseCharacter(currentPhonemeLabel)) {
+          const visemeKey = getJapaneseVisemeKey(currentPhonemeLabel);
+          const visemeProfile = JapaneseVisemeProfiles[visemeKey] || JapaneseVisemeProfiles.neutral;
+          const combinedMapping: { [key: string]: number } = { ...visemeProfile };
+
+          Object.entries(currentMapping).forEach(([morphName, value]) => {
+            combinedMapping[morphName] = Math.max(combinedMapping[morphName] ?? 0, value);
+          });
+
+          currentMapping = adjustJapaneseMorphs(currentPhonemeLabel, combinedMapping);
+          phonemeContext = 'japanese';
         }
 
         // 音声レベルに完全に同期した口の動き
@@ -2483,7 +2918,24 @@ function AvatarModel({
       
       // 音声の立ち上がり・立ち下がり検出は削除（予備動作なし）
     }
-    
+
+    if (Object.keys(anticipationMorphs.current).length > 0) {
+      Object.entries(anticipationMorphs.current).forEach(([morphName, value]) => {
+        const anticipationWeight = phonemeContext === 'english' ? 0.3 : phonemeContext === 'japanese' ? 0.25 : 0.2;
+        const weightedValue = value * anticipationWeight;
+        if (weightedValue > 0) {
+          targetMorphs[morphName] = Math.max(targetMorphs[morphName] || 0, weightedValue);
+        }
+      });
+      // 予測モーフは徐々に減衰させる
+      Object.keys(anticipationMorphs.current).forEach((key) => {
+        anticipationMorphs.current[key] *= 0.6;
+        if (anticipationMorphs.current[key] < 0.01) {
+          delete anticipationMorphs.current[key];
+        }
+      });
+    }
+
     // ダイレクトな値の適用（補間なし）
     Object.entries(targetMorphs).forEach(([morphName, targetValue]) => {
       // モデル別の係数を適用
@@ -2501,27 +2953,34 @@ function AvatarModel({
       } else if (selectedAvatar === 'boy_improved') {
         maxLimit = 0.4; // 少年改アバターはさらに控えめに0.4に制限
       }
-      if (englishContextActive) {
+      if (phonemeContext === 'english') {
         maxLimit = Math.min(maxLimit, 0.7);
+      } else if (phonemeContext === 'japanese') {
+        maxLimit = Math.min(maxLimit, 0.75);
       }
       
       // 最大値を制限（自然な動きのため）
       adjustedValue = Math.min(adjustedValue, maxLimit);
       
       // 直接値を設定（補間なし）
+      const currentValue = currentMorphValues.current[morphName] || 0;
+      const approachSpeed = phonemeContext === 'english' ? 0.45 : phonemeContext === 'japanese' ? 0.5 : 0.6;
+
       if (isSpeaking) {
-        currentMorphValues.current[morphName] = adjustedValue;
+        const blendedValue = currentValue + (adjustedValue - currentValue) * approachSpeed;
+        currentMorphValues.current[morphName] = blendedValue;
       } else {
         // 話していない時は少し補間
-        const currentValue = currentMorphValues.current[morphName] || 0;
-        currentMorphValues.current[morphName] = currentValue + (adjustedValue - currentValue) * 0.8;
+        const blendedValue = currentValue + (adjustedValue - currentValue) * 0.75;
+        currentMorphValues.current[morphName] = blendedValue;
       }
     });
     
     // 使用されなくなったモーフを徐々に0に戻す
     Object.keys(currentMorphValues.current).forEach(morphName => {
       if (!targetMorphs[morphName]) {
-        currentMorphValues.current[morphName] *= 0.85; // より速く閉じる
+        const decayFactor = phonemeContext === 'english' ? 0.7 : phonemeContext === 'japanese' ? 0.75 : 0.82;
+        currentMorphValues.current[morphName] *= decayFactor;
         if (currentMorphValues.current[morphName] < 0.01) {
           delete currentMorphValues.current[morphName];
         }
