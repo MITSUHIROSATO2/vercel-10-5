@@ -30,13 +30,18 @@ function WebGLContextHandler() {
       console.log('[WebGL] Context restored successfully');
       resetMotherAvatarTextureCache();
       const femaleScene = (window as any).__FEMALE_AVATAR_SCENE__;
+      console.log('[WebGL] Female scene found:', !!femaleScene);
       if (femaleScene) {
         try {
+          console.log('[WebGL] Reapplying female textures and hiding cornea...');
           femaleScene.userData.femaleTexturesApplied = false;
           applyMotherAvatarTextures(femaleScene);
+          console.log('[WebGL] Female textures reapplied successfully');
         } catch (error) {
           console.warn('[WebGL] Failed to reapply female textures after context restore:', error);
         }
+      } else {
+        console.log('[WebGL] No female scene to restore');
       }
     };
 
@@ -1608,20 +1613,36 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
         switch (matName) {
           case 'hair_transparency':
             mat.color = new THREE.Color(0x1a1511);
-            mat.emissive = new THREE.Color(0x0a0806);
-            mat.emissiveIntensity = 0.05;
-            mat.roughness = 0.95;
+            mat.emissive = new THREE.Color(0x000000);
+            mat.emissiveIntensity = 0.0;
+            mat.roughness = 1.0; // 完全にマット
             mat.metalness = 0.0;
-            console.log(`  -> 髪: 茶色（マット）`);
+            // テクスチャとnormalMapを削除してマット仕上げ
+            mat.map = null;
+            mat.normalMap = null;
+            mat.bumpMap = null;
+            if (mat.envMapIntensity !== undefined) {
+              mat.envMapIntensity = 0.0; // 環境反射を無効化
+            }
+            mat.needsUpdate = true; // マテリアル更新を強制
+            console.log(`  -> 髪: 茶色（完全マット・テクスチャなし）`);
             break;
 
           case 'eyebrow_transparency':
             mat.color = new THREE.Color(0x1a1511);
-            mat.emissive = new THREE.Color(0x1a1511);
-            mat.emissiveIntensity = 0.2;
-            mat.roughness = 0.7;
+            mat.emissive = new THREE.Color(0x000000);
+            mat.emissiveIntensity = 0.0;
+            mat.roughness = 1.0; // 完全にマット
             mat.metalness = 0.0;
-            console.log(`  -> 眉毛: 茶色`);
+            // テクスチャとnormalMapを削除してマット仕上げ
+            mat.map = null;
+            mat.normalMap = null;
+            mat.bumpMap = null;
+            if (mat.envMapIntensity !== undefined) {
+              mat.envMapIntensity = 0.0; // 環境反射を無効化
+            }
+            mat.needsUpdate = true; // マテリアル更新を強制
+            console.log(`  -> 眉毛: 茶色（完全マット・テクスチャなし）`);
             break;
 
           case 'nug_eye_r': {
@@ -2003,6 +2024,9 @@ function AvatarModel({
       }
     };
 
+    // async処理を含むため、即時実行async関数で囲む
+    (async () => {
+
     if (isChildModel && !scene.userData.childAvatarAdjusted) {
       try {
         // ステージ装飾など不要なメッシュを非表示
@@ -2053,6 +2077,11 @@ function AvatarModel({
     const decodedPath = decodeURIComponent(modelPath);
     
     if (modelPath.includes('少年アバター') || modelPath.includes('%E5%B0%91%E5%B9%B4%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC')) {
+      // 開発モードではテクスチャフラグをリセット
+      if (process.env.NODE_ENV === 'development') {
+        scene.userData.texturesApplied = false;
+        console.log('[AvatarModel] Development mode: resetting boy avatar texture flag');
+      }
       const applied = setupBoyAvatarMaterials(scene, notifyLoaded);
       if (!applied) {
         notifyLoaded();
@@ -2142,20 +2171,35 @@ function AvatarModel({
       decodedPath.includes('Mother') ||
       selectedAvatar === 'female'
     ) {
+      // WebGLコンテキストロス時の再適用のため、グローバルに保存
+      (window as any).__FEMALE_AVATAR_SCENE__ = scene;
+
+      // テクスチャ適用は初回のみ（フラグで管理）
       if (!scene.userData.femaleTexturesApplied) {
         try {
-          applyMotherAvatarTextures(scene);
+          console.log('[AvatarModel] Starting texture application for female avatar');
+          // テクスチャ適用完了を待ってからonLoadedを呼ぶ
+          await applyMotherAvatarTextures(scene);
           console.log('[AvatarModel] 女性アバターのマテリアル適用を完了');
+
+          // テクスチャ適用完了後にonLoadedを呼ぶ
+          if (onLoaded) {
+            console.log(`[FinalLipSyncAvatar] Female model ready, calling onLoaded for ${selectedAvatar}`);
+            notifyLoaded();
+          }
         } catch (error) {
           console.warn('[AvatarModel] 女性アバターのマテリアル処理でエラー:', error);
+          // エラーが発生してもonLoadedは呼ぶ
+          if (onLoaded) {
+            notifyLoaded();
+          }
         }
       } else {
         console.log('[AvatarModel] 女性アバターのテクスチャは既に適用済み');
-      }
-
-      if (onLoaded) {
-        console.log(`[FinalLipSyncAvatar] Female model ready, calling onLoaded for ${selectedAvatar}`);
-        notifyLoaded();
+        if (onLoaded) {
+          console.log(`[FinalLipSyncAvatar] Female model ready, calling onLoaded for ${selectedAvatar}`);
+          notifyLoaded();
+        }
       }
     } else {
       // 成人男性モデルの場合はすぐに通知
@@ -2206,13 +2250,29 @@ function AvatarModel({
       }
     });
     
+    // 女性アバターの角膜メッシュを完全に削除
+    const corneaMeshesToRemove: any[] = [];
     scene.traverse((child: any) => {
       if (child.isMesh || child.isSkinnedMesh) {
+        // 女性アバターの角膜メッシュを検出して削除リストに追加
+        if (child.material && (selectedAvatar === 'female' || modelPath.includes('Mother'))) {
+          const materials = Array.isArray(child.material) ? child.material : [child.material];
+          const hasCorneaMaterial = materials.some((mat: THREE.Material) => {
+            const matName = (mat?.name || '').toLowerCase();
+            return matName.includes('cornea');
+          });
+          if (hasCorneaMaterial) {
+            console.log('[FinalLipSyncAvatar] Found cornea mesh to remove in traverse:', child.name);
+            corneaMeshesToRemove.push(child);
+            return; // このメッシュの処理をスキップ
+          }
+        }
+
         child.frustumCulled = true;
         // 陰影を減らすため、キャストシャドウとレシーブシャドウを無効化
         child.castShadow = false;
         child.receiveShadow = false;
-        
+
         // 特定のメッシュを識別（名前とマテリアルで判定）
         // 少年アバター用の下の歯メッシュ (NUG_Base_Teeth_2)
         if (child.name === 'NUG_Base_Teeth_2' || 
@@ -2290,7 +2350,18 @@ function AvatarModel({
         }
       }
     });
-    
+
+    // 角膜メッシュを削除
+    corneaMeshesToRemove.forEach((mesh) => {
+      if (mesh.parent) {
+        mesh.parent.remove(mesh);
+        console.log('[FinalLipSyncAvatar] Removed cornea mesh from scene:', mesh.name);
+      }
+    });
+    if (corneaMeshesToRemove.length > 0) {
+      console.log(`[FinalLipSyncAvatar] Total cornea meshes removed: ${corneaMeshesToRemove.length}`);
+    }
+
     // 初期化時にすべてのモーフターゲットを0にリセット
     morphMeshes.forEach(mesh => {
       if (mesh.morphTargetInfluences) {
@@ -2319,14 +2390,55 @@ function AvatarModel({
       lowerTeethMesh.current.rotation.set(0, 0, 0);
     }
     */
-    
+
     setMorphTargets(morphMeshes);
     setOralMeshes(oralMeshList);
+    })(); // async即時実行関数の終了
   }, [scene, onLoaded, modelPath, selectedAvatar, isBoyImprovedModel]); // 依存配列を適切に設定
   
   useFrame((state, delta) => {
     if (!group.current) return;
-    
+
+    // 少年アバターの髪と眉毛の環境マップを強制的に削除（マット仕上げを維持）
+    if (selectedAvatar === 'boy' && scene) {
+      scene.traverse((child: any) => {
+        if (child.isMesh) {
+          const materials = Array.isArray(child.material) ? child.material : [child.material];
+          materials.forEach((mat: any) => {
+            const matName = mat?.name?.toLowerCase() || '';
+            if (matName === 'hair_transparency' || matName === 'eyebrow_transparency') {
+              // 環境マップを削除
+              if (mat.envMap !== null) {
+                mat.envMap = null;
+              }
+              // マット仕上げを強制
+              mat.roughness = 1.0;
+              mat.metalness = 0.0;
+              // MeshPhysicalMaterialの場合の追加設定
+              if (mat.clearcoat !== undefined) {
+                mat.clearcoat = 0;
+                mat.clearcoatRoughness = 1;
+              }
+              if (mat.sheen !== undefined) {
+                mat.sheen = 0;
+              }
+              if (mat.reflectivity !== undefined) {
+                mat.reflectivity = 0;
+              }
+              // 環境マップ強度を0に
+              if (mat.envMapIntensity !== undefined) {
+                mat.envMapIntensity = 0.0;
+              }
+              // 一度だけログ出力
+              if (animationTime.current < 0.1) {
+                console.log(`[useFrame] Enforcing matte for ${matName}: roughness=${mat.roughness}, metalness=${mat.metalness}, type=${mat.type}`);
+              }
+            }
+          });
+        }
+      });
+    }
+
     animationTime.current += delta;
     microExpressionTimer.current += delta;
     
@@ -3435,7 +3547,7 @@ function FinalLipSyncAvatarComponent({
     : (isBoyModel || isBoyImprovedModel)
     ? { position: [0, 1.72, 0.8], fov: 30, target: [0, 1.72, 0] } // 少年用：水平視点
     : isFemaleModel
-    ? { position: [0, 1.485, 0.8], fov: 30, target: [0, 1.485, 0] } // 女性用：水平視点
+    ? { position: [0, 1.49, 0.8], fov: 30, target: [0, 1.49, 0] } // 女性用：水平視点
     : { position: [0, 1.68, 0.7], fov: 28, target: [0, 1.7, 0] }; // 成人男性用
   
   // リップシンク強度設定（少年と少年改は同じ強度）
@@ -3534,19 +3646,22 @@ function FinalLipSyncAvatarComponent({
         >
           <WebGLContextHandler />
           {/* 陰影を減らすため、アンビエントライトを強化 */}
-          <ambientLight intensity={0.8} color="#ffffff" />
-          {/* メインライトの影を無効化し、強度を下げる */}
+          <ambientLight intensity={1.2} color="#ffffff" />
+          {/* 左右のメインライト（左側強め） */}
           <directionalLight
-            position={[5, 10, 5]}
+            position={[3, 8, 5]}
             intensity={0.3}
             castShadow={false}
           />
-          {/* フィルライトを追加して陰影を埋める */}
-          <directionalLight position={[-5, 5, -5]} intensity={0.3} />
-          <directionalLight position={[0, 5, 5]} intensity={0.2} />
-          <directionalLight position={[0, -5, 5]} intensity={0.2} />
-          {/* フロントライトで顔を明るく */}
-          <pointLight position={[0, 2, 3]} intensity={0.3} />
+          <directionalLight
+            position={[-3, 8, 5]}
+            intensity={0.9}
+            castShadow={false}
+          />
+          {/* 上からの均等な照明 */}
+          <directionalLight position={[0, 10, 3]} intensity={0.2} />
+          {/* フロントライトで顔を明るく（中央） */}
+          <pointLight position={[0, 1.5, 4]} intensity={0.4} />
           
           <Suspense fallback={null}>
             <AvatarModel 

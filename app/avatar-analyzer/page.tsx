@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment } from '@react-three/drei';
 import * as THREE from 'three';
+import { applyMotherAvatarTextures } from '@/utils/applyMotherAvatarTextures';
 
 // 表情プリセット
 const EXPRESSION_PRESETS = {
@@ -178,7 +179,19 @@ function AvatarModel({
     const meshes: any[] = [];
     const allMorphNames = new Set<string>();
     const meshInfo: any[] = [];
-    
+
+    if (!scene) return;
+
+    const decodedModelPath = decodeURIComponent(modelPath);
+    if (
+      decodedModelPath.includes('Mother') ||
+      decodedModelPath.toLowerCase().includes('female')
+    ) {
+      applyMotherAvatarTextures(scene);
+    }
+
+    scene.updateMatrixWorld(true);
+
     scene.traverse((child: any) => {
       if (child.isMesh || child.isSkinnedMesh) {
         // メッシュ情報を収集
