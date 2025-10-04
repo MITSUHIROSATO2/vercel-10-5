@@ -52,10 +52,15 @@ export default function AIEvaluationResult({
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [showScenarioSelector, setShowScenarioSelector] = useState(false);
+  const [hasEvaluated, setHasEvaluated] = useState(false);
 
   useEffect(() => {
-    generateEvaluation();
-  }, [messages, scenarioId]);
+    // 既に評価済みの場合は実行しない
+    if (!hasEvaluated) {
+      generateEvaluation();
+      setHasEvaluated(true);
+    }
+  }, [hasEvaluated]);
 
   const generateEvaluation = async () => {
     setIsLoading(true);

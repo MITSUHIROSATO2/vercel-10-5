@@ -570,7 +570,7 @@ export default function FacialExpressionAnalyzer() {
   const modelPath =
     selectedAvatar === 'adult' ? '/models/成人男性.glb' :
     selectedAvatar === 'boy' ? '/models/少年アバター.glb' :
-    selectedAvatar === 'boy_improved' ? '/models/Baby%20main.glb' :
+    selectedAvatar === 'boy_improved' ? '/models/Baby main.glb' :
     '/models/Mother.glb';
 
   // 共通のモーフターゲット名（ARKit準拠）

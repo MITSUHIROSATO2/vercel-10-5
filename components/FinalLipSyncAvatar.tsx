@@ -1506,7 +1506,7 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             }
             mat.needsUpdate = true;
           } else if (matName.includes('nug_tongue')) {
-            mat.color = new THREE.Color(0xd36a7a);
+            mat.color = new THREE.Color(0xbf5f70);
             mat.roughness = 0.32;
             mat.metalness = 0.0;
             if (mat.emissive) {
@@ -1577,7 +1577,10 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
           !matName.includes('nug_eye_r') &&
           !matName.includes('nug_eye_l') &&
           !matName.includes('nug_cornea_r') &&
-          !matName.includes('nug_cornea_l')
+          !matName.includes('nug_cornea_l') &&
+          !matName.includes('nug_upper_teeth') &&
+          !matName.includes('nug_lower_teeth') &&
+          !matName.includes('nug_tongue')
         ) {
           if (mat.map) {
             mat.map.dispose?.();
@@ -1721,39 +1724,51 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
           case 'nug_skin_body':
           case 'nug_skin_arm':
           case 'nug_skin_leg':
-            mat.color = new THREE.Color(0xc08870);
-            mat.emissive = new THREE.Color(0xc08870);
-            mat.emissiveIntensity = 0.2;
+            mat.color = new THREE.Color(0xa87860);
+            mat.emissive = new THREE.Color(0xa87860);
+            mat.emissiveIntensity = 0.15;
             mat.roughness = 0.45;
             mat.metalness = 0.0;
-            console.log(`  -> 肌: ベージュ`);
+            console.log(`  -> 肌: 自然なベージュ`);
             break;
 
           case 'nug_upper_teeth':
-          case 'nug_lower_teeth':
-            mat.color = new THREE.Color(0xe6cfb8);
+            mat.color = new THREE.Color(0xe7d2ba);
+            mat.roughness = 0.22;
+            mat.metalness = 0.0;
             if (mat.emissive) {
-              mat.emissive = new THREE.Color(0x1f130d);
+              mat.emissive = new THREE.Color(0x1f120c);
               mat.emissiveIntensity = 0.03;
             }
-            mat.roughness = 0.24;
-            mat.metalness = 0.0;
             mat.transparent = false;
             mat.opacity = 1.0;
-            console.log(`  -> 歯: アイボリー`);
+            console.log(`  -> 上の歯: アイボリー`);
+            break;
+
+          case 'nug_lower_teeth':
+            mat.color = new THREE.Color(0xe3cab3);
+            mat.roughness = 0.24;
+            mat.metalness = 0.0;
+            if (mat.emissive) {
+              mat.emissive = new THREE.Color(0x1b110c);
+              mat.emissiveIntensity = 0.03;
+            }
+            mat.transparent = false;
+            mat.opacity = 1.0;
+            console.log(`  -> 下の歯: アイボリー`);
             break;
 
           case 'nug_tongue':
-            mat.color = new THREE.Color(0xd87282);
-            if (mat.emissive) {
-              mat.emissive = new THREE.Color(0x662030);
-              mat.emissiveIntensity = 0.08;
-            }
+            mat.color = new THREE.Color(0xbf5f70);
             mat.roughness = 0.32;
             mat.metalness = 0.0;
+            if (mat.emissive) {
+              mat.emissive = new THREE.Color(0x6b1c2c);
+              mat.emissiveIntensity = 0.08;
+            }
             mat.transparent = false;
             mat.opacity = 1.0;
-            console.log(`  -> 舌: 落ち着いたピンク`);
+            console.log(`  -> 舌: 暗めのピンク`);
             break;
 
           case 'nug_nails':
@@ -1791,8 +1806,8 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
           case 'nug_eyelash':
           case 'nug_tearline_r':
           case 'nug_tearline_l':
-            mat.color = new THREE.Color(0xc08870);
-            mat.emissive = new THREE.Color(0xc08870);
+            mat.color = new THREE.Color(0xa87860);
+            mat.emissive = new THREE.Color(0xa87860);
             mat.emissiveIntensity = 0.15;
             mat.roughness = 0.5;
             mat.metalness = 0.0;
@@ -2077,11 +2092,7 @@ function AvatarModel({
     const decodedPath = decodeURIComponent(modelPath);
     
     if (modelPath.includes('少年アバター') || modelPath.includes('%E5%B0%91%E5%B9%B4%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC')) {
-      // 開発モードではテクスチャフラグをリセット
-      if (process.env.NODE_ENV === 'development') {
-        scene.userData.texturesApplied = false;
-        console.log('[AvatarModel] Development mode: resetting boy avatar texture flag');
-      }
+      // マテリアル処理は1回のみ実行（開発モードでもリセットしない）
       const applied = setupBoyAvatarMaterials(scene, notifyLoaded);
       if (!applied) {
         notifyLoaded();
@@ -3112,9 +3123,9 @@ function AvatarModel({
     }
     */
     
-    // 少年アバター用の下の歯制御 
+    // 少年・女性アバター用の下の歯制御
     // NUG_Base_Teeth_2メッシュとCC_Base_Teeth02ボーンの両方を制御
-    if ((teeth02Bone.current || nugLowerTeethMesh.current) && (selectedAvatar === 'boy' || selectedAvatar === 'boy_improved')) {
+    if ((teeth02Bone.current || nugLowerTeethMesh.current) && (selectedAvatar === 'boy' || selectedAvatar === 'boy_improved' || selectedAvatar === 'female')) {
       if (isSpeaking) {
         const jawOpenValue = currentMorphValues.current['A25_Jaw_Open'] || currentMorphValues.current['Move_Jaw_Down'] || 0;
         const mouthOpenValue = currentMorphValues.current['Mouth_Open'] || 0;
@@ -3183,26 +3194,28 @@ function AvatarModel({
       } else {
         // 話していない時は元の位置にスムーズに戻す（ボーン制御）
         const lerpSpeed = 0.15; // 補間速度
-        
-        if (Math.abs(teeth02Bone.current.position.y) > 0.0001) {
-          teeth02Bone.current.position.y *= (1 - lerpSpeed);
-        } else {
-          teeth02Bone.current.position.y = 0;
+
+        if (teeth02Bone.current) {
+          if (Math.abs(teeth02Bone.current.position.y) > 0.0001) {
+            teeth02Bone.current.position.y *= (1 - lerpSpeed);
+          } else {
+            teeth02Bone.current.position.y = 0;
+          }
+
+          if (Math.abs(teeth02Bone.current.rotation.x) > 0.0001) {
+            teeth02Bone.current.rotation.x *= (1 - lerpSpeed);
+          } else {
+            teeth02Bone.current.rotation.x = 0;
+          }
+
+          if (Math.abs(teeth02Bone.current.position.z) > 0.0001) {
+            teeth02Bone.current.position.z *= (1 - lerpSpeed);
+          } else {
+            teeth02Bone.current.position.z = 0;
+          }
+
+          teeth02Bone.current.updateMatrixWorld(true);
         }
-        
-        if (Math.abs(teeth02Bone.current.rotation.x) > 0.0001) {
-          teeth02Bone.current.rotation.x *= (1 - lerpSpeed);
-        } else {
-          teeth02Bone.current.rotation.x = 0;
-        }
-        
-        if (Math.abs(teeth02Bone.current.position.z) > 0.0001) {
-          teeth02Bone.current.position.z *= (1 - lerpSpeed);
-        } else {
-          teeth02Bone.current.position.z = 0;
-        }
-        
-        teeth02Bone.current.updateMatrixWorld(true);
       }
     }
     
@@ -3302,13 +3315,13 @@ function AvatarModel({
             (window as any).blinkDebugLogged = true;
           }
         } else if (selectedAvatar === 'female') {
-          // 女性アバターは男性Aとほぼ同設定でごくわずかに補強
-          applyMorph('A14_Eye_Blink_Left', blinkValue);
-          applyMorph('A15_Eye_Blink_Right', blinkValue);
-          applyMorph('Eye_Blink_L', blinkValue);
-          applyMorph('Eye_Blink_R', blinkValue);
+          // 女性アバター: 瞬きの強度を0.95に制限
+          applyMorph('A14_Eye_Blink_Left', blinkValue * 0.95);
+          applyMorph('A15_Eye_Blink_Right', blinkValue * 0.95);
+          applyMorph('Eye_Blink_L', blinkValue * 0.95);
+          applyMorph('Eye_Blink_R', blinkValue * 0.95);
         } else {
-          // 成人アバター
+          // 成人アバター（男性A）: 瞬きの強度1.0
           applyMorph('A14_Eye_Blink_Left', blinkValue);
           applyMorph('A15_Eye_Blink_Right', blinkValue);
         }
@@ -3545,7 +3558,7 @@ function FinalLipSyncAvatarComponent({
   const cameraSettings = isChildModel
     ? { position: [0, 1.1, 0.25], fov: 14, target: [0, 0.9, 0] }
     : (isBoyModel || isBoyImprovedModel)
-    ? { position: [0, 1.72, 0.8], fov: 30, target: [0, 1.72, 0] } // 少年用：水平視点
+    ? { position: [0, 1.71, 0.8], fov: 27, target: [0, 1.71, 0] } // 少年用：拡大（fov 30→27）
     : isFemaleModel
     ? { position: [0, 1.49, 0.8], fov: 30, target: [0, 1.49, 0] } // 女性用：水平視点
     : { position: [0, 1.68, 0.7], fov: 28, target: [0, 1.7, 0] }; // 成人男性用
@@ -3647,21 +3660,21 @@ function FinalLipSyncAvatarComponent({
           <WebGLContextHandler />
           {/* 陰影を減らすため、アンビエントライトを強化 */}
           <ambientLight intensity={1.2} color="#ffffff" />
-          {/* 左右のメインライト（左側強め） */}
+          {/* 左右のメインライト */}
           <directionalLight
             position={[3, 8, 5]}
-            intensity={0.3}
+            intensity={0}
             castShadow={false}
           />
           <directionalLight
             position={[-3, 8, 5]}
-            intensity={0.9}
+            intensity={0}
             castShadow={false}
           />
           {/* 上からの均等な照明 */}
           <directionalLight position={[0, 10, 3]} intensity={0.2} />
-          {/* フロントライトで顔を明るく（中央） */}
-          <pointLight position={[0, 1.5, 4]} intensity={0.4} />
+          {/* フロントライトで顔を明るく（左） */}
+          <pointLight position={[-0.7, 1.5, 4]} intensity={0.6} />
           
           <Suspense fallback={null}>
             <AvatarModel 
@@ -3695,7 +3708,7 @@ function FinalLipSyncAvatarComponent({
             </mesh>
           )}
           
-          <color attach="background" args={['#e0f2fe']} />
+          <color attach="background" args={['#c8e6fc']} />
         </Canvas>
       
       {showDebug && (
