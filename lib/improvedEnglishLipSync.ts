@@ -347,18 +347,18 @@ function getVisemeMorphTargets(viseme: string): { [key: string]: number } {
     'postalveolar': { 'V_Tongue_Raise': 0.3, 'A30_Mouth_Pucker': 0.2, 'A25_Jaw_Open': 0.15 },
     'velar': { 'V_Tongue_Lower': 0.2, 'A25_Jaw_Open': 0.15 },
     'glottal': { 'A25_Jaw_Open': 0.2, 'V_Open': 0.15 },
-    'rounded': { 'A30_Mouth_Pucker': 0.4, 'A29_Mouth_Funnel': 0.3, 'V_Tight_O': 0.3 },
-    'spread': { 'V_Wide': 0.4, 'A50_Mouth_Stretch_Left': 0.3, 'A51_Mouth_Stretch_Right': 0.3 },
+    'rounded': { 'A30_Mouth_Pucker': 0.15, 'A29_Mouth_Funnel': 0.1, 'V_Tight_O': 0.3 },
+    'spread': { 'V_Wide': 0.15, 'A50_Mouth_Stretch_Left': 0.1, 'A51_Mouth_Stretch_Right': 0.1 },
     'open': { 'A25_Jaw_Open': 0.6, 'V_Open': 0.5, 'Mouth_Open': 0.4 },
-    'open_mid': { 'A25_Jaw_Open': 0.5, 'V_Wide': 0.3, 'Mouth_Open': 0.35 },
+    'open_mid': { 'A25_Jaw_Open': 0.5, 'V_Wide': 0.12, 'Mouth_Open': 0.35 },
     'mid': { 'A25_Jaw_Open': 0.35, 'V_Open': 0.3 },
-    'open_rounded': { 'A25_Jaw_Open': 0.5, 'A30_Mouth_Pucker': 0.3, 'V_Tight_O': 0.3 },
-    'open_to_close': { 'A25_Jaw_Open': 0.4, 'V_Wide': 0.35 },
-    'mid_spread': { 'A25_Jaw_Open': 0.3, 'V_Wide': 0.25 },
-    'mid_rounded': { 'A25_Jaw_Open': 0.25, 'A30_Mouth_Pucker': 0.3 },
-    'close_spread': { 'A25_Jaw_Open': 0.15, 'V_Wide': 0.5, 'A50_Mouth_Stretch_Left': 0.4, 'A51_Mouth_Stretch_Right': 0.4 },
-    'close_rounded': { 'A25_Jaw_Open': 0.2, 'A30_Mouth_Pucker': 0.5, 'A29_Mouth_Funnel': 0.4 },
-    'rounded_to_spread': { 'A25_Jaw_Open': 0.35, 'A30_Mouth_Pucker': 0.2, 'V_Wide': 0.2 }
+    'open_rounded': { 'A25_Jaw_Open': 0.5, 'A30_Mouth_Pucker': 0.12, 'V_Tight_O': 0.3 },
+    'open_to_close': { 'A25_Jaw_Open': 0.4, 'V_Wide': 0.15 },
+    'mid_spread': { 'A25_Jaw_Open': 0.3, 'V_Wide': 0.1 },
+    'mid_rounded': { 'A25_Jaw_Open': 0.25, 'A30_Mouth_Pucker': 0.12 },
+    'close_spread': { 'A25_Jaw_Open': 0.15, 'V_Wide': 0.2, 'A50_Mouth_Stretch_Left': 0.15, 'A51_Mouth_Stretch_Right': 0.15 },
+    'close_rounded': { 'A25_Jaw_Open': 0.2, 'A30_Mouth_Pucker': 0.2, 'A29_Mouth_Funnel': 0.15 },
+    'rounded_to_spread': { 'A25_Jaw_Open': 0.35, 'A30_Mouth_Pucker': 0.08, 'V_Wide': 0.1 }
   };
 
   return visemeMap[viseme] || visemeMap['neutral'];
