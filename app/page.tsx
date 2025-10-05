@@ -51,6 +51,7 @@ export default function Home() {
   const [evaluations, setEvaluations] = useState<EvaluationType[]>([]);
   const [selectedAvatar, setSelectedAvatar] = useState<'adult' | 'boy' | 'boy_improved' | 'female'>('boy');
   const [isAvatarLoaded, setIsAvatarLoaded] = useState(false);
+  const [isManualAvatarSelection, setIsManualAvatarSelection] = useState(false);
   const [language, setLanguage] = useState<'ja' | 'en'>('en'); // 言語設定を追加（デフォルトを英語に）
   const languageRef = useRef<'ja' | 'en'>('en'); // 最新の言語値を保持
   
@@ -80,11 +81,14 @@ export default function Home() {
   } = useDemoElevenLabsSpeech();
   
   // アバター変更時にローディング状態をリセット
-  const handleAvatarChange = React.useCallback((avatar: 'adult' | 'boy' | 'boy_improved' | 'female') => {
+  const handleAvatarChange = React.useCallback((avatar: 'adult' | 'boy' | 'boy_improved' | 'female', isManual = false) => {
     if (avatar !== selectedAvatar) {
-      console.log(`[Avatar Change] Switching from ${selectedAvatar} to ${avatar}`);
+      console.log(`[Avatar Change] Switching from ${selectedAvatar} to ${avatar}${isManual ? ' (manual)' : ''}`);
       setIsAvatarLoaded(false);
       setSelectedAvatar(avatar);
+      if (isManual) {
+        setIsManualAvatarSelection(true);
+      }
       const modelPath = getModelPath(avatar);
       console.log(`[Avatar Change] Model path for ${avatar}: ${modelPath}`);
     }
@@ -138,8 +142,13 @@ export default function Home() {
     languageRef.current = language; // useRefも更新
   }, [language]);
 
-  // シナリオの性別に応じてアバターを自動切り替え
+  // シナリオの性別に応じてアバターを自動切り替え（手動選択がない場合のみ）
   useEffect(() => {
+    if (isManualAvatarSelection) {
+      // 手動でアバターが選択された場合は自動切り替えをスキップ
+      return;
+    }
+
     if (selectedScenario?.basicInfo?.gender) {
       const gender = selectedScenario.basicInfo.gender.toLowerCase();
       // 日本語と英語両方に対応
@@ -155,7 +164,7 @@ export default function Home() {
         }
       }
     }
-  }, [handleAvatarChange, selectedAvatar, selectedScenario]);
+  }, [handleAvatarChange, selectedAvatar, selectedScenario, isManualAvatarSelection]);
 
   // デモ開始時に最初の発話を開始
   /* eslint-disable react-hooks/exhaustive-deps */
@@ -642,6 +651,7 @@ export default function Home() {
     if (scenario) {
       setSelectedScenario(scenario);
       setMessages([]); // シナリオ変更時のみメッセージをリセット
+      setIsManualAvatarSelection(false); // シナリオ変更時は自動切り替えを再開
       cancel();
       setApiError(null);
       // console.log('シナリオを変更しました：', scenario.name);
@@ -768,7 +778,7 @@ export default function Home() {
                   {/* アバター選択ボタン - 右端 */}
                   <div className="absolute top-4 right-4 z-10 flex gap-2">
                     <button
-                      onClick={() => handleAvatarChange('boy')}
+                      onClick={() => handleAvatarChange('boy', true)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                         selectedAvatar === 'boy'
                           ? 'bg-cyan-600 text-white shadow-lg'
@@ -778,7 +788,7 @@ export default function Home() {
                       {language === 'ja' ? '男性A' : 'Male A'}
                     </button>
                     <button
-                      onClick={() => handleAvatarChange('adult')}
+                      onClick={() => handleAvatarChange('adult', true)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                         selectedAvatar === 'adult'
                           ? 'bg-cyan-600 text-white shadow-lg'
@@ -788,7 +798,7 @@ export default function Home() {
                       {language === 'ja' ? '男性B' : 'Male B'}
                     </button>
                     <button
-                      onClick={() => handleAvatarChange('female')}
+                      onClick={() => handleAvatarChange('female', true)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                         selectedAvatar === 'female'
                           ? 'bg-cyan-600 text-white shadow-lg'

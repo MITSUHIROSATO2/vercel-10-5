@@ -1961,18 +1961,31 @@ function AvatarModel({
     decodedModelPath.includes('Baby main') ||
     decodedModelPath.includes('baby') ||
     modelPath.includes('Baby%20main') ||
+    modelPath.includes('boy-improved-avatar') ||
     modelPath.includes('ClassicMan-3のコピー');
-  const isBoyModel = !isBoyImprovedModel && (decodedModelPath.includes('少年アバター') || modelPath.includes('ClassicMan') || modelPath.includes('BOY_4'));
+  const isBoyModel = !isBoyImprovedModel && (decodedModelPath.includes('少年アバター') || modelPath.includes('boy-avatar') || modelPath.includes('ClassicMan') || modelPath.includes('BOY_4'));
   const isAdultImprovedModel = decodedModelPath.includes('成人男性改');
-  const isAdultModel = !isAdultImprovedModel && (decodedModelPath.includes('成人男性') || modelPath.includes('man-grey-suit'));
+  const isAdultModel = !isAdultImprovedModel && (decodedModelPath.includes('成人男性') || modelPath.includes('adult-male') || modelPath.includes('man-grey-suit'));
   const isFemaleModel =
     modelPath.includes('Hayden') ||
     modelPath.includes('female') ||
     modelPath.includes('Mother') ||
+    modelPath.includes('mother') ||
     decodedModelPath.includes('Hayden') ||
     decodedModelPath.includes('Mother') ||
     (typeof selectedAvatar === 'string' && selectedAvatar === 'female');
   const isChildModel = decodedModelPath.includes('Baby main') || decodedModelPath.includes('baby') || modelPath.includes('Baby%20main');
+
+  // デバッグログ
+  console.log('[Model Detection]', {
+    modelPath,
+    decodedModelPath,
+    selectedAvatar,
+    isBoyModel,
+    isAdultModel,
+    isFemaleModel,
+    isBoyImprovedModel
+  });
 
   // モデル別のリップシンク設定
   const lipSyncConfig = {
@@ -2091,8 +2104,9 @@ function AvatarModel({
     // URLエンコードされた文字列とデコードされた文字列の両方をチェック
     const decodedPath = decodeURIComponent(modelPath);
     
-    if (modelPath.includes('少年アバター') || modelPath.includes('%E5%B0%91%E5%B9%B4%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC')) {
+    if (modelPath.includes('少年アバター') || modelPath.includes('%E5%B0%91%E5%B9%B4%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC') || modelPath.includes('boy-avatar') || isBoyModel) {
       // マテリアル処理は1回のみ実行（開発モードでもリセットしない）
+      console.log('[AvatarModel] Applying boy avatar materials');
       const applied = setupBoyAvatarMaterials(scene, notifyLoaded);
       if (!applied) {
         notifyLoaded();
@@ -2178,6 +2192,7 @@ function AvatarModel({
       modelPath.includes('Hayden') ||
       modelPath.includes('female') ||
       modelPath.includes('Mother') ||
+      modelPath.includes('mother') ||
       decodedPath.includes('Hayden') ||
       decodedPath.includes('Mother') ||
       selectedAvatar === 'female'
@@ -2266,7 +2281,7 @@ function AvatarModel({
     scene.traverse((child: any) => {
       if (child.isMesh || child.isSkinnedMesh) {
         // 女性アバターの角膜メッシュを検出して削除リストに追加
-        if (child.material && (selectedAvatar === 'female' || modelPath.includes('Mother'))) {
+        if (child.material && (selectedAvatar === 'female' || modelPath.includes('Mother') || modelPath.includes('mother'))) {
           const materials = Array.isArray(child.material) ? child.material : [child.material];
           const hasCorneaMaterial = materials.some((mat: THREE.Material) => {
             const matName = (mat?.name || '').toLowerCase();
@@ -3528,6 +3543,7 @@ function FinalLipSyncAvatarComponent({
     decodedModelPath.includes('Baby main') ||
     decodedModelPath.includes('baby') ||
     modelPath.includes('Baby%20main') ||
+    modelPath.includes('boy-improved-avatar') ||
     modelPath.includes('ClassicMan-3のコピー');
   const isBoyModel = !isBoyImprovedModel && (decodedModelPath.includes('少年アバター') || modelPath.includes('ClassicMan') || modelPath.includes('BOY_4'));
   const isAdultImprovedModel = decodedModelPath.includes('成人男性改');
@@ -3536,6 +3552,7 @@ function FinalLipSyncAvatarComponent({
     modelPath.includes('Hayden') ||
     modelPath.includes('female') ||
     modelPath.includes('Mother') ||
+    modelPath.includes('mother') ||
     decodedModelPath.includes('Hayden') ||
     decodedModelPath.includes('Mother');
 
