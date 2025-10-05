@@ -6,6 +6,13 @@ import { OrbitControls, useGLTF, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { applyMotherAvatarTextures } from '@/utils/applyMotherAvatarTextures';
 
+type PhonemePreset = {
+  name: string;
+  morphs: Record<string, number>;
+};
+
+type PhonemePresetMap = Record<string, PhonemePreset>;
+
 // 表情プリセット
 const EXPRESSION_PRESETS = {
   neutral: { name: '😐 通常', morphs: {} },
@@ -108,7 +115,7 @@ const PHONEME_PRESETS_JP = {
   u: { name: 'う', morphs: { 'A25_Jaw_Open': 0.2, 'A30_Mouth_Pucker': 0.5, 'A29_Mouth_Funnel': 0.3 } },
   e: { name: 'え', morphs: { 'A25_Jaw_Open': 0.35, 'V_Wide': 0.3, 'Mouth_Open': 0.25 } },
   o: { name: 'お', morphs: { 'A25_Jaw_Open': 0.35, 'V_Open': 0.25, 'A29_Mouth_Funnel': 0.3 } }
-};
+} satisfies PhonemePresetMap;
 
 // 英語音素プリセット（拡張版）
 const PHONEME_PRESETS_EN = {
@@ -154,7 +161,7 @@ const PHONEME_PRESETS_EN = {
   Y: { name: 'Y', morphs: { 'A25_Jaw_Open': 0.15, 'V_Wide': 0.4, 'A50_Mouth_Stretch_Left': 0.3, 'A51_Mouth_Stretch_Right': 0.3 } },
   Z: { name: 'Z', morphs: { 'A25_Jaw_Open': 0.12, 'V_Wide': 0.25, 'A50_Mouth_Stretch_Left': 0.18, 'A51_Mouth_Stretch_Right': 0.18 } },
   ZH: { name: 'ZH', morphs: { 'A25_Jaw_Open': 0.15, 'A30_Mouth_Pucker': 0.3, 'V_Tight_O': 0.22 } }
-};
+} satisfies PhonemePresetMap;
 
 function AvatarModel({ 
   modelPath, 
@@ -611,14 +618,18 @@ export default function FacialExpressionAnalyzer() {
   };
 
   // 現在の言語に応じた音素プリセットを取得
-  const PHONEME_PRESETS = phonemeLanguage === 'jp' ? PHONEME_PRESETS_JP : PHONEME_PRESETS_EN;
+  const phonemePresets: PhonemePresetMap =
+    phonemeLanguage === 'jp' ? PHONEME_PRESETS_JP : PHONEME_PRESETS_EN;
 
   const applyPhoneme = (phoneme: string) => {
-    const preset = PHONEME_PRESETS[phoneme as keyof typeof PHONEME_PRESETS];
-    if (preset) {
-      setCustomMorphs(preset.morphs);
-      setSelectedExpression('custom');
+    if (!Object.prototype.hasOwnProperty.call(phonemePresets, phoneme)) {
+      console.warn('Unknown phoneme preset selected:', phoneme);
+      return;
     }
+
+    const preset = phonemePresets[phoneme];
+    setCustomMorphs(preset.morphs);
+    setSelectedExpression('custom');
   };
 
   const exportToJSON = () => {
@@ -734,7 +745,7 @@ export default function FacialExpressionAnalyzer() {
         morphs: preset.morphs,
         morphCount: Object.keys(preset.morphs).length
       })),
-      phonemePresets: Object.entries(PHONEME_PRESETS).map(([key, preset]) => ({
+      phonemePresets: Object.entries(phonemePresets).map(([key, preset]) => ({
         id: key,
         name: preset.name,
         morphs: preset.morphs,
@@ -751,7 +762,7 @@ export default function FacialExpressionAnalyzer() {
       commonMorphTargets: commonMorphTargets,
       statistics: {
         totalPresetExpressions: Object.keys(EXPRESSION_PRESETS).length,
-        totalPhonemes: Object.keys(PHONEME_PRESETS).length,
+        totalPhonemes: Object.keys(phonemePresets).length,
         totalCommonMorphs: commonMorphTargets.length,
         totalAvailableMorphs: morphList.length,
         currentActiveMorphs: Object.entries(customMorphs).filter(([_, value]) => value > 0).length
@@ -976,9 +987,33 @@ export default function FacialExpressionAnalyzer() {
             {/* 音素タブ */}
             {activeTab === 'phoneme' && (
               <div className="space-y-3">
-                <h3 className="text-lg text-gray-300 mb-2">日本語音素</h3>
+                <div className="flex gap-2 mb-3">
+                  <button
+                    onClick={() => setPhonemeLanguage('jp')}
+                    className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
+                      phonemeLanguage === 'jp'
+                        ? 'bg-green-600 text-white shadow-lg'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    日本語音素
+                  </button>
+                  <button
+                    onClick={() => setPhonemeLanguage('en')}
+                    className={`px-3 py-1 rounded-md text-sm font-medium transition-all ${
+                      phonemeLanguage === 'en'
+                        ? 'bg-indigo-600 text-white shadow-lg'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    英語音素
+                  </button>
+                </div>
+                <h3 className="text-lg text-gray-300 mb-2">
+                  {phonemeLanguage === 'jp' ? '選択中: 日本語音素' : '選択中: 英語音素'}
+                </h3>
                 <div className="grid grid-cols-5 gap-3">
-                  {Object.entries(PHONEME_PRESETS).map(([key, preset]) => (
+                  {Object.entries(phonemePresets).map(([key, preset]) => (
                     <button
                       key={key}
                       onClick={() => applyPhoneme(key)}
@@ -991,7 +1026,9 @@ export default function FacialExpressionAnalyzer() {
                 <div className="mt-4 p-4 bg-gray-700 rounded-lg">
                   <p className="text-sm text-gray-300">
                     音素ボタンをクリックして、リップシンクの基本形を確認できます。
-                    これらは日本語の母音に対応した口の形です。
+                    {phonemeLanguage === 'jp'
+                      ? '日本語の母音に対応した口の形を素早く確認できます。'
+                      : '英語の音素に対応した口の形を素早く確認できます。'}
                   </p>
                 </div>
               </div>
