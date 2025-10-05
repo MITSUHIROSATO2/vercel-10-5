@@ -183,7 +183,7 @@ function AvatarModel({
   useEffect(() => {
     morphListUpdateRef.current = onMorphListUpdate;
   }, [onMorphListUpdate]);
-  const safeModelPath = encodeURI(modelPath);
+  const safeModelPath = modelPath.startsWith('http') ? modelPath : encodeURI(modelPath);
   const { scene } = useGLTF(safeModelPath);
 
   // モーフターゲットの初期化とテクスチャ適用
