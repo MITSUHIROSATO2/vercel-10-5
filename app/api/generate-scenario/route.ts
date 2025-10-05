@@ -60,7 +60,7 @@ export async function POST(request: Request) {
   "id": "unique_id_timestamp",
   "name": "シナリオ名",
   "basicInfo": {
-    "name": "患者氏名（例：田中 弘樹）",
+    "name": "患者氏名（ひらがなで記入、例：やまだ　たろう）",
     "age": "年齢（例：43歳）",
     "gender": "性別（例：男性）",
     "occupation": "職業（例：営業職）"
@@ -107,6 +107,7 @@ export async function POST(request: Request) {
 }
 
 リアルで具体的な内容を生成してください。各フィールドは適切な日本語で記入してください。
+重要：患者氏名は必ずひらがなで生成してください（例：やまだ　たろう、さとう　みちこ）。漢字は使用しないでください。
 specialCircumstancesは通常空欄のままにしてください。特別な配慮が必要な場合のみ記入してください。
 ` : `
 You are an expert in generating realistic patient scenarios for dental interview simulations.

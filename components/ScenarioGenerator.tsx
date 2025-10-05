@@ -21,7 +21,6 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
     { id: 'trauma', label: '外傷患者', icon: '🤕', description: '転倒や事故による歯の外傷を持つ患者' },
     { id: 'orthodontic', label: '矯正相談患者', icon: '😬', description: '歯並びや咬み合わせの改善を相談する患者' },
     { id: 'aesthetic', label: '審美希望患者', icon: '✨', description: '見た目の改善を希望する患者' },
-    { id: 'pediatric', label: '小児患者', icon: '👶', description: '歯科恐怖を持つ子供の患者' },
     { id: 'pregnant', label: '妊婦患者', icon: '🤰', description: '妊娠中の安全な歯科治療を希望する患者' },
     { id: 'implant', label: 'インプラント希望者', icon: '🔩', description: '欠損部位にインプラント治療を望む患者' },
     { id: 'maintenance', label: 'メンテナンス患者', icon: '🪥', description: '定期健診やクリーニングを希望する患者' },
@@ -35,7 +34,6 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
     { id: 'trauma', label: 'Trauma Patient', icon: '🤕', description: 'Patient with dental injury from accidents or sports' },
     { id: 'orthodontic', label: 'Orthodontic Patient', icon: '😬', description: 'Patient seeking alignment or bite correction' },
     { id: 'aesthetic', label: 'Aesthetic Patient', icon: '✨', description: 'Patient seeking cosmetic improvement' },
-    { id: 'pediatric', label: 'Pediatric Patient', icon: '👶', description: 'Child patient with dental anxiety' },
     { id: 'pregnant', label: 'Pregnant Patient', icon: '🤰', description: 'Expectant patient concerned about safe dental care' },
     { id: 'implant', label: 'Implant Patient', icon: '🔩', description: 'Patient considering implant restoration' },
     { id: 'maintenance', label: 'Maintenance Patient', icon: '🪥', description: 'Patient coming for recall checkups or cleaning' },
@@ -74,7 +72,7 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-slate-900 rounded-2xl max-w-3xl w-full border border-cyan-500/30">
+      <div className="bg-slate-900 rounded-2xl max-w-6xl w-full border border-cyan-500/30">
         {/* ヘッダー */}
         <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 p-6 border-b border-cyan-500/30">
           <div className="flex items-center justify-between">
@@ -112,7 +110,7 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
         {/* コンテンツ */}
         <div className="p-6">
           <h3 className="text-lg font-semibold text-cyan-400 mb-4">{language === 'ja' ? '生成タイプを選択' : 'Select Generation Type'}</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {themes.map(theme => (
               <button
                 key={theme.id}

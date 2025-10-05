@@ -81,16 +81,3 @@ export const demoDialogues: DemoDialogue[] = [
   { speaker: 'patient', text: 'はい、お願いします。', delay: 2000 },
 ];
 
-// ランダムな短縮版デモ（練習用）
-export const shortDemoDialogues: DemoDialogue[] = [
-  { speaker: 'doctor', text: 'こんにちは。今日はどうされましたか？', delay: 2500 },
-  { speaker: 'patient', text: '歯が痛くて来ました。', delay: 2000 },
-  { speaker: 'doctor', text: 'いつからですか？', delay: 2000 },
-  { speaker: 'patient', text: '3日前からです。', delay: 2000 },
-  { speaker: 'doctor', text: 'どんな時に痛みますか？', delay: 2000 },
-  { speaker: 'patient', text: '冷たいものを飲むと痛みます。', delay: 2500 },
-  { speaker: 'doctor', text: 'どのような痛みですか？', delay: 2000 },
-  { speaker: 'patient', text: 'ズキズキする痛みです。', delay: 2000 },
-  { speaker: 'doctor', text: 'わかりました。診察させていただきますね。', delay: 2500 },
-  { speaker: 'patient', text: 'お願いします。', delay: 2000 },
-];

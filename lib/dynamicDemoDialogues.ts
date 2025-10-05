@@ -55,13 +55,17 @@ const doctorQuestions = {
 
   // 心理社会的側面
   psychosocialTransition: '治療に関するご希望をお聞かせください。',
+  explanatoryModel: 'ご自身では、この症状の原因は何だと思われますか？',
+  visitReason: '今日、受診しようと思われたきっかけは何ですか？',
+  psychologicalStatus: '最近、ストレスや不安を感じることはありますか？',
   concerns: '治療について何か不安なことはありますか？',
   requests: '治療に関して特別なご希望はありますか？',
+  patientBackground: '通院の際、お仕事やご家庭の都合で気をつけることはありますか？',
 
   // まとめ
   summary: 'それでは、今日お聞きした内容を確認させていただきます。',
   additionalConcerns: '他に何か気になることや、お聞きしたいことはありますか？',
-  conclusion: '分かりました。これから診察させていただきますね。'
+  conclusion: 'わかりました。それでは診察させていただきますね。'
 };
 
 // シナリオに基づいて患者の応答を生成
@@ -71,7 +75,7 @@ export function generateDemoDialogues(scenario: PatientScenario, language: 'ja' 
   // ===== 導入 =====
   dialogues.push(
     { speaker: 'doctor', text: doctorQuestions.greeting, delay: 3000 },
-    { speaker: 'patient', text: 'こんにちは、よろしくお願いします。', delay: 2500 },
+    { speaker: 'patient', text: 'こんにちは。よろしくお願いします。', delay: 2500 },
 
     { speaker: 'doctor', text: doctorQuestions.nameConfirmation, delay: 2000 },
     { speaker: 'patient', text: `${scenario.basicInfo.name}です。`, delay: 2000 },
@@ -89,28 +93,28 @@ export function generateDemoDialogues(scenario: PatientScenario, language: 'ja' 
     { speaker: 'patient', text: `${scenario.chiefComplaint.complaint}で来ました。`, delay: 2500 },
 
     { speaker: 'doctor', text: doctorQuestions.sympathyAndDetail, delay: 3000 },
-    { speaker: 'patient', text: 'はい。', delay: 1500 }
+    { speaker: 'patient', text: generateOnsetDetail(scenario.presentIllness.trigger), delay: 3000 }
   );
 
   // ===== 現病歴（OPQRST）=====
   dialogues.push(
     { speaker: 'doctor', text: doctorQuestions.onset, delay: 2000 },
-    { speaker: 'patient', text: scenario.chiefComplaint.since, delay: 2000 },
+    { speaker: 'patient', text: `${scenario.chiefComplaint.since}からです。`, delay: 2000 },
 
     { speaker: 'doctor', text: doctorQuestions.trigger, delay: 2000 },
-    { speaker: 'patient', text: scenario.presentIllness.trigger || '特にきっかけはありません。', delay: 3000 },
-
-    { speaker: 'doctor', text: doctorQuestions.whenPain, delay: 2000 },
-    { speaker: 'patient', text: scenario.presentIllness.trigger || '噛むと痛みます。', delay: 2500 },
+    { speaker: 'patient', text: generatePainTrigger(scenario.presentIllness.trigger), delay: 2500 },
 
     { speaker: 'doctor', text: doctorQuestions.otherTriggers, delay: 2000 },
-    { speaker: 'patient', text: scenario.presentIllness.dailyImpact || '特にありません。', delay: 2500 },
+    { speaker: 'patient', text: generateAdditionalTrigger(scenario.presentIllness.trigger), delay: 2000 },
 
-    { speaker: 'doctor', text: doctorQuestions.quality, delay: 2500 },
-    { speaker: 'patient', text: scenario.presentIllness.nature, delay: 2500 },
+    { speaker: 'doctor', text: doctorQuestions.quality, delay: 2000 },
+    { speaker: 'patient', text: generatePainQuality(scenario.presentIllness.nature), delay: 2000 },
+
+    { speaker: 'doctor', text: 'もう少し詳しく教えてください。', delay: 2000 },
+    { speaker: 'patient', text: generateDetailedSymptom(scenario.presentIllness.nature), delay: 2500 },
 
     { speaker: 'doctor', text: doctorQuestions.location, delay: 2000 },
-    { speaker: 'patient', text: scenario.chiefComplaint.location, delay: 2000 },
+    { speaker: 'patient', text: `${scenario.chiefComplaint.location}です。`, delay: 2000 },
 
     { speaker: 'doctor', text: doctorQuestions.radiation, delay: 2000 },
     { speaker: 'patient', text: generateRadiation(scenario.chiefComplaint.location), delay: 2500 },
@@ -119,7 +123,7 @@ export function generateDemoDialogues(scenario: PatientScenario, language: 'ja' 
     { speaker: 'patient', text: generateSeverityResponse(scenario.presentIllness.severity), delay: 3000 },
 
     { speaker: 'doctor', text: doctorQuestions.medication, delay: 2000 },
-    { speaker: 'patient', text: scenario.presentIllness.medication || '特に使っていません。', delay: 3000 }
+    { speaker: 'patient', text: scenario.presentIllness.medication ? `${scenario.presentIllness.medication}を使っています。` : '今のところ、何も使っていません。', delay: 3000 }
   );
 
   // ===== 歯科的既往歴 =====
@@ -127,13 +131,13 @@ export function generateDemoDialogues(scenario: PatientScenario, language: 'ja' 
     { speaker: 'doctor', text: doctorQuestions.dentalTransition, delay: 2500 },
 
     { speaker: 'doctor', text: doctorQuestions.dentalHistory, delay: 2500 },
-    { speaker: 'patient', text: scenario.dentalHistory.extraction || 'ありません。', delay: 2500 },
+    { speaker: 'patient', text: scenario.dentalHistory.extraction ? `${scenario.dentalHistory.extraction}抜いたことがあります。` : '歯を抜いたことはありません。', delay: 2500 },
 
     { speaker: 'doctor', text: doctorQuestions.dentalProblems, delay: 2500 },
-    { speaker: 'patient', text: scenario.dentalHistory.complications || '特に問題ありませんでした。', delay: 2500 },
+    { speaker: 'patient', text: scenario.dentalHistory.complications ? `${scenario.dentalHistory.complications}がありました。` : '特にトラブルはなかったと思います。', delay: 2500 },
 
     { speaker: 'doctor', text: doctorQuestions.otherDentalHistory, delay: 2000 },
-    { speaker: 'patient', text: scenario.dentalHistory.anesthesia ? '虫歯の治療を受けたことがあります。' : '特にありません。', delay: 2000 }
+    { speaker: 'patient', text: scenario.dentalHistory.anesthesia ? '以前、虫歯の治療を何度か受けたことがあります。' : '他には特にありません。', delay: 2000 }
   );
 
   // ===== 全身的既往歴 =====
@@ -141,13 +145,13 @@ export function generateDemoDialogues(scenario: PatientScenario, language: 'ja' 
     { speaker: 'doctor', text: doctorQuestions.medicalTransition, delay: 3000 },
 
     { speaker: 'doctor', text: doctorQuestions.currentDiseases, delay: 2000 },
-    { speaker: 'patient', text: scenario.medicalHistory.systemicDisease || 'ありません。', delay: 2000 },
+    { speaker: 'patient', text: scenario.medicalHistory.systemicDisease ? `${scenario.medicalHistory.systemicDisease}があります。` : '特に病気はありません。', delay: 2000 },
 
     { speaker: 'doctor', text: doctorQuestions.currentMedications, delay: 2000 },
-    { speaker: 'patient', text: scenario.medicalHistory.currentMedication || '飲んでいません。', delay: 2500 },
+    { speaker: 'patient', text: scenario.medicalHistory.currentMedication ? `${scenario.medicalHistory.currentMedication}を服用しています。` : '現在、薬は飲んでいません。', delay: 2500 },
 
     { speaker: 'doctor', text: doctorQuestions.allergies, delay: 2000 },
-    { speaker: 'patient', text: scenario.medicalHistory.allergies || 'ありません。', delay: 2500 }
+    { speaker: 'patient', text: scenario.medicalHistory.allergies ? `${scenario.medicalHistory.allergies}にアレルギーがあります。` : 'アレルギーは特にありません。', delay: 2500 }
   );
 
   // 家族歴
@@ -161,7 +165,7 @@ export function generateDemoDialogues(scenario: PatientScenario, language: 'ja' 
     { speaker: 'doctor', text: doctorQuestions.lifestyleTransition, delay: 3000 },
 
     { speaker: 'doctor', text: doctorQuestions.brushingFrequency, delay: 2000 },
-    { speaker: 'patient', text: scenario.lifestyle.oralHygiene || '朝と夜の2回です。', delay: 2000 },
+    { speaker: 'patient', text: scenario.lifestyle.oralHygiene ? `${scenario.lifestyle.oralHygiene}磨いています。` : '朝と夜の2回、歯を磨いています。', delay: 2000 },
 
     { speaker: 'doctor', text: doctorQuestions.flossUsage, delay: 2500 },
     { speaker: 'patient', text: generateFlossUsage(scenario.lifestyle.oralHygiene), delay: 2000 },
@@ -188,21 +192,39 @@ export function generateDemoDialogues(scenario: PatientScenario, language: 'ja' 
   dialogues.push(
     { speaker: 'doctor', text: doctorQuestions.psychosocialTransition, delay: 3000 },
 
-    { speaker: 'doctor', text: doctorQuestions.concerns, delay: 2500 },
-    { speaker: 'patient', text: scenario.psychosocial.concerns || '特にありません。', delay: 2500 },
+    // 解釈モデル
+    { speaker: 'doctor', text: doctorQuestions.explanatoryModel, delay: 2500 },
+    { speaker: 'patient', text: generateExplanatoryModel(scenario.chiefComplaint.complaint), delay: 3000 },
 
+    // 来院動機
+    { speaker: 'doctor', text: doctorQuestions.visitReason, delay: 2500 },
+    { speaker: 'patient', text: generateVisitReason(scenario.presentIllness.severity), delay: 2500 },
+
+    // 心理的状況
+    { speaker: 'doctor', text: doctorQuestions.psychologicalStatus, delay: 2500 },
+    { speaker: 'patient', text: '仕事が忙しくて、少しストレスはあります。', delay: 2500 },
+
+    // 治療への不安
+    { speaker: 'doctor', text: doctorQuestions.concerns, delay: 2500 },
+    { speaker: 'patient', text: scenario.psychosocial.concerns ? `${scenario.psychosocial.concerns}が心配です。` : '治療の痛みがあるかどうかが少し心配です。', delay: 2500 },
+
+    // 治療への要望
     { speaker: 'doctor', text: doctorQuestions.requests, delay: 2500 },
-    { speaker: 'patient', text: scenario.psychosocial.requests || 'なるべく痛くない治療を希望します。', delay: 3000 }
+    { speaker: 'patient', text: scenario.psychosocial.requests ? `${scenario.psychosocial.requests}をお願いしたいです。` : 'できるだけ痛くない治療をお願いできればと思います。', delay: 3000 },
+
+    // 患者背景
+    { speaker: 'doctor', text: doctorQuestions.patientBackground, delay: 2500 },
+    { speaker: 'patient', text: '仕事がありますので、できれば平日の夕方以降が助かります。', delay: 3000 }
   );
 
   // ===== まとめ =====
   dialogues.push(
     { speaker: 'doctor', text: doctorQuestions.summary, delay: 3000 },
     { speaker: 'doctor', text: generateSummary(scenario), delay: 4000 },
-    { speaker: 'patient', text: 'はい、そうです。', delay: 2000 },
+    { speaker: 'patient', text: 'はい、その通りです。', delay: 2000 },
 
     { speaker: 'doctor', text: doctorQuestions.additionalConcerns, delay: 2500 },
-    { speaker: 'patient', text: '大丈夫です。', delay: 2000 },
+    { speaker: 'patient', text: '特に他には大丈夫です。', delay: 2000 },
 
     { speaker: 'doctor', text: doctorQuestions.conclusion, delay: 2500 }
   );
@@ -221,9 +243,9 @@ function generateBirthDate(age: string): string {
 
 function generateRadiation(location: string): string {
   if (location.includes('右')) {
-    return '右の頬や耳の方まで響きます。';
+    return '頬の方まで痛みが響きます。';
   } else if (location.includes('左')) {
-    return '左の頬や耳の方まで響きます。';
+    return '頬の方まで痛みが響きます。';
   } else if (location === '全体的') {
     return '特に広がりません。';
   }
@@ -233,7 +255,7 @@ function generateRadiation(location: string): string {
 function generateSeverityResponse(severity: string | undefined): string {
   if (!severity) return '7くらいです。';
   if (severity.includes('ロキソニン')) {
-    return '8くらいです。夜も眠れないほどです。';
+    return '8くらいです。夜も眠れないくらい痛いです。';
   }
   if (severity.includes('軽減')) {
     return '6くらいです。薬を飲めば楽になります。';
@@ -269,6 +291,25 @@ function generateSnacking(dietaryHabits: string | undefined): string {
     return '仕事中にお菓子をつまむことがあります。';
   }
   return 'ほとんどしません。';
+}
+
+function generateExplanatoryModel(complaint: string): string {
+  if (complaint.includes('痛')) {
+    return '虫歯が進行して神経まで達しているのかもしれません。';
+  } else if (complaint.includes('出血')) {
+    return '歯周病が進んでいるのではないかと思います。';
+  } else if (complaint.includes('腫')) {
+    return '膿が溜まっているのかもしれません。';
+  }
+  return '虫歯か歯周病だと思います。';
+}
+
+function generateVisitReason(severity: string | undefined): string {
+  if (!severity) return '症状が続いているので、心配になりました。';
+  if (severity.includes('夜も眠れない')) {
+    return '痛みで夜も眠れなくなったので、これは受診しないとと思いました。';
+  }
+  return '症状が続いていて、このままでは悪化すると思ったからです。';
 }
 
 function generateSmokingResponse(dietaryHabits: string | undefined): string {

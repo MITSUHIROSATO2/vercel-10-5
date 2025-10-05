@@ -5,7 +5,7 @@ export const patientScenarios: PatientScenario[] = [
     id: 'toothache-01',
     name: '急性歯痛の患者',
     basicInfo: {
-      name: '田中 弘樹',
+      name: 'やまだ　たろう',
       age: '43歳',
       gender: '男性',
       occupation: '営業職'
@@ -53,7 +53,7 @@ export const patientScenarios: PatientScenario[] = [
     id: 'periodontal-01',
     name: '歯周病の患者',
     basicInfo: {
-      name: '佐藤 美智子',
+      name: 'さとう　みちこ',
       age: '58歳',
       gender: '女性',
       occupation: '主婦'
@@ -101,7 +101,7 @@ export const patientScenarios: PatientScenario[] = [
     id: 'wisdom-tooth-01',
     name: '親知らずの痛み',
     basicInfo: {
-      name: '鈴木 健太',
+      name: 'すずき　けんた',
       age: '25歳',
       gender: '男性',
       occupation: 'IT企業勤務'

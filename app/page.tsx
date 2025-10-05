@@ -54,8 +54,8 @@ export default function Home() {
   const [latestResponse, setLatestResponse] = useState<string>('');
   const [selectedAvatar, setSelectedAvatar] = useState<'adult' | 'boy' | 'boy_improved' | 'female'>('boy');
   const [isAvatarLoaded, setIsAvatarLoaded] = useState(false);
-  const [language, setLanguage] = useState<'ja' | 'en'>('ja'); // 言語設定を追加
-  const languageRef = useRef<'ja' | 'en'>('ja'); // 最新の言語値を保持
+  const [language, setLanguage] = useState<'ja' | 'en'>('en'); // 言語設定を追加（デフォルトを英語に）
+  const languageRef = useRef<'ja' | 'en'>('en'); // 最新の言語値を保持
   
   // タイマー関連の状態
   const [interviewTime, setInterviewTime] = useState(0);
@@ -70,7 +70,7 @@ export default function Home() {
   const [currentDemoIndex, setCurrentDemoIndex] = useState(0);
   const [demoType, setDemoType] = useState<'full' | 'short'>('short');
   const [useImprovedDemo, setUseImprovedDemo] = useState(false); // 改善版を使うかどうか
-  const [demoLanguage, setDemoLanguage] = useState<'ja' | 'en'>('ja'); // デモ再生時の言語を保持
+  const [demoLanguage, setDemoLanguage] = useState<'ja' | 'en'>('en'); // デモ再生時の言語を保持（デフォルトを英語に）
   const demoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // デモ用の音声フック
@@ -748,19 +748,6 @@ export default function Home() {
                   <div className="absolute top-4 left-4 z-10 flex gap-2">
                     <button
                       onClick={() => {
-                        console.log('🇯🇵 Switching to Japanese (current:', language, ')');
-                        setLanguage('ja');
-                      }}
-                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
-                        language === 'ja'
-                          ? 'bg-blue-600 text-white shadow-lg'
-                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
-                      }`}
-                    >
-                      日本語版
-                    </button>
-                    <button
-                      onClick={() => {
                         console.log('🇬🇧 Switching to English (current:', language, ')');
                         setLanguage('en');
                       }}
@@ -771,6 +758,19 @@ export default function Home() {
                       }`}
                     >
                       ENGLISH VERSION
+                    </button>
+                    <button
+                      onClick={() => {
+                        console.log('🇯🇵 Switching to Japanese (current:', language, ')');
+                        setLanguage('ja');
+                      }}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                        language === 'ja'
+                          ? 'bg-blue-600 text-white shadow-lg'
+                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                      }`}
+                    >
+                      日本語版
                     </button>
                   </div>
                   {/* アバター選択ボタン - 右端 */}
@@ -805,7 +805,8 @@ export default function Home() {
                     >
                       {language === 'ja' ? '女性' : 'Female'}
                     </button>
-                    <button
+                    {/* 小児版ボタンを非表示 */}
+                    {/* <button
                       onClick={() => handleAvatarChange('boy_improved')}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                         selectedAvatar === 'boy_improved'
@@ -814,7 +815,7 @@ export default function Home() {
                       }`}
                     >
                       {language === 'ja' ? '小児' : 'Pediatric'}
-                    </button>
+                    </button> */}
                   </div>
                 </>
               )}

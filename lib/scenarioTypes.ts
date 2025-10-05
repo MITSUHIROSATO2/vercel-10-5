@@ -72,7 +72,7 @@ export const scenarioTemplates: Record<string, Partial<PatientScenario>> = {
   toothache: {
     name: '急性歯痛の患者',
     basicInfo: {
-      name: '田中 弘樹',
+      name: 'やまだ　たろう',
       age: '43歳',
       gender: '男性',
       occupation: '営業職'
