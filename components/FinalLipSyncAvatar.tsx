@@ -1507,11 +1507,11 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             mat.needsUpdate = true;
           } else if (matName.includes('nug_tongue')) {
             mat.color = new THREE.Color(0xbf5f70);
-            mat.roughness = 0.32;
+            mat.roughness = 0.15;
             mat.metalness = 0.0;
             if (mat.emissive) {
-              mat.emissive = new THREE.Color(0x6b1c2c);
-              mat.emissiveIntensity = 0.08;
+              mat.emissive = new THREE.Color(0xbf5f70);
+              mat.emissiveIntensity = 1.0;
             }
             mat.needsUpdate = true;
           }
@@ -1760,15 +1760,15 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
 
           case 'nug_tongue':
             mat.color = new THREE.Color(0xbf5f70);
-            mat.roughness = 0.32;
+            mat.roughness = 0.15;
             mat.metalness = 0.0;
             if (mat.emissive) {
-              mat.emissive = new THREE.Color(0x6b1c2c);
-              mat.emissiveIntensity = 0.08;
+              mat.emissive = new THREE.Color(0xbf5f70);
+              mat.emissiveIntensity = 1.0;
             }
             mat.transparent = false;
             mat.opacity = 1.0;
-            console.log(`  -> 舌: 暗めのピンク`);
+            console.log(`  -> 舌: 暗めのピンク (ライト影響なし)`);
             break;
 
           case 'nug_nails':
@@ -2160,11 +2160,11 @@ function AvatarModel({
                 mat.opacity = 1.0;
               } else if (matName.includes('std_tongue')) {
                 mat.color = new THREE.Color(0xb45b65);
-                mat.roughness = 0.42;
+                mat.roughness = 0.2;
                 mat.metalness = 0.02;
                 if (mat.emissive) {
-                  mat.emissive = new THREE.Color(0x6a1f2b);
-                  mat.emissiveIntensity = 0.12;
+                  mat.emissive = new THREE.Color(0xb45b65);
+                  mat.emissiveIntensity = 1.0;
                 }
                 mat.transparent = false;
                 mat.opacity = 1.0;
