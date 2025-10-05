@@ -44,57 +44,52 @@ export default function InterviewEvaluationComponent({
     if (!showAutoSuggestions || isEditMode) return;
 
     const conversationText = messages.map(m => m.content).join(' ').toLowerCase();
-    const newEvaluation = { ...evaluation };
 
-    // 挨拶のチェック
-    if (conversationText.includes('こんにちは') || conversationText.includes('よろしく')) {
-      const introItem = newEvaluation.categories.introduction.find(item => item.id === 'intro-1');
-      if (introItem) introItem.checked = true;
-    }
+    setEvaluation(prev => {
+      const newEvaluation = { ...prev };
 
-    // 主訴の確認
-    if (conversationText.includes('どうされました') || conversationText.includes('どうしました')) {
-      const chiefItem = newEvaluation.categories.medicalInfo.chiefComplaint.find(item => item.id === 'chief-1');
-      if (chiefItem) chiefItem.checked = true;
-    }
+      if (conversationText.includes('こんにちは') || conversationText.includes('よろしく')) {
+        const introItem = newEvaluation.categories.introduction.find(item => item.id === 'intro-1');
+        if (introItem) introItem.checked = true;
+      }
 
-    // 痛みの性状
-    if (conversationText.includes('どのような痛み') || conversationText.includes('どんな痛み')) {
-      const item = newEvaluation.categories.medicalInfo.chiefComplaint.find(item => item.id === 'chief-3');
-      if (item) item.checked = true;
-    }
+      if (conversationText.includes('どうされました') || conversationText.includes('どうしました')) {
+        const chiefItem = newEvaluation.categories.medicalInfo.chiefComplaint.find(item => item.id === 'chief-1');
+        if (chiefItem) chiefItem.checked = true;
+      }
 
-    // 発症時期
-    if (conversationText.includes('いつから')) {
-      const item = newEvaluation.categories.medicalInfo.chiefComplaint.find(item => item.id === 'chief-6');
-      if (item) item.checked = true;
-    }
+      if (conversationText.includes('どのような痛み') || conversationText.includes('どんな痛み')) {
+        const item = newEvaluation.categories.medicalInfo.chiefComplaint.find(item => item.id === 'chief-3');
+        if (item) item.checked = true;
+      }
 
-    // 既往歴
-    if (conversationText.includes('持病') || conversationText.includes('既往') || conversationText.includes('お体')) {
-      const item = newEvaluation.categories.medicalInfo.history.find(item => item.id === 'hist-3');
-      if (item) item.checked = true;
-    }
+      if (conversationText.includes('いつから')) {
+        const item = newEvaluation.categories.medicalInfo.chiefComplaint.find(item => item.id === 'chief-6');
+        if (item) item.checked = true;
+      }
 
-    // アレルギー
-    if (conversationText.includes('アレルギー')) {
-      const item = newEvaluation.categories.medicalInfo.history.find(item => item.id === 'hist-5');
-      if (item) item.checked = true;
-    }
+      if (conversationText.includes('持病') || conversationText.includes('既往') || conversationText.includes('お体')) {
+        const item = newEvaluation.categories.medicalInfo.history.find(item => item.id === 'hist-3');
+        if (item) item.checked = true;
+      }
 
-    // 要約・確認
-    if (conversationText.includes('まとめ') || conversationText.includes('確認')) {
-      const item = newEvaluation.categories.closing.find(item => item.id === 'close-1');
-      if (item) item.checked = true;
-    }
+      if (conversationText.includes('アレルギー')) {
+        const item = newEvaluation.categories.medicalInfo.history.find(item => item.id === 'hist-5');
+        if (item) item.checked = true;
+      }
 
-    // 言い忘れ
-    if (conversationText.includes('言い忘れ') || conversationText.includes('他に') || conversationText.includes('ほかに')) {
-      const item = newEvaluation.categories.closing.find(item => item.id === 'close-2');
-      if (item) item.checked = true;
-    }
+      if (conversationText.includes('まとめ') || conversationText.includes('確認')) {
+        const item = newEvaluation.categories.closing.find(item => item.id === 'close-1');
+        if (item) item.checked = true;
+      }
 
-    setEvaluation(newEvaluation);
+      if (conversationText.includes('言い忘れ') || conversationText.includes('他に') || conversationText.includes('ほかに')) {
+        const item = newEvaluation.categories.closing.find(item => item.id === 'close-2');
+        if (item) item.checked = true;
+      }
+
+      return newEvaluation;
+    });
   }, [messages, showAutoSuggestions, isEditMode]);
 
   const handleItemToggle = (category: string, subcategory: string | null, itemId: string) => {

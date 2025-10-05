@@ -325,7 +325,7 @@ export function blendVisemes(
   const blended: { [key: string]: number } = {};
 
   // Blend all morph targets
-  const allKeys = new Set([...Object.keys(fromMorphs), ...Object.keys(toMorphs)]);
+  const allKeys: string[] = Array.from(new Set([...Object.keys(fromMorphs), ...Object.keys(toMorphs)]));
 
   for (const key of allKeys) {
     const fromValue = fromMorphs[key] || 0;
@@ -364,9 +364,11 @@ function getVisemeMorphTargets(viseme: string): { [key: string]: number } {
   return visemeMap[viseme] || visemeMap['neutral'];
 }
 
-export default {
+const improvedEnglishLipSync = {
   estimateWordTimings,
   getCurrentPhoneme,
   preprocessTextForTiming,
   blendVisemes
 };
+
+export default improvedEnglishLipSync;

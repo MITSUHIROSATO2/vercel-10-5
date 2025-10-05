@@ -120,10 +120,10 @@ export default function PatientInfoModal({ scenario, language, onClose }: Patien
                   <p className="text-white mt-1 text-base">{translatedScenario.medicalHistory.allergies}</p>
                 </div>
               )}
-              {translatedScenario.medicalHistory.medications && (
+              {translatedScenario.medicalHistory.currentMedication && (
                 <div>
                   <span className="text-gray-400">{language === 'ja' ? '服用薬' : 'Medications'}</span>
-                  <p className="text-white mt-1 text-base">{translatedScenario.medicalHistory.medications}</p>
+                  <p className="text-white mt-1 text-base">{translatedScenario.medicalHistory.currentMedication}</p>
                 </div>
               )}
             </div>
@@ -140,10 +140,10 @@ export default function PatientInfoModal({ scenario, language, onClose }: Patien
                 <span className="text-gray-400">{language === 'ja' ? '懸念事項' : 'Concerns'}</span>
                 <p className="text-white mt-1 text-base">{translatedScenario.psychosocial.concerns}</p>
               </div>
-              {translatedScenario.psychosocial.expectations && (
+              {translatedScenario.psychosocial.requests && (
                 <div>
-                  <span className="text-gray-400">{language === 'ja' ? '期待' : 'Expectations'}</span>
-                  <p className="text-white mt-1 text-base">{translatedScenario.psychosocial.expectations}</p>
+                  <span className="text-gray-400">{language === 'ja' ? '要望' : 'Requests'}</span>
+                  <p className="text-white mt-1 text-base">{translatedScenario.psychosocial.requests}</p>
                 </div>
               )}
             </div>

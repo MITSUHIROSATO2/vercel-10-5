@@ -178,6 +178,11 @@ function AvatarModel({
 }) {
   const group = useRef<THREE.Group>(null);
   const [morphTargets, setMorphTargets] = useState<any[]>([]);
+  const morphListUpdateRef = useRef(onMorphListUpdate);
+  
+  useEffect(() => {
+    morphListUpdateRef.current = onMorphListUpdate;
+  }, [onMorphListUpdate]);
   const safeModelPath = encodeURI(modelPath);
   const { scene } = useGLTF(safeModelPath);
 
@@ -349,8 +354,9 @@ function AvatarModel({
     console.log('利用可能なモーフ総数:', allMorphNames.size);
     
     // 親コンポーネントに利用可能なモーフリストを通知
-    if (onMorphListUpdate) {
-      onMorphListUpdate(Array.from(allMorphNames).sort());
+    const notifyMorphList = morphListUpdateRef.current;
+    if (notifyMorphList) {
+      notifyMorphList(Array.from(allMorphNames).sort());
     }
     
     // 少年アバターの詳細分析（目のメッシュに特化）
@@ -674,39 +680,6 @@ export default function FacialExpressionAnalyzer() {
     URL.revokeObjectURL(url);
 
     console.log('✅ マテリアル情報をJSONファイルとして出力しました');
-  };
-
-  const exportMeshInfoToJSON = () => {
-    const meshInfo = (window as any).femaleAvatarMeshInfo;
-    if (!meshInfo) {
-      alert('メッシュ情報を読み込んでください');
-      return;
-    }
-
-    const exportData = {
-      timestamp: new Date().toISOString(),
-      avatar: selectedAvatar,
-      modelPath: modelPath,
-      meshCount: meshInfo.length,
-      meshes: meshInfo,
-      summary: {
-        totalMeshes: meshInfo.length,
-        meshesWithMorphTargets: meshInfo.filter((m: any) => m.hasMorphTargets).length,
-        totalVertices: meshInfo.reduce((sum: number, m: any) => sum + m.vertexCount, 0),
-        uniqueMaterials: Array.from(new Set(meshInfo.map((m: any) => m.materialName))),
-        allMorphTargets: Array.from(new Set(meshInfo.flatMap((m: any) => m.morphTargets || [])))
-      }
-    };
-
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `mesh_info_${selectedAvatar}_${Date.now()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
   };
 
   const exportBoyAvatarAnalysis = () => {

@@ -3,6 +3,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { convertTextForSpeech } from '@/lib/kuromojiConverter';
 
 export async function GET(request: NextRequest) {
+  const token = process.env.TEST_API_TOKEN;
+
+  if (!token) {
+    return NextResponse.json({ error: 'Test endpoint disabled' }, { status: 503 });
+  }
+
+  const authorization = request.headers.get('authorization') || '';
+  const providedToken = authorization.startsWith('Bearer ')
+    ? authorization.slice('Bearer '.length)
+    : null;
+
+  if (!providedToken || providedToken !== token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const testPhrases = [
     "食事中に痛みがあります。",
     "食事の時に痛いです。",

@@ -1406,8 +1406,6 @@ const JapaneseCharToViseme: Record<string, string> = {
   'ん': 'ja_nasal', 'ン': 'ja_nasal',
   'ゃ': 'ja_semivowel', 'ゅ': 'ja_semivowel', 'ょ': 'ja_semivowel',
   'ャ': 'ja_semivowel', 'ュ': 'ja_semivowel', 'ョ': 'ja_semivowel',
-  'ぁ': 'ja_vowel_a', 'ぃ': 'ja_vowel_i', 'ぅ': 'ja_vowel_u', 'ぇ': 'ja_vowel_e', 'ぉ': 'ja_vowel_o',
-  'ァ': 'ja_vowel_a', 'ィ': 'ja_vowel_i', 'ゥ': 'ja_vowel_u', 'ェ': 'ja_vowel_e', 'ォ': 'ja_vowel_o',
   'っ': 'ja_hold', 'ッ': 'ja_hold',
   'ー': 'neutral',
 };
@@ -1459,9 +1457,10 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
     return false;
   }
 
+  const originalVisibility = scene.visible;
+  const hiddenOralMeshes: THREE.Object3D[] = [];
+
   try {
-    const originalVisibility = scene.visible;
-    const hiddenOralMeshes: any[] = [];
     const hideOralMesh = (mesh: any) => {
       if (!mesh) return;
       if (!hiddenOralMeshes.includes(mesh)) {
@@ -1944,8 +1943,8 @@ function AvatarModel({
   isSpeaking, 
   audioLevel = 0, 
   currentWord = '', 
-  currentPhoneme = '',
-  speechProgress = 0,
+  currentPhoneme: _currentPhoneme = '',
+  speechProgress: _speechProgress = 0,
   audioData,
   audioFrequency = 0,
   onLoaded,
@@ -2847,9 +2846,6 @@ function AvatarModel({
       const amplification = Math.min((smoothedAudioLevel.current || audioLevel || 0.5) * 1.5, 1.2);
       
       
-      // 直接適用（補間なし）
-      const lerpSpeed = 1.0; // 補間なしで即座に適用
-      
       // ボーン制御は使用しない - モーフターゲットのみで制御
       /*
       // CC_Base_Tongue01（舌の根元）- Y軸の移動のみ
@@ -3476,8 +3472,8 @@ function FinalLipSyncAvatarComponent({
   isSpeaking = false,
   audioLevel = 0,
   currentWord = '',
-  currentPhoneme = '',
-  speechProgress = 0,
+  currentPhoneme: _currentPhoneme = '',
+  speechProgress: _speechProgress = 0,
   showDebug = false,
   audioData,
   audioFrequency = 0,
@@ -3534,7 +3530,6 @@ function FinalLipSyncAvatarComponent({
     modelPath.includes('ClassicMan-3のコピー');
   const isBoyModel = !isBoyImprovedModel && (decodedModelPath.includes('少年アバター') || modelPath.includes('ClassicMan') || modelPath.includes('BOY_4'));
   const isAdultImprovedModel = decodedModelPath.includes('成人男性改');
-  const isAdultModel = !isAdultImprovedModel && (decodedModelPath.includes('成人男性') || modelPath.includes('man-grey-suit'));
   const isChildModel = decodedModelPath.includes('Baby main') || decodedModelPath.includes('baby') || modelPath.includes('Baby%20main');
   const pathSuggestsFemale =
     modelPath.includes('Hayden') ||
@@ -3682,8 +3677,8 @@ function FinalLipSyncAvatarComponent({
               isSpeaking={isSpeaking} 
               audioLevel={audioLevel}
               currentWord={currentWord}
-              currentPhoneme={currentPhoneme}
-              speechProgress={speechProgress}
+              currentPhoneme={_currentPhoneme}
+              speechProgress={_speechProgress}
               audioData={audioData}
               audioFrequency={audioFrequency}
               onLoaded={handleModelLoaded}

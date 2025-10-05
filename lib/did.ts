@@ -1,4 +1,4 @@
-const DID_API_KEY = process.env.NEXT_PUBLIC_DID_API_KEY;
+const DID_API_KEY = process.env.DID_API_KEY || process.env.NEXT_PUBLIC_DID_API_KEY;
 const DID_API_URL = 'https://api.d-id.com';
 
 export interface TalkResponse {

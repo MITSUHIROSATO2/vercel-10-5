@@ -108,7 +108,6 @@ function translateScenarioToEnglish(scenario: string): string {
     '右下6番': 'lower right 6th tooth',
     '左上6番': 'upper left 6th tooth',
     '左下6番': 'lower left 6th tooth',
-    '前歯': 'front teeth',
     '奥歯全体': 'all back teeth',
     '1ヶ月前から': 'since a month ago',
     '3ヶ月前から': 'since 3 months ago',

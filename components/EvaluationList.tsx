@@ -408,7 +408,7 @@ export default function EvaluationList({
         })
       );
 
-      evaluation.conversationLog.forEach((msg, index) => {
+      evaluation.conversationLog.forEach((msg) => {
         const roleLabel = msg.role === 'student'
           ? (language === 'ja' ? '学生' : 'Student')
           : (language === 'ja' ? '患者' : 'Patient');

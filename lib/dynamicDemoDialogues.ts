@@ -69,7 +69,7 @@ const doctorQuestions = {
 };
 
 // シナリオに基づいて患者の応答を生成
-export function generateDemoDialogues(scenario: PatientScenario, language: 'ja' | 'en' = 'ja'): DemoDialogue[] {
+export function generateDemoDialogues(scenario: PatientScenario, _language: 'ja' | 'en' = 'ja'): DemoDialogue[] {
   const dialogues: DemoDialogue[] = [];
 
   // ===== 導入 =====
@@ -379,6 +379,8 @@ function generateDetailedSymptom(nature: string): string {
   return '持続的で鈍い痛みです。';
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 function generateDetailedSeverity(severity: string | undefined): string {
   if (!severity) return '7くらいです。日常生活に支障があります。';
   if (severity.includes('ロキソニン')) {
@@ -514,8 +516,10 @@ function generateAdditionalConcern(complaint: string): string {
   return '特にありません。';
 }
 
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
 // 英語版の対話生成（通常版 - 40対話）
-export function generateDemoDialoguesEnglish(scenario: PatientScenario): DemoDialogue[] {
+export function generateDemoDialoguesEnglish(_scenario: PatientScenario): DemoDialogue[] {
   const dialogues: DemoDialogue[] = [];
 
   // ===== Introduction =====
@@ -621,4 +625,3 @@ export function generateDemoDialoguesEnglish(scenario: PatientScenario): DemoDia
 
   return dialogues;
 }
-

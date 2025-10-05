@@ -222,8 +222,7 @@ const LETTER_TO_PHONEME_RULES: { [pattern: string]: string[] } = {
   'ow': ['OW'],
   'oy': ['OY'],
   'u': ['AH'],
-  'ue': ['UW'],
-  'y': ['IY'] // when used as vowel
+  'ue': ['UW']
 };
 
 // Convert text to phoneme sequence
@@ -302,6 +301,11 @@ function convertWordToPhonemes(word: string): PhonemeSequence[] {
             phoneme: p,
             duration: isVowelPhoneme(p) ? 0.6 : 0.4
           });
+        });
+      } else if (letter === 'y' && i === word.length - 1) {
+        phonemes.push({
+          phoneme: 'IY',
+          duration: 0.6
         });
       } else {
         // Default to neutral vowel for unknown
@@ -404,9 +408,9 @@ export function phonemeToViseme(phoneme: string): string {
 
 // Calculate smooth transition between visemes
 export function calculateVisemeBlend(
-  fromViseme: string,
-  toViseme: string,
-  progress: number
+  _fromViseme: string,
+  _toViseme: string,
+  _progress: number
 ): { [morphTarget: string]: number } {
   // This would return interpolated morph target values
   // Implementation depends on your morph target structure
@@ -414,8 +418,10 @@ export function calculateVisemeBlend(
 }
 
 // Export for use in components
-export default {
+const englishPhonemeConverter = {
   textToPhonemes,
   phonemeToViseme,
   calculateVisemeBlend
 };
+
+export default englishPhonemeConverter;

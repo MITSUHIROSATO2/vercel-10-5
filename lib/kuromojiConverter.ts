@@ -344,6 +344,7 @@ export async function convertTextForSpeech(text: string): Promise<string> {
     // クライアントサイドではフォールバックを使用
     return convertKanjiToHiraganaFallback(text);
   } catch (error) {
+    console.warn('convertTextForSpeech fallback due to error:', error);
     // エラー時はフォールバック
     return convertKanjiToHiraganaFallback(text);
   }

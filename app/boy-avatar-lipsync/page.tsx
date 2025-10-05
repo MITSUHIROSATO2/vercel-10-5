@@ -10,16 +10,13 @@ function BoyAvatarWithLipSync({ isSpeaking }: { isSpeaking: boolean }) {
   const { scene } = useGLTF('/models/BOY_4.glb');
   const meshRef = useRef<THREE.Mesh>(null);
   const originalGeometry = useRef<THREE.BufferGeometry | null>(null);
-  const [meshInfo, setMeshInfo] = useState<any>(null);
   
   useEffect(() => {
     if (!scene) return;
     
     // モデル構造を分析
-    let mainMesh: THREE.Mesh | null = null;
     scene.traverse((child: any) => {
       if (child.isMesh) {
-        mainMesh = child;
         meshRef.current = child;
         
         // オリジナルのジオメトリを保存
@@ -48,7 +45,6 @@ function BoyAvatarWithLipSync({ isSpeaking }: { isSpeaking: boolean }) {
             };
           }
           
-          setMeshInfo(info);
           console.log('Boy Avatar Mesh Info:', info);
         }
       }

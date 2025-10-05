@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generatePatientResponse, PatientMessage } from '@/lib/openai';
+import { generatePatientResponse } from '@/lib/openai';
 import { getRandomMockResponse } from '@/lib/mockResponses';
 
 export async function POST(request: NextRequest) {
@@ -18,35 +18,48 @@ export async function POST(request: NextRequest) {
 
     // Check if API key is configured
     const apiKey = process.env.OPENAI_API_KEY;
-    console.log('Environment check:');
-    console.log('- NODE_ENV:', process.env.NODE_ENV);
-    console.log('- API Key exists:', !!apiKey);
-    console.log('- API Key length:', apiKey?.length);
-    console.log('- API Key starts with:', apiKey?.substring(0, 7) + '...');
-    console.log('- Is dummy key:', apiKey === 'dummy-key-for-build');
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    if (!isProduction) {
+      console.log('Environment check:');
+      console.log('- NODE_ENV:', process.env.NODE_ENV);
+      console.log('- API Key configured:', !!apiKey);
+      console.log('- Using dummy key:', apiKey === 'dummy-key-for-build');
+    }
     
     if (!apiKey || apiKey === 'your_openai_api_key_here' || apiKey === 'dummy-key-for-build') {
-      console.log('No valid API key found, using mock response');
-      console.log('Reason: ', !apiKey ? 'No key' : apiKey === 'dummy-key-for-build' ? 'Dummy key' : 'Placeholder key');
+      if (!isProduction) {
+        console.log('No valid API key found, using mock response');
+        console.log('Reason: ', !apiKey ? 'No key' : apiKey === 'dummy-key-for-build' ? 'Dummy key' : 'Placeholder key');
+      }
       const mockResponse = getRandomMockResponse(language);
       return NextResponse.json({ response: mockResponse });
     }
 
     try {
-      console.log('Calling OpenAI API...');
+      if (!isProduction) {
+        console.log('Calling OpenAI API...');
+      }
       const response = await generatePatientResponse(messages, patientScenario, language);
-      console.log('OpenAI API response received:', response?.substring(0, 50) + '...');
+      if (!isProduction) {
+        console.log('OpenAI API response received');
+      }
       return NextResponse.json({ response });
     } catch (apiError: any) {
-      console.error('OpenAI API Error Details:');
-      console.error('Error message:', apiError?.message);
-      console.error('Error response:', apiError?.response?.data);
-      console.error('Error status:', apiError?.response?.status);
-      console.error('Full error:', JSON.stringify(apiError, null, 2));
-      
+      if (!isProduction) {
+        console.error('OpenAI API Error Details:');
+        console.error('Error message:', apiError?.message);
+        console.error('Error response:', apiError?.response?.data);
+        console.error('Error status:', apiError?.response?.status);
+      } else {
+        console.error('OpenAI API request failed');
+      }
+
       // If API fails, fall back to mock response
       const mockResponse = getRandomMockResponse();
-      console.log('Falling back to mock response:', mockResponse);
+      if (!isProduction) {
+        console.log('Falling back to mock response');
+      }
       return NextResponse.json({ response: mockResponse });
     }
   } catch (error) {

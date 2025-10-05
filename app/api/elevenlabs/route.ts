@@ -100,7 +100,14 @@ function convertDynamicDates(text: string): string {
 }
 
 export async function POST(request: NextRequest) {
-  console.log('ElevenLabs API called');
+  const isProduction = process.env.NODE_ENV === 'production';
+  const debugLog = (...args: unknown[]) => {
+    if (!isProduction) {
+      console.log(...args);
+    }
+  };
+
+  debugLog('ElevenLabs API called');
   
   try {
     const { text, emotion = 'neutral', voiceId, voiceRole, language = 'ja' } = await request.json();
@@ -119,21 +126,24 @@ export async function POST(request: NextRequest) {
       doctor: ELEVENLABS_VOICE_DOCTOR,
     };
 
-    let selectedVoiceId = voiceId || (voiceRole ? voiceRoleMap[voiceRole] : undefined) || ELEVENLABS_VOICE_ID;
+    const selectedVoiceId = voiceId || (voiceRole ? voiceRoleMap[voiceRole] : undefined) || ELEVENLABS_VOICE_ID;
 
     if (!ELEVENLABS_API_KEY || !selectedVoiceId) {
-      console.error('ElevenLabs configuration check:');
-      console.error('- API Key exists:', !!ELEVENLABS_API_KEY);
-      console.error('- API Key length:', ELEVENLABS_API_KEY?.length);
-      console.error('- Voice ID exists:', !!selectedVoiceId);
-      console.error('- Voice Role:', voiceRole);
+      if (!isProduction) {
+        console.error('ElevenLabs configuration check:');
+        console.error('- API Key exists:', !!ELEVENLABS_API_KEY);
+        console.error('- Voice ID exists:', !!selectedVoiceId);
+        console.error('- Voice Role:', voiceRole);
+      } else {
+        console.error('ElevenLabs API configuration missing');
+      }
       return NextResponse.json(
         { error: 'ElevenLabs APIが設定されていません' },
         { status: 500 }
       );
     }
 
-    console.log(`🎙️ Voice role: ${voiceRole ?? 'default'} (resolved=${selectedVoiceId ? 'yes' : 'no'})`);
+    debugLog(`🎙️ Voice role: ${voiceRole ?? 'default'} (resolved=${selectedVoiceId ? 'yes' : 'no'})`);
 
     // 辞書ベースでテキストを音声用に変換
     let processedTextForTTS: string = text;
@@ -141,13 +151,13 @@ export async function POST(request: NextRequest) {
     // テキストの正規化（不要なスペースを削除）
     processedTextForTTS = processedTextForTTS.trim().replace(/　+/g, ' ').replace(/ +/g, ' ');
 
-    console.log(`🌐 Language: ${language}, Original text: "${text.substring(0, 50)}..."`);
+    debugLog(`🌐 Language: ${language}`);
 
     // 日本語の場合のみ医療辞書による変換を行う
     if (language === 'ja') {
       // 3日前の変換前のテキストを確認
-      if (processedTextForTTS.includes('3日')) {
-        console.log(`Text before conversion contains '3日': "${processedTextForTTS}"`);
+      if (!isProduction && processedTextForTTS.includes('3日')) {
+        console.log("Text before conversion contains '3日'");
       }
 
       // 包括的な医療辞書を使用して変換
@@ -155,8 +165,7 @@ export async function POST(request: NextRequest) {
       const sortedWords = Object.entries(medicalDictionary)
         .sort((a, b) => b[0].length - a[0].length);
     
-    // 生年月日の変換をデバッグ
-    if (processedTextForTTS.includes('生年月日')) {
+    if (!isProduction && processedTextForTTS.includes('生年月日')) {
       console.log('生年月日 found in text before conversion');
     }
     
@@ -168,27 +177,25 @@ export async function POST(request: NextRequest) {
       processedTextForTTS = processedTextForTTS.replace(new RegExp(escapedKanji, 'g'), hiragana);
 
       // 生年月日の変換をログ
-      if (kanji === '生年月日' && beforeReplace !== processedTextForTTS) {
+      if (!isProduction && kanji === '生年月日' && beforeReplace !== processedTextForTTS) {
         console.log(`Successfully replaced '生年月日' with 'せいねんがっぴ'`);
       }
 
       // 3日前の変換をデバッグ
-      if ((kanji.includes('3日') || kanji === '3日') && beforeReplace !== processedTextForTTS) {
-        console.log(`Replaced '${kanji}' with '${hiragana}' - Before: "${beforeReplace}" After: "${processedTextForTTS}"`);
+      if (!isProduction && (kanji.includes('3日') || kanji === '3日') && beforeReplace !== processedTextForTTS) {
+        console.log(`Replaced '${kanji}' with '${hiragana}'`);
       }
     }
 
     // 年月日の動的変換（辞書にない日付も処理）
     processedTextForTTS = convertDynamicDates(processedTextForTTS);
 
-      // 変換後の生年月日を確認
-      if (processedTextForTTS.includes('せいねんがっぴ')) {
+      if (!isProduction && processedTextForTTS.includes('せいねんがっぴ')) {
         console.log('せいねんがっぴ found in text after conversion');
       }
 
-      // 変換後の3日の最終結果を確認
-      if (text.includes('3日')) {
-        console.log(`Final converted text for ElevenLabs: "${processedTextForTTS}"`);
+      if (!isProduction && text.includes('3日')) {
+        console.log('Final converted text for ElevenLabs generated');
       }
     } // language === 'ja' の終了
     
@@ -454,8 +461,8 @@ export async function POST(request: NextRequest) {
       .replace(/(\d+)秒/g, '$1びょう');
     */
     
-    console.log('Original text:', text);
-    console.log('Processed for TTS (Dictionary):', processedTextForTTS);
+    debugLog('Original text received for TTS processing');
+    debugLog('Processed for TTS (Dictionary).');
 
     // 言語と感情に応じたvoice_settingsを設定
     let voiceSettings: any = language === 'ja' ? {
@@ -552,9 +559,9 @@ export async function POST(request: NextRequest) {
     voiceSettings.similarity_boost = Math.max(0, Math.min(1, voiceSettings.similarity_boost));
     voiceSettings.style = Math.max(0, Math.min(1, voiceSettings.style));
 
-    console.log(`Generating speech with emotion: ${emotion}`);
-    console.log('Voice settings:', JSON.stringify(voiceSettings, null, 2));
-    console.log('Final text to ElevenLabs:', processedText);
+    debugLog(`Generating speech with emotion: ${emotion}`);
+    debugLog('Voice settings configured');
+    debugLog('Final text prepared for ElevenLabs');
 
     // ElevenLabs API呼び出し（ひらがなテキストを使用）
     const response = await fetch(
@@ -578,7 +585,11 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('ElevenLabs API Error:', response.status, errorText);
+      if (!isProduction) {
+        console.error('ElevenLabs API Error:', response.status, errorText);
+      } else {
+        console.error('ElevenLabs API Error:', response.status);
+      }
       return NextResponse.json(
         { error: `音声生成エラー: ${response.status}` },
         { status: response.status }
@@ -589,15 +600,19 @@ export async function POST(request: NextRequest) {
     const audioBuffer = await response.arrayBuffer();
     const audioBase64 = Buffer.from(audioBuffer).toString('base64');
     
-    console.log('Speech generated successfully');
-    
+    debugLog('Speech generated successfully');
+
     return NextResponse.json({ 
       audio: audioBase64,
       format: 'mp3'
     });
-    
+
   } catch (error) {
-    console.error('ElevenLabs API Error:', error);
+    if (!isProduction) {
+      console.error('ElevenLabs API Error:', error);
+    } else {
+      console.error('ElevenLabs API Error occurred');
+    }
     return NextResponse.json(
       { error: 'エラーが発生しました' },
       { status: 500 }

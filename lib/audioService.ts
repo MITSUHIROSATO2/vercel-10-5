@@ -77,7 +77,6 @@ class AudioService {
     // 実際の発話速度に近づけるため、文字ごとの時間を調整
     // 日本語の平均発話速度: 約5-7音節/秒
     const charDuration = Math.max(80, Math.min(200, duration / characters.length));
-    let lastCharTime = Date.now();
     let currentChar = '';
     let targetAudioLevel = 0;
     let currentAudioLevel = 0;
@@ -290,7 +289,7 @@ class AudioService {
 
   // 統一された音声再生メソッド
   async playAudio(options: AudioPlaybackOptions): Promise<void> {
-    const { text, base64Audio, onProgress, onEnd, enableRealTimeAnalysis = false } = options;
+    const { text, base64Audio, onProgress, onEnd } = options;
 
     return new Promise((resolve, reject) => {
       try {

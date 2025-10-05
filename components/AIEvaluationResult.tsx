@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { PatientMessage } from '@/lib/openai';
 
 interface AIEvaluationResultProps {
@@ -54,15 +54,7 @@ export default function AIEvaluationResult({
   const [showScenarioSelector, setShowScenarioSelector] = useState(false);
   const [hasEvaluated, setHasEvaluated] = useState(false);
 
-  useEffect(() => {
-    // 既に評価済みの場合は実行しない
-    if (!hasEvaluated) {
-      generateEvaluation();
-      setHasEvaluated(true);
-    }
-  }, [hasEvaluated]);
-
-  const generateEvaluation = async () => {
+  const generateEvaluation = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     
@@ -210,7 +202,7 @@ export default function AIEvaluationResult({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [language, messages, onSave, scenarioId]);
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-400';
@@ -232,6 +224,13 @@ export default function AIEvaluationResult({
     { id: 'details', label: language === 'ja' ? '詳細項目' : 'Detailed Items', icon: '📋' },
     { id: 'feedback', label: language === 'ja' ? 'フィードバック' : 'Feedback', icon: '💬' },
   ];
+
+  useEffect(() => {
+    if (!hasEvaluated) {
+      generateEvaluation();
+      setHasEvaluated(true);
+    }
+  }, [generateEvaluation, hasEvaluated]);
 
   const categoryLabels: { [key: string]: { ja: string; en: string } } = {
     procedure: { ja: '手順・手続き', en: 'Procedure' },

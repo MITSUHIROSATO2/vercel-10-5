@@ -99,7 +99,9 @@ export async function applyBoyAvatarTexturesWithReplacement(scene: THREE.Object3
         const matName = material.name?.toLowerCase() || '';
         
         if (enableLogging) {
-          console.log(`  マテリアル: ${material.name}, morphTargets: ${mat.morphTargets}, morphNormals: ${mat.morphNormals}`);
+          const morphTargetsInfo = (mat as any).morphTargets ?? 'n/a';
+          const morphNormalsInfo = (mat as any).morphNormals ?? 'n/a';
+          console.log(`  マテリアル: ${material.name}, morphTargets: ${morphTargetsInfo}, morphNormals: ${morphNormalsInfo}`);
         }
         
         // 頂点カラーを無効化

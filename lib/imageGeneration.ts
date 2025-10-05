@@ -1,6 +1,6 @@
 // DALL-E機能は現在無効化されています
 // サーバーサイドAPIルートで使用する場合は、別ファイルに移動してください
-export async function generatePatientAvatar(scenario: {
+export async function generatePatientAvatar(_scenario: {
   age?: string;
   gender?: string;
   symptoms?: string;

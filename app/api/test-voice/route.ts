@@ -5,11 +5,29 @@ const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID;
 
 export async function GET(request: NextRequest) {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const token = process.env.TEST_API_TOKEN;
+
+  if (!token) {
+    return NextResponse.json({ error: 'Test endpoint disabled' }, { status: 503 });
+  }
+
+  const authorization = request.headers.get('authorization') || '';
+  const providedToken = authorization.startsWith('Bearer ')
+    ? authorization.slice('Bearer '.length)
+    : null;
+
+  if (!providedToken || providedToken !== token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const testText = "こんにちは、今日はどうされましたか？";
   
-  console.log('Testing voice output...');
-  console.log('API Key exists:', !!ELEVENLABS_API_KEY);
-  console.log('Voice ID exists:', !!ELEVENLABS_VOICE_ID);
+  if (!isProduction) {
+    console.log('Testing voice output...');
+    console.log('API Key exists:', !!ELEVENLABS_API_KEY);
+    console.log('Voice ID exists:', !!ELEVENLABS_VOICE_ID);
+  }
   
   if (!ELEVENLABS_API_KEY || !ELEVENLABS_VOICE_ID) {
     return NextResponse.json({
@@ -22,7 +40,9 @@ export async function GET(request: NextRequest) {
   try {
     // 漢字をひらがなに変換（フォールバック使用）
     const hiraganaText = convertKanjiToHiragana(testText);
-    console.log('Converted text:', hiraganaText);
+    if (!isProduction) {
+      console.log('Converted text:', hiraganaText);
+    }
 
     // ElevenLabs API呼び出し
     const response = await fetch(
@@ -47,8 +67,10 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    console.log('ElevenLabs Response Status:', response.status);
-    console.log('ElevenLabs Response Headers:', Object.fromEntries(response.headers.entries()));
+    if (!isProduction) {
+      console.log('ElevenLabs Response Status:', response.status);
+      console.log('ElevenLabs Response Headers:', Object.fromEntries(response.headers.entries()));
+    }
 
     if (!response.ok) {
       const errorText = await response.text();

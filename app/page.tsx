@@ -23,13 +23,11 @@ import type { InterviewEvaluation as EvaluationType } from '@/lib/evaluationType
 import AIEvaluationResult from '@/components/AIEvaluationResult';
 import EvaluationCriteriaEditor from '@/components/EvaluationCriteriaEditor';
 import EvaluationList from '@/components/EvaluationList';
-import InterviewEvaluation from '@/components/InterviewEvaluation';
 import ScenarioEditor from '@/components/ScenarioEditor';
 import ScenarioGenerator from '@/components/ScenarioGenerator';
 import PatientInfoModal from '@/components/PatientInfoModal';
-import { demoDialogues, shortDemoDialogues } from '@/lib/demoDialogues';
-import { improvedDemoDialogues, shortImprovedDemoDialogues, DemoDialogue } from '@/lib/improvedDemoDialogues';
-import { improvedDemoDialoguesEn, shortImprovedDemoDialoguesEn } from '@/lib/improvedDemoDialoguesEnglish';
+import type { DemoDialogue } from '@/lib/demoDialogues';
+import { improvedDemoDialoguesEn } from '@/lib/improvedDemoDialoguesEnglish';
 import {
   generateDemoDialogues,
   generateDemoDialoguesEnglish,
@@ -51,7 +49,6 @@ export default function Home() {
   const [showEvaluationList, setShowEvaluationList] = useState(false);
   const [showCriteriaEditor, setShowCriteriaEditor] = useState(false);
   const [evaluations, setEvaluations] = useState<EvaluationType[]>([]);
-  const [latestResponse, setLatestResponse] = useState<string>('');
   const [selectedAvatar, setSelectedAvatar] = useState<'adult' | 'boy' | 'boy_improved' | 'female'>('boy');
   const [isAvatarLoaded, setIsAvatarLoaded] = useState(false);
   const [language, setLanguage] = useState<'ja' | 'en'>('en'); // 言語設定を追加（デフォルトを英語に）
@@ -83,7 +80,7 @@ export default function Home() {
   } = useDemoElevenLabsSpeech();
   
   // アバター変更時にローディング状態をリセット
-  const handleAvatarChange = (avatar: 'adult' | 'boy' | 'boy_improved' | 'female') => {
+  const handleAvatarChange = React.useCallback((avatar: 'adult' | 'boy' | 'boy_improved' | 'female') => {
     if (avatar !== selectedAvatar) {
       console.log(`[Avatar Change] Switching from ${selectedAvatar} to ${avatar}`);
       setIsAvatarLoaded(false);
@@ -91,7 +88,7 @@ export default function Home() {
       const modelPath = getModelPath(avatar);
       console.log(`[Avatar Change] Model path for ${avatar}: ${modelPath}`);
     }
-  };
+  }, [selectedAvatar]);
   
   // onLoaded コールバックをメモ化（selectedAvatarへの依存を削除）
   const handleAvatarLoaded = React.useCallback(() => {
@@ -111,7 +108,6 @@ export default function Home() {
     isDemoPlayingRef.current = false;
     setCurrentDemoIndex(0);
     setIsSpeaking(false);
-    setLatestResponse('');
     
     if (demoTimeoutRef.current) {
       clearTimeout(demoTimeoutRef.current);
@@ -159,9 +155,10 @@ export default function Home() {
         }
       }
     }
-  }, [selectedScenario]);
+  }, [handleAvatarChange, selectedAvatar, selectedScenario]);
 
   // デモ開始時に最初の発話を開始
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (isDemoPlaying && currentDemoIndex === 0 && demoType) {
       console.log('▶️ Starting demo playback with:', { demoType, demoLanguage, useImprovedDemo });
@@ -172,6 +169,7 @@ export default function Home() {
       return () => clearTimeout(timer);
     }
   }, [isDemoPlaying]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   // デモンストレーション機能
   const playNextDemoDialogue = async (index: number, type: 'full' | 'short') => {
@@ -246,7 +244,6 @@ export default function Home() {
     if (dialogue.speaker === 'patient') {
       console.log('🎭 デモ: 患者の発話を再生開始:', dialogue.text);
       // 最新の応答を保存（アバターのリップシンク用）
-      setLatestResponse(dialogue.text);
       
       // アバターに応じたElevenLabs voice IDを選択
       const patientVoiceRole = selectedAvatar === 'female'
@@ -297,8 +294,6 @@ export default function Home() {
               
               // 音声再生完了後のクリーンアップ
               setIsSpeaking(false);
-              setLatestResponse('');
-              
               console.log('✅ 音声再生処理完了');
               
               proceedToNext();
@@ -339,7 +334,7 @@ export default function Home() {
             setIsSpeaking(false);
             proceedToNext();
           },
-          (progress) => {}
+          (_progress) => {}
         );
       } else {
         setIsSpeaking(false);
@@ -485,7 +480,6 @@ export default function Home() {
     voiceActivityLevel,
     silenceTimer,
     isAutoMode,
-    setAutoMode,
     setProcessingState,
     setSpeakingState
   } = useAutoVoiceDetection();
@@ -523,7 +517,7 @@ export default function Home() {
           // console.log('✅ 音声システムを初期化しました');
         }, 100);
       }
-    } catch (error) {
+    } catch {
       // console.error('音声初期化エラー:', error);
       // エラーでも音声認識は開始
       isConversationActiveRef.current = true;
@@ -595,8 +589,6 @@ export default function Home() {
         setMessages([...updatedMessages, aiMessage]);
         
         // 最新の応答を保存（感情分析用）
-        setLatestResponse(data.response);
-        
         // 音声再生（初期化済みでなくても試みる）
         setIsSpeaking(true);
         
@@ -618,7 +610,7 @@ export default function Home() {
               // console.log('音声再生完了、音声認識を再開待機中...');
             }
           },
-          (progress) => {
+          (_progress) => {
             // プログレスのログは最小限に
             // if (progress % 25 === 0) {
             //   console.log('Speech progress:', progress);
@@ -627,7 +619,7 @@ export default function Home() {
           language // 言語設定を追加
         );
       }
-    } catch (error) {
+    } catch {
       // console.error('Error:', error);
       setApiError('応答の生成中にエラーが発生しました。しばらくしてから再度お試しください。');
     } finally {
@@ -857,7 +849,6 @@ export default function Home() {
                         // 他のデモが動作中の場合は一旦停止してから開始
                         stopDemo();
                         // 現在の言語値をキャプチャして渡す
-                        const currentLang = language;
                         requestAnimationFrame(() => {
                           startDemo('short');
                         });
@@ -1201,16 +1192,7 @@ export default function Home() {
             setIsTimerRunning(false);
             setInterviewTime(0);
           }}
-          onSave={(evaluation) => {
-            // AI評価を保存
-            const updatedEvaluations = [...evaluations, evaluation];
-            setEvaluations(updatedEvaluations);
-
-            // localStorageに保存
-            const storedEvaluations = localStorage.getItem('evaluations');
-            const allEvaluations = storedEvaluations ? JSON.parse(storedEvaluations) : [];
-            localStorage.setItem('evaluations', JSON.stringify([...allEvaluations, evaluation]));
-          }}
+          onSave={handleSaveEvaluation}
           onRetry={() => {
             // 同じシナリオで再度練習
             setShowAIEvaluation(false);
