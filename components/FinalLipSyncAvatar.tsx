@@ -1948,7 +1948,7 @@ function AvatarModel({
   audioData,
   audioFrequency = 0,
   onLoaded,
-  modelPath = '/models/成人男性.glb',
+  modelPath = '/models/adult-male.glb',
   selectedAvatar = 'adult'
 }: AvatarModelProps) {
   // モデルタイプの判定（URLエンコードされた文字列も考慮）
@@ -3477,7 +3477,7 @@ function FinalLipSyncAvatarComponent({
   showDebug = false,
   audioData,
   audioFrequency = 0,
-  modelPath = '/models/成人男性.glb',
+  modelPath = '/models/adult-male.glb',
   selectedAvatar: propSelectedAvatar,
   onLoaded
 }: {

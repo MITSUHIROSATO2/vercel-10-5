@@ -20,11 +20,11 @@ export const getModelPath = (modelType: 'adult' | 'adult_improved' | 'boy' | 'bo
   // ローカル開発でローカルモデルを使用する場合
   if (useLocalInDev) {
     const localPaths = {
-      adult: '/models/成人男性.glb',
-      adult_improved: '/models/成人男性改アバター.glb',
-      boy: '/models/少年アバター.glb',
-      boy_improved: '/models/Baby main.glb',
-      female: '/models/Mother.glb'
+      adult: '/models/adult-male.glb',
+      adult_improved: '/models/adult-improved.glb',
+      boy: '/models/boy-avatar.glb',
+      boy_improved: '/models/boy-improved-avatar.glb',
+      female: '/models/mother.glb'
     };
     return localPaths[modelType];
   }
@@ -47,22 +47,22 @@ export const getModelPath = (modelType: 'adult' | 'adult_improved' | 'boy' | 'bo
   // CDNベースURLが設定されている場合
   if (useCdn && cdnBase) {
     const cdnPaths = {
-      adult: `${cdnBase}/成人男性.glb`,
-      adult_improved: `${cdnBase}/成人男性改アバター.glb`,
-      boy: `${cdnBase}/少年アバター.glb`,
-      boy_improved: `${cdnBase}/Baby main.glb`,
-      female: `${cdnBase}/Mother.glb`
+      adult: `${cdnBase}/adult-male.glb`,
+      adult_improved: `${cdnBase}/adult-improved.glb`,
+      boy: `${cdnBase}/boy-avatar.glb`,
+      boy_improved: `${cdnBase}/boy-improved-avatar.glb`,
+      female: `${cdnBase}/mother.glb`
     };
     return cdnPaths[modelType];
   }
   
   // デフォルト：ローカルパス
   const localPaths = {
-    adult: '/models/成人男性.glb',
-    adult_improved: '/models/成人男性改アバター.glb',
-    boy: '/models/少年アバター.glb',
-    boy_improved: '/models/Baby main.glb',
-    female: '/models/Mother.glb'
+    adult: '/models/adult-male.glb',
+    adult_improved: '/models/adult-improved.glb',
+    boy: '/models/boy-avatar.glb',
+    boy_improved: '/models/boy-improved-avatar.glb',
+    female: '/models/mother.glb'
   };
 
   return localPaths[modelType];
