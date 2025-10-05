@@ -233,7 +233,7 @@ const EnglishPhonemeToMorphs: { [key: string]: { [morphName: string]: number } }
     'A45_Mouth_Upper_Up_Right': 0.05,
     'A48_Mouth_Press_Left': 0.28,
     'A49_Mouth_Press_Right': 0.28,
-    'A37_Mouth_Close': 0.32,
+    'A37_Mouth_Close': 0.1,
     'Mouth_Lips_Part': 0.05
   },
   // CH - chair, match
@@ -312,7 +312,7 @@ const EnglishPhonemeToMorphs: { [key: string]: { [morphName: string]: number } }
     'A25_Jaw_Open': 0.02,
     'A44_Mouth_Upper_Up_Left': 0.05,
     'A45_Mouth_Upper_Up_Right': 0.05,
-    'A37_Mouth_Close': 0.38,
+    'A37_Mouth_Close': 0.1,
     'A48_Mouth_Press_Left': 0.24,
     'A49_Mouth_Press_Right': 0.24,
     'Mouth_Lips_Part': 0.05
@@ -341,7 +341,7 @@ const EnglishPhonemeToMorphs: { [key: string]: { [morphName: string]: number } }
     'V_Explosive': 0.4,
     'A48_Mouth_Press_Left': 0.32,
     'A49_Mouth_Press_Right': 0.32,
-    'A37_Mouth_Close': 0.28,
+    'A37_Mouth_Close': 0.1,
     'Mouth_Plosive': 0.35,
     'Mouth_Lips_Part': 0.05
   },
@@ -532,35 +532,35 @@ const PhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
   },
   
   // ま行（唇を使う音）
-  'ま': { 
-    'A37_Mouth_Close': 0.3,
+  'ま': {
+    'A37_Mouth_Close': 0.1,
     'V_Explosive': 0.2,
     'A25_Jaw_Open': 0.25,
     'A48_Mouth_Press_Left': 0.2,
     'A49_Mouth_Press_Right': 0.2,
     'Mouth_Lips_Part': 0.3
   },
-  'み': { 
-    'A37_Mouth_Close': 0.25,
+  'み': {
+    'A37_Mouth_Close': 0.1,
     'V_Wide': 0.15,
     'A25_Jaw_Open': 0.1,
     'A48_Mouth_Press_Left': 0.15,
     'A49_Mouth_Press_Right': 0.15
   },
-  'む': { 
-    'A37_Mouth_Close': 0.25,
+  'む': {
+    'A37_Mouth_Close': 0.1,
     'A25_Jaw_Open': 0.1,
     'A48_Mouth_Press_Left': 0.15,
     'A49_Mouth_Press_Right': 0.15
   },
-  'め': { 
-    'A37_Mouth_Close': 0.15,
+  'め': {
+    'A37_Mouth_Close': 0.1,
     'Mouth_Open': 0.2,
     'A25_Jaw_Open': 0.2,
     'V_Wide': 0.1
   },
-  'も': { 
-    'A37_Mouth_Close': 0.15,
+  'も': {
+    'A37_Mouth_Close': 0.1,
     'A29_Mouth_Funnel': 0.25,
     'A25_Jaw_Open': 0.3,
     'V_Tight_O': 0.2
@@ -588,14 +588,14 @@ const PhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
   'そ': { 'V_Tight': 0.2, 'A25_Jaw_Open': 0.35, 'V_Tight_O': 0.15 },
   
   // ん（鼻音）
-  'ん': { 
-    'A37_Mouth_Close': 0.5,
+  'ん': {
+    'A37_Mouth_Close': 0.1,
     'Mouth_Lips_Part': 0.05,
     'A20_Cheek_Puff': 0.05,
     'V_None': 0.3
   },
-  'ン': { 
-    'A37_Mouth_Close': 0.5,
+  'ン': {
+    'A37_Mouth_Close': 0.1,
     'Mouth_Lips_Part': 0.05,
     'A20_Cheek_Puff': 0.05,
     'V_None': 0.3
@@ -1168,7 +1168,7 @@ const EnglishVisemeProfiles: Record<string, VisemeProfile> = {
     'Mouth_Lips_Part': 0.1,
   },
   bilabial: {
-    'A37_Mouth_Close': 0.5,
+    'A37_Mouth_Close': 0.1,
     'A48_Mouth_Press_Left': 0.35,
     'A49_Mouth_Press_Right': 0.35,
     'Mouth_Lips_Part': 0.05,
@@ -1324,7 +1324,7 @@ const JapaneseVisemeProfiles: Record<string, VisemeProfile> = {
     'V_Tight_O': 0.28,
   },
   ja_bilabial: {
-    'A37_Mouth_Close': 0.42,
+    'A37_Mouth_Close': 0.1,
     'A48_Mouth_Press_Left': 0.28,
     'A49_Mouth_Press_Right': 0.28,
     'Mouth_Lips_Part': 0.07,
@@ -1358,11 +1358,11 @@ const JapaneseVisemeProfiles: Record<string, VisemeProfile> = {
   },
   ja_nasal: {
     'A25_Jaw_Open': 0.14,
-    'A37_Mouth_Close': 0.38,
+    'A37_Mouth_Close': 0.1,
     'Mouth_Lips_Part': 0.12,
   },
   ja_hold: {
-    'A37_Mouth_Close': 0.46,
+    'A37_Mouth_Close': 0.1,
     'A48_Mouth_Press_Left': 0.22,
     'A49_Mouth_Press_Right': 0.22,
   },
@@ -1506,11 +1506,11 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             }
             mat.needsUpdate = true;
           } else if (matName.includes('nug_tongue')) {
-            mat.color = new THREE.Color(0xbf5f70);
+            mat.color = new THREE.Color(0xb54f60);
             mat.roughness = 0.15;
             mat.metalness = 0.0;
             if (mat.emissive) {
-              mat.emissive = new THREE.Color(0xbf5f70);
+              mat.emissive = new THREE.Color(0xb54f60);
               mat.emissiveIntensity = 1.0;
             }
             mat.needsUpdate = true;
@@ -1759,11 +1759,11 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             break;
 
           case 'nug_tongue':
-            mat.color = new THREE.Color(0xbf5f70);
+            mat.color = new THREE.Color(0xb54f60);
             mat.roughness = 0.15;
             mat.metalness = 0.0;
             if (mat.emissive) {
-              mat.emissive = new THREE.Color(0xbf5f70);
+              mat.emissive = new THREE.Color(0xb54f60);
               mat.emissiveIntensity = 1.0;
             }
             mat.transparent = false;
@@ -2159,11 +2159,11 @@ function AvatarModel({
                 mat.transparent = false;
                 mat.opacity = 1.0;
               } else if (matName.includes('std_tongue')) {
-                mat.color = new THREE.Color(0xb45b65);
+                mat.color = new THREE.Color(0x0000ff);
                 mat.roughness = 0.2;
                 mat.metalness = 0.02;
                 if (mat.emissive) {
-                  mat.emissive = new THREE.Color(0xb45b65);
+                  mat.emissive = new THREE.Color(0x0000ff);
                   mat.emissiveIntensity = 1.0;
                 }
                 mat.transparent = false;
@@ -3135,9 +3135,30 @@ function AvatarModel({
     }
     */
     
-    // 少年・女性アバター用の下の歯制御
+    // 女性アバター用の下の歯制御（固定位置）
+    if ((teeth02Bone.current || nugLowerTeethMesh.current) && selectedAvatar === 'female') {
+      const fixedOffsetY = -0.6; // 下に固定
+
+      if (teeth02Bone.current) {
+        teeth02Bone.current.position.y = fixedOffsetY;
+        teeth02Bone.current.rotation.x = 0;
+        teeth02Bone.current.position.z = 0;
+        teeth02Bone.current.updateMatrix();
+        teeth02Bone.current.updateMatrixWorld(true);
+      }
+
+      if (nugLowerTeethMesh.current) {
+        nugLowerTeethMesh.current.position.y = lowerTeethOriginalY.current + fixedOffsetY;
+        nugLowerTeethMesh.current.rotation.x = 0;
+        nugLowerTeethMesh.current.position.z = 0;
+        nugLowerTeethMesh.current.updateMatrix();
+        nugLowerTeethMesh.current.updateMatrixWorld(true);
+      }
+    }
+
+    // 少年アバター用の下の歯制御
     // NUG_Base_Teeth_2メッシュとCC_Base_Teeth02ボーンの両方を制御
-    if ((teeth02Bone.current || nugLowerTeethMesh.current) && (selectedAvatar === 'boy' || selectedAvatar === 'boy_improved' || selectedAvatar === 'female')) {
+    if ((teeth02Bone.current || nugLowerTeethMesh.current) && (selectedAvatar === 'boy' || selectedAvatar === 'boy_improved')) {
       if (isSpeaking) {
         const jawOpenValue = currentMorphValues.current['A25_Jaw_Open'] || currentMorphValues.current['Move_Jaw_Down'] || 0;
         const mouthOpenValue = currentMorphValues.current['Mouth_Open'] || 0;
@@ -3157,15 +3178,20 @@ function AvatarModel({
         const mouthFactor = mouthOpenValue * 0.4;
         const combinedValue = Math.max(lipFactor, jawFactor, mouthFactor);
         
-        // 少年アバター用の下の歯制御
+        // 少年・女性アバター用の下の歯制御
+        // 女性アバターは位置を調整（より控えめに）
+        const yMultiplier = selectedAvatar === 'female' ? 0.05 : 0.3;
+        const yAddMultiplier = selectedAvatar === 'female' ? 0.03 : 0.2;
+        const rotMultiplier = selectedAvatar === 'female' ? 0.15 : 0.8;
+        const rotAddMultiplier = selectedAvatar === 'female' ? 0.1 : 0.5;
+
         // Y軸: 下唇に連動して下の歯を下に移動（唇と重ならないように）
-        // 大幅に増加: 0.03 -> 0.3, 0.02 -> 0.2 (10倍)
-        const targetY = -(lowerLipAvg * 0.3 + combinedValue * 0.2);
-        
-        // X軸の回転: 自然な傾き (値を増加)
-        const targetRotX = -(lowerLipAvg * 0.8 + combinedValue * 0.5);
-        
-        // Z軸: 後ろに移動 (値を増加)
+        const targetY = -(lowerLipAvg * yMultiplier + combinedValue * yAddMultiplier);
+
+        // X軸の回転: 自然な傾き
+        const targetRotX = -(lowerLipAvg * rotMultiplier + combinedValue * rotAddMultiplier);
+
+        // Z軸: 後ろに移動
         const targetZ = -(combinedValue * 0.05);
         
         // CC_Base_Teeth02ボーンを制御
@@ -3202,7 +3228,7 @@ function AvatarModel({
             // console.log('メッシュ制御 Y:', nugLowerTeethMesh.current.position.y.toFixed(3));
           }
         }
-        
+
       } else {
         // 話していない時は元の位置にスムーズに戻す（ボーン制御）
         const lerpSpeed = 0.15; // 補間速度

@@ -340,11 +340,11 @@ export async function applyMotherAvatarTextures(scene: THREE.Object3D) {
         case 'nug_tongue':
           mat.map = loadFemaleTexture('/models/textures/Base/Std_Tongue_Diffuse.png');
           mat.normalMap = loadFemaleTexture('/models/textures/Base/Std_Tongue_Normal.png', 'linear');
-          mat.color = new THREE.Color(0xc2636e);
-          mat.emissive = new THREE.Color(0x000000);
-          mat.emissiveIntensity = 0.0;
-          mat.roughness = 0.4;
-          mat.metalness = 0.01;
+          mat.color = new THREE.Color(0xb54f60);
+          mat.emissive = new THREE.Color(0xb54f60);
+          mat.emissiveIntensity = 1.0;
+          mat.roughness = 0.15;
+          mat.metalness = 0.0;
           break;
 
         case 'nug_nails':
