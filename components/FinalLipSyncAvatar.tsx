@@ -60,8 +60,9 @@ function WebGLContextHandler() {
 
 // モデルURLをプリロード（クライアントサイドのみ）
 if (typeof window !== 'undefined') {
-  const modelTypes: ('adult' | 'boy' | 'boy_improved' | 'female')[] = ['adult', 'boy', 'boy_improved', 'female'];
-  
+  // boy_improved は現在使用していないためプリロードから除外
+  const modelTypes: ('adult' | 'boy' | 'female')[] = ['adult', 'boy', 'female'];
+
   modelTypes.forEach(type => {
     try {
       const modelPath = getModelPath(type);
