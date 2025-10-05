@@ -2,6 +2,7 @@
 
 import type { PatientScenario } from './scenarioTypes';
 import type { DemoDialogue } from './improvedDemoDialogues';
+import { getTranslatedScenario } from './scenariosEnglish';
 
 // 医師の質問は全シナリオ共通
 const doctorQuestions = {
@@ -519,108 +520,141 @@ function generateAdditionalConcern(complaint: string): string {
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 // 英語版の対話生成（通常版 - 40対話）
-export function generateDemoDialoguesEnglish(_scenario: PatientScenario): DemoDialogue[] {
+export function generateDemoDialoguesEnglish(scenario: PatientScenario): DemoDialogue[] {
   const dialogues: DemoDialogue[] = [];
+
+  // 英語シナリオから患者情報を取得
+  const translatedScenario = getTranslatedScenario(scenario, 'en');
+  const patientName = translatedScenario.basicInfo?.name || 'Taro Yamada';
+  const patientAge = translatedScenario.basicInfo?.age || '34 years old';
+  const patientGender = translatedScenario.basicInfo?.gender || 'Male';
 
   // ===== Introduction =====
   dialogues.push(
     { speaker: 'doctor', text: "Hello. I'm Dr. Tanaka, and I'll be taking care of you today.", delay: 2000 },
-    { speaker: 'patient', text: 'Hello. Nice to meet you, doctor.', delay: 2000 },
+    { speaker: 'patient', text: 'Hello, doctor. Thank you for seeing me today. I appreciate your time.', delay: 2500 },
     { speaker: 'doctor', text: 'May I have your full name, please?', delay: 2000 },
-    { speaker: 'patient', text: 'My name is Taro Yamada.', delay: 2000 },
+    { speaker: 'patient', text: `Yes, of course. My name is ${patientName}.`, delay: 2000 },
     { speaker: 'doctor', text: 'Could you tell me your date of birth as well?', delay: 2000 },
-    { speaker: 'patient', text: 'May 15th, 1990.', delay: 2500 }
+    { speaker: 'patient', text: "Sure, it's May 15th, 1990.", delay: 2500 }
   );
 
   // ===== Chief Complaint =====
+  const chiefComplaint = translatedScenario.chiefComplaint?.complaint || 'I have pain in my lower right back tooth.';
+  const location = translatedScenario.chiefComplaint?.location || 'lower right back tooth';
+
   dialogues.push(
     { speaker: 'doctor', text: 'What brings you in today?', delay: 2000 },
-    { speaker: 'patient', text: 'I have pain in my lower right back tooth.', delay: 2500 }
+    { speaker: 'patient', text: `Well, ${chiefComplaint.toLowerCase()}. It's been bothering me quite a bit lately.`, delay: 3000 }
   );
 
   // ===== Present Illness (OPQRST) =====
+  const since = translatedScenario.chiefComplaint?.since || 'About three days ago';
+  const nature = translatedScenario.presentIllness?.nature || 'throbbing pain';
+  const trigger = translatedScenario.presentIllness?.trigger || 'It started suddenly during dinner';
+
   dialogues.push(
-    { speaker: 'doctor', text: 'When did the pain start?', delay: 2000 },
-    { speaker: 'patient', text: 'About three days ago.', delay: 2000 },
+    { speaker: 'doctor', text: 'When did this problem start?', delay: 2000 },
+    { speaker: 'patient', text: `Let me think... I would say ${since.toLowerCase()}. I remember noticing it first around that time.`, delay: 3000 },
     { speaker: 'doctor', text: 'Could you tell me more about how it started?', delay: 2000 },
-    { speaker: 'patient', text: 'It started suddenly during dinner on Thursday evening.', delay: 3000 }
+    { speaker: 'patient', text: `${trigger}. I was quite surprised when I first noticed it, to be honest.`, delay: 3500 }
+  );
+
+  const severity = translatedScenario.presentIllness?.severity || 'Severe';
+  const progress = translatedScenario.presentIllness?.progress || 'Getting worse';
+  const medication = translatedScenario.presentIllness?.medication || 'None';
+  const dailyImpact = translatedScenario.presentIllness?.dailyImpact || 'Affecting daily life';
+
+  dialogues.push(
+    { speaker: 'doctor', text: 'When does it occur most often?', delay: 2000 },
+    { speaker: 'patient', text: `Mainly ${trigger.toLowerCase()}. That's when I notice it the most.`, delay: 2500 },
+    { speaker: 'doctor', text: 'Are there other times when you notice it?', delay: 2000 },
+    { speaker: 'patient', text: 'Yes, it happens regularly throughout the day. Sometimes even when I\'m not doing anything in particular.', delay: 3000 }
   );
 
   dialogues.push(
-    { speaker: 'doctor', text: 'When does the tooth hurt?', delay: 2000 },
-    { speaker: 'patient', text: 'It hurts when I drink something cold.', delay: 2500 },
-    { speaker: 'doctor', text: 'Are there other times when it hurts?', delay: 2000 },
-    { speaker: 'patient', text: 'Yes, it also hurts when I chew.', delay: 2000 }
+    { speaker: 'doctor', text: 'What does it feel like? Can you describe the sensation?', delay: 2000 },
+    { speaker: 'patient', text: `It's like ${nature.toLowerCase()}. That's the best way I can describe it.`, delay: 2500 },
+    { speaker: 'doctor', text: 'And how severe would you say it is?', delay: 2000 },
+    { speaker: 'patient', text: `I'd say it's ${severity.toLowerCase()}. And to be honest, it seems to be ${progress.toLowerCase()} over time.`, delay: 3000 }
   );
 
   dialogues.push(
-    { speaker: 'doctor', text: 'What kind of pain is it?', delay: 2000 },
-    { speaker: 'patient', text: 'It\'s a throbbing pain.', delay: 2000 },
-    { speaker: 'doctor', text: 'Could you describe it in more detail?', delay: 2000 },
-    { speaker: 'patient', text: 'It\'s like a pulsing, aching sensation.', delay: 2500 }
+    { speaker: 'doctor', text: 'Where exactly is the problem located?', delay: 2000 },
+    { speaker: 'patient', text: `It's in the ${location.toLowerCase()}. I can show you exactly where if you'd like.`, delay: 2500 }
   );
 
   dialogues.push(
-    { speaker: 'doctor', text: 'Where exactly is the pain?', delay: 2000 },
-    { speaker: 'patient', text: 'In my lower right back tooth.', delay: 2000 },
-    { speaker: 'doctor', text: 'Does the pain spread to other areas?', delay: 2000 },
-    { speaker: 'patient', text: 'Yes, it radiates to my cheek.', delay: 2500 }
+    { speaker: 'doctor', text: 'Have you taken any medication for this?', delay: 2000 },
+    { speaker: 'patient', text: medication === 'None' ? 'No, I haven\'t taken anything yet. I wanted to see you first before taking any medication.' : `Yes, I've tried ${medication.toLowerCase()}. It helped a little, but not as much as I'd hoped.`, delay: 3500 }
   );
 
   dialogues.push(
-    { speaker: 'doctor', text: 'How severe is the pain on a scale of 1 to 10?', delay: 2500 },
-    { speaker: 'patient', text: 'About 8. It\'s so bad I can\'t sleep at night.', delay: 3000 }
-  );
-
-  dialogues.push(
-    { speaker: 'doctor', text: 'Have you taken any pain medication?', delay: 2000 },
-    { speaker: 'patient', text: 'I took over-the-counter painkillers, but they didn\'t help much.', delay: 3000 }
+    { speaker: 'doctor', text: 'How is this affecting your daily life?', delay: 2000 },
+    { speaker: 'patient', text: `${dailyImpact}. It's really been quite disruptive, to be honest.`, delay: 3000 }
   );
 
   // ===== Medical History & Allergies =====
+  const systemicDisease = translatedScenario.medicalHistory?.systemicDisease || 'No particular medical conditions';
+  const currentMedication = translatedScenario.medicalHistory?.currentMedication || 'None';
+  const allergies = translatedScenario.medicalHistory?.allergies || 'None';
+
   dialogues.push(
-    { speaker: 'doctor', text: 'Do you have any medical conditions?', delay: 2000 },
-    { speaker: 'patient', text: 'I have high blood pressure.', delay: 2000 },
-    { speaker: 'doctor', text: 'Anything else?', delay: 2000 },
-    { speaker: 'patient', text: 'I also have diabetes.', delay: 2000 }
+    { speaker: 'doctor', text: 'Do you have any medical conditions I should know about?', delay: 2000 },
+    { speaker: 'patient', text: systemicDisease === 'No particular medical conditions' ? 'No, I\'m generally healthy. I don\'t have any chronic medical conditions that I know of.' : `Yes, I have ${systemicDisease.toLowerCase()}. I've been managing it for quite some time now.`, delay: 3000 }
   );
 
   dialogues.push(
-    { speaker: 'doctor', text: 'Are you taking any medications?', delay: 2000 },
-    { speaker: 'patient', text: 'Yes, I take medication for blood pressure.', delay: 2000 },
-    { speaker: 'doctor', text: 'Do you know the name of the medication?', delay: 2000 },
-    { speaker: 'patient', text: 'Um, I think it\'s amlodipine.', delay: 2500 }
+    { speaker: 'doctor', text: 'Are you currently taking any medications regularly?', delay: 2000 },
+    { speaker: 'patient', text: currentMedication === 'None' ? 'No, I\'m not taking any regular medications at the moment.' : `Yes, I am. ${currentMedication}. I take it every day as prescribed by my doctor.`, delay: 3000 }
   );
 
   dialogues.push(
-    { speaker: 'doctor', text: 'Do you have any allergies?', delay: 2000 },
-    { speaker: 'patient', text: 'I once got hives from penicillin.', delay: 2500 }
+    { speaker: 'doctor', text: 'Do you have any allergies, especially to medications?', delay: 2000 },
+    { speaker: 'patient', text: allergies === 'None' ? 'No, I don\'t have any known allergies to medications or anything else.' : `Yes, actually. ${allergies}. So I need to be careful about that.`, delay: 3000 }
   );
 
   // ===== Dental History =====
+  const extraction = translatedScenario.dentalHistory?.extraction || 'No previous extractions';
+  const anesthesia = translatedScenario.dentalHistory?.anesthesia || 'No issues with anesthesia';
+  const complications = translatedScenario.dentalHistory?.complications || 'No complications';
+
   dialogues.push(
-    { speaker: 'doctor', text: 'Have you had any dental treatment before?', delay: 2500 },
-    { speaker: 'patient', text: 'I had my wisdom teeth removed 10 years ago.', delay: 2500 },
-    { speaker: 'doctor', text: 'Were there any problems during that procedure?', delay: 2000 },
-    { speaker: 'patient', text: 'The anesthesia didn\'t work well at first, so they had to give me more.', delay: 2500 }
+    { speaker: 'doctor', text: 'Have you had any dental treatment in the past?', delay: 2500 },
+    { speaker: 'patient', text: extraction === 'No previous extractions' ? 'No, I haven\'t had any major dental work done before. Just regular cleanings and check-ups.' : `Yes, ${extraction.toLowerCase()}. I remember it quite well.`, delay: 3000 }
   );
 
+  if (anesthesia !== 'No issues with anesthesia') {
+    dialogues.push(
+      { speaker: 'doctor', text: 'Were there any problems during that procedure?', delay: 2000 },
+      { speaker: 'patient', text: `Actually, yes. ${anesthesia}. It was a bit uncomfortable, but we got through it eventually.`, delay: 3000 }
+    );
+  }
+
   // ===== Psychosocial Aspects =====
-  dialogues.push(
-    { speaker: 'doctor', text: 'Is this pain affecting your daily life?', delay: 3000 },
-    { speaker: 'patient', text: 'Yes, I can\'t concentrate at work.', delay: 2500 },
-    { speaker: 'doctor', text: 'Are you concerned about anything?', delay: 2000 },
-    { speaker: 'patient', text: 'I\'m worried I might need to have the tooth extracted.', delay: 2500 },
-    { speaker: 'doctor', text: 'Do you have any preferences for treatment?', delay: 2500 },
-    { speaker: 'patient', text: 'I\'d like to keep the tooth if possible.', delay: 2000 }
-  );
+  const concerns = translatedScenario.psychosocial?.concerns || 'No particular concerns';
+  const requests = translatedScenario.psychosocial?.requests || 'No special requests';
+
+  if (concerns !== 'No particular concerns') {
+    dialogues.push(
+      { speaker: 'doctor', text: 'Are you concerned or worried about anything in particular?', delay: 2000 },
+      { speaker: 'patient', text: `Yes, actually. ${concerns}. It's been on my mind quite a bit lately.`, delay: 3000 }
+    );
+  }
+
+  if (requests !== 'No special requests') {
+    dialogues.push(
+      { speaker: 'doctor', text: 'Do you have any preferences or requests for your treatment?', delay: 2500 },
+      { speaker: 'patient', text: `Well, ${requests.toLowerCase()}. That would really be ideal for me.`, delay: 2500 }
+    );
+  }
 
   // ===== Conclusion =====
   dialogues.push(
-    { speaker: 'doctor', text: 'Is there anything else you\'d like to tell me?', delay: 2000 },
-    { speaker: 'patient', text: 'Oh, I just remembered - my gums bleed sometimes too.', delay: 2500 },
-    { speaker: 'doctor', text: 'I understand. Now, let me examine your teeth.', delay: 3000 },
-    { speaker: 'patient', text: 'Yes, please do.', delay: 2000 }
+    { speaker: 'doctor', text: 'Is there anything else you\'d like to tell me about your condition?', delay: 2000 },
+    { speaker: 'patient', text: 'I think that covers everything for now. Thank you for listening so carefully to all my concerns.', delay: 3000 },
+    { speaker: 'doctor', text: 'Of course. Now, let me examine you so we can determine the best course of treatment.', delay: 3000 },
+    { speaker: 'patient', text: 'Yes, please go ahead. I really appreciate your help, doctor.', delay: 2500 }
   );
 
   return dialogues;

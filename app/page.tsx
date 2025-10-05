@@ -88,11 +88,34 @@ export default function Home() {
       setSelectedAvatar(avatar);
       if (isManual) {
         setIsManualAvatarSelection(true);
+
+        // 手動でアバターを選択した場合、性別に応じたシナリオに変更
+        if (avatar === 'female') {
+          // 女性のシナリオを探す
+          const femaleScenario = [...patientScenarios, ...customScenarios].find(scenario =>
+            scenario.basicInfo?.gender?.includes('女') || scenario.basicInfo?.gender?.toLowerCase().includes('female')
+          );
+          if (femaleScenario && femaleScenario.id !== selectedScenario.id) {
+            console.log(`[Avatar Change] Auto-switching to female scenario: ${femaleScenario.name}`);
+            setSelectedScenario(femaleScenario);
+            setMessages([]);
+          }
+        } else {
+          // 男性のシナリオを探す
+          const maleScenario = [...patientScenarios, ...customScenarios].find(scenario =>
+            scenario.basicInfo?.gender?.includes('男') || scenario.basicInfo?.gender?.toLowerCase().includes('male')
+          );
+          if (maleScenario && maleScenario.id !== selectedScenario.id) {
+            console.log(`[Avatar Change] Auto-switching to male scenario: ${maleScenario.name}`);
+            setSelectedScenario(maleScenario);
+            setMessages([]);
+          }
+        }
       }
       const modelPath = getModelPath(avatar);
       console.log(`[Avatar Change] Model path for ${avatar}: ${modelPath}`);
     }
-  }, [selectedAvatar]);
+  }, [selectedAvatar, selectedScenario, customScenarios]);
   
   // onLoaded コールバックをメモ化（selectedAvatarへの依存を削除）
   const handleAvatarLoaded = React.useCallback(() => {
