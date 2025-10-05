@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "check-lfs": "node scripts/check-git-lfs.js",
-    "vercel-build": "git lfs pull && npm run build",
+    "vercel-build": "git lfs pull && NEXT_DISABLE_GOOGLE_FONT_OPTIMIZATION=1 npm run build",
     "upload-models": "node scripts/upload-models-to-blob.js",
     "monitor": "node scripts/monitor-console.js",
     "monitor:test": "node scripts/monitor-console.js --test",
