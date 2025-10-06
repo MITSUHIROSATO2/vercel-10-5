@@ -1004,6 +1004,7 @@ export default function Home() {
                     onClick={() => {
                       setIsTimerRunning(false);
                       setInterviewTime(0);
+                      setMessages([]);
                     }}
                     className="p-1 hover:bg-white/10 rounded transition-colors"
                     title={language === 'ja' ? 'リセット' : 'Reset'}
