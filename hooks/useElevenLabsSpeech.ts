@@ -6,8 +6,16 @@ import {
   type WordTiming
 } from '@/lib/improvedEnglishLipSync';
 
+type VoiceRole = 'patient_male' | 'patient_female' | 'doctor';
+
 interface ElevenLabsSpeechHook {
-  speak: (text: string, onEnd?: () => void, onProgress?: (progress: number) => void, language?: 'ja' | 'en') => Promise<void>;
+  speak: (
+    text: string,
+    onEnd?: () => void,
+    onProgress?: (progress: number) => void,
+    language?: 'ja' | 'en',
+    voiceRole?: VoiceRole
+  ) => Promise<void>;
   cancel: () => void;
   isCurrentlySpeaking: boolean;
   currentWord: string;
@@ -105,7 +113,8 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
     text: string,
     onEnd?: () => void,
     onProgress?: (progress: number) => void,
-    language: 'ja' | 'en' = 'ja'
+    language: 'ja' | 'en' = 'ja',
+    voiceRole?: VoiceRole
   ) => {
     try {
       setIsLoading(true);
@@ -136,7 +145,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text, emotion, language }),
+        body: JSON.stringify({ text, emotion, language, voiceRole }),
       });
 
       if (!response.ok) {

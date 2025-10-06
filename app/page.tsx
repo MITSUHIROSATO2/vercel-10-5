@@ -362,12 +362,15 @@ export default function Home() {
       // フォールバック: Web Speech APIを使用
       if ('speechSynthesis' in window) {
         setIsSpeaking(true);
+        const fallbackVoiceRole: 'patient_male' | 'patient_female' = selectedAvatar === 'female' ? 'patient_female' : 'patient_male';
         speak(dialogue.text, 
           () => {
             setIsSpeaking(false);
             proceedToNext();
           },
-          (_progress) => {}
+          (_progress) => {},
+          demoLanguage,
+          fallbackVoiceRole
         );
       } else {
         setIsSpeaking(false);
@@ -633,6 +636,7 @@ export default function Home() {
         // });
         
         // ElevenLabsまたはフォールバックで音声合成（言語設定を渡す）
+        const patientVoiceRole: 'patient_male' | 'patient_female' = selectedAvatar === 'female' ? 'patient_female' : 'patient_male';
         speak(data.response,
           () => {
             setIsSpeaking(false);
@@ -649,7 +653,8 @@ export default function Home() {
             //   console.log('Speech progress:', progress);
             // }
           },
-          language // 言語設定を追加
+          language, // 言語設定を追加
+          patientVoiceRole
         );
       }
     } catch {
