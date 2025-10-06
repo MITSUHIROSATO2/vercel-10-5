@@ -3255,12 +3255,11 @@ function AvatarModel({
         const mouthFactor = mouthOpenValue * 0.4;
         const combinedValue = Math.max(lipFactor, jawFactor, mouthFactor);
         
-        // 少年・女性アバター用の下の歯制御
-        // 女性アバターは位置を調整（より控えめに）
-        const yMultiplier = selectedAvatar === 'female' ? 0.05 : 0.3;
-        const yAddMultiplier = selectedAvatar === 'female' ? 0.03 : 0.2;
-        const rotMultiplier = selectedAvatar === 'female' ? 0.15 : 0.8;
-        const rotAddMultiplier = selectedAvatar === 'female' ? 0.1 : 0.5;
+        // 少年アバター用の下の歯制御（女性アバターは上のブロックで固定済み）
+        const yMultiplier = 0.3;
+        const yAddMultiplier = 0.2;
+        const rotMultiplier = 0.8;
+        const rotAddMultiplier = 0.5;
 
         // Y軸: 下唇に連動して下の歯を下に移動（唇と重ならないように）
         const targetY = -(lowerLipAvg * yMultiplier + combinedValue * yAddMultiplier);
