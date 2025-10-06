@@ -1,26 +1,33 @@
 import { useCallback, useRef, useState } from 'react';
-// 英語版でも日本語版のリップシンク処理を使用するため、英語用のリップシンクモジュールは不要
+import {
+  estimateWordTimings,
+  getCurrentPhoneme as getCurrentEnglishPhoneme,
+  preprocessTextForTiming,
+  type WordTiming
+} from '@/lib/improvedEnglishLipSync';
 
 interface DemoElevenLabsSpeechHook {
   playDemoAudio: (base64Audio: string, text: string) => Promise<void>;
   stopAudio: () => void;
   currentWord: string;
+  currentPhoneme: string;
   audioLevel: number;
   isPlaying: boolean;
 }
 
 export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const animationRef = useRef<number | null>(null);
   const wordsRef = useRef<string[]>([]);
   const audioLevelRef = useRef(0);
-  const sourceCreatedRef = useRef<WeakSet<HTMLAudioElement>>(new WeakSet());
-  // 英語版でも日本語版のリップシンク処理を使用するため、英語用のタイミング管理は不要
-  
+  const englishWordTimingsRef = useRef<WordTiming[]>([]);
+  const lastEnglishPhonemeRef = useRef<string>('');
+  const lastEnglishWordRef = useRef<string>('');
+  const isEnglishRef = useRef(false);
+
   const [currentWord, setCurrentWord] = useState('');
+  const [currentPhoneme, setCurrentPhoneme] = useState('');
   const [audioLevel, setAudioLevel] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -35,9 +42,14 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
     }
     setIsPlaying(false);
     setCurrentWord('');
+    setCurrentPhoneme('');
     setAudioLevel(0);
     // audioLevelRefをリセットして次回の再生を初期状態から開始
     audioLevelRef.current = 0;
+    englishWordTimingsRef.current = [];
+    lastEnglishPhonemeRef.current = '';
+    lastEnglishWordRef.current = '';
+    isEnglishRef.current = false;
   }, []);
 
   const playDemoAudio = useCallback((base64Audio: string, text: string) => {
@@ -49,6 +61,13 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
         // 初回と2回目以降で同じ動作を保証するため、refをリセット
         audioLevelRef.current = 0;
         wordsRef.current = [];
+        englishWordTimingsRef.current = [];
+        lastEnglishPhonemeRef.current = '';
+        lastEnglishWordRef.current = '';
+        setCurrentPhoneme('');
+        const containsLatin = /[a-zA-Z]/.test(text);
+        const containsJapanese = /[ぁ-んァ-ヶ一-龥]/.test(text);
+        isEnglishRef.current = containsLatin && !containsJapanese;
 
         // オーディオ要素を作成
         const audio = new Audio();
@@ -75,6 +94,13 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
         // 音声を即座にロード開始
         audio.load();
 
+        audio.onloadedmetadata = () => {
+          if (isEnglishRef.current && audio.duration > 0) {
+            const processed = preprocessTextForTiming(text);
+            englishWordTimingsRef.current = estimateWordTimings(processed, audio.duration);
+          }
+        };
+
         // 英語版でも日本語版のリップシンク処理を使用
         // 全てのテキストを日本語処理と同じ方法で扱う
         const cleanText = text.replace(/([、。！？,!?])/g, ' $1 ');
@@ -96,41 +122,78 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
               const average = voiceRange.reduce((sum, value) => sum + value, 0) / voiceRange.length;
               const normalizedLevel = Math.max(0, Math.min((average - 10) / 60, 1));
               const currentLevel = audioLevelRef.current || 0;
-              const smoothedLevel = currentLevel * 0.1 + normalizedLevel * 0.9;
+              const smoothedLevel = currentLevel * 0.4 + normalizedLevel * 0.6;
               audioLevelRef.current = smoothedLevel;
-              setAudioLevel(Math.max(smoothedLevel, 0.2));
+              setAudioLevel(Math.max(smoothedLevel, 0.15));
             } else {
               // 音素ベースの高品質リップシンクシミュレーション
               const currentTime = audio.currentTime;
               const duration = audio.duration;
               const progress = currentTime / duration;
-              
+
+              if (!isNaN(progress) && isEnglishRef.current) {
+                if (duration > 0 && englishWordTimingsRef.current.length === 0) {
+                  const processed = preprocessTextForTiming(text);
+                  englishWordTimingsRef.current = estimateWordTimings(processed, duration);
+                }
+
+                if (englishWordTimingsRef.current.length > 0) {
+                  const phonemeInfo = getCurrentEnglishPhoneme(englishWordTimingsRef.current, currentTime);
+                  if (phonemeInfo) {
+                    if (phonemeInfo.phoneme !== lastEnglishPhonemeRef.current) {
+                      lastEnglishPhonemeRef.current = phonemeInfo.phoneme;
+                      setCurrentPhoneme(phonemeInfo.phoneme);
+                    }
+
+                    let matchedWord = '';
+                    for (const timing of englishWordTimingsRef.current) {
+                      if (currentTime >= timing.startTime && currentTime <= timing.endTime) {
+                        matchedWord = timing.word;
+                        break;
+                      }
+                    }
+                    if (matchedWord !== lastEnglishWordRef.current) {
+                      lastEnglishWordRef.current = matchedWord;
+                      setCurrentWord(matchedWord);
+                    }
+
+                    const targetLevel = Math.min(0.85, phonemeInfo.intensity * 0.8 + 0.08);
+                    const currentLevel = audioLevelRef.current || 0;
+                    const smoothedLevel = currentLevel * 0.7 + targetLevel * 0.3;
+                    audioLevelRef.current = smoothedLevel;
+                    setAudioLevel(Math.max(smoothedLevel, 0.15));
+
+                    animationRef.current = requestAnimationFrame(analyzeAudio);
+                    return;
+                  }
+                }
+              }
+
               if (wordsRef.current.length > 0 && !isNaN(progress)) {
                 // テキスト全体での現在位置を計算
                 const totalText = wordsRef.current.join('');
                 const totalChars = totalText.length;
-                const currentCharIndex = Math.floor(progress * totalChars);
-                
+                const currentCharIndex = Math.floor(progress * Math.max(totalChars, 1));
+
                 // 現在の文字を取得
                 let charCount = 0;
                 let currentWord = '';
                 let currentChar = '';
-                
+
                 for (const word of wordsRef.current) {
                   if (charCount + word.length > currentCharIndex) {
                     currentWord = word;
-                    const wordCharIndex = currentCharIndex - charCount;
+                    const wordCharIndex = Math.max(0, Math.min(word.length - 1, currentCharIndex - charCount));
                     currentChar = word[wordCharIndex] || word[0] || '';
                     break;
                   }
                   charCount += word.length;
                 }
-                
+
                 // Always use Japanese lip-sync processing regardless of language
                 // 英語版でも日本語版のリップシンク処理を使用
                 let targetLevel = 0.2;
 
-                // Original Japanese vowel mapping (used for both Japanese and English)
                 const vowelMap: { [key: string]: number } = {
                     'あ': 0.6, 'ア': 0.6, 'a': 0.6,
                     'か': 0.7, 'が': 0.7, 'カ': 0.7, 'ガ': 0.7,
@@ -233,9 +296,34 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
 
                 // 現在の単語も更新
                 setCurrentWord(currentWord);
+                lastEnglishWordRef.current = '';
+                lastEnglishPhonemeRef.current = '';
+
+                const plosives = ['か', 'き', 'く', 'け', 'こ', 'が', 'ぎ', 'ぐ', 'げ', 'ご', 'た', 'て', 'と', 'だ', 'で', 'ど', 'ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ'];
+                const fricatives = ['さ', 'し', 'す', 'せ', 'そ', 'ざ', 'じ', 'ず', 'ぜ', 'ぞ', 'は', 'ひ', 'ふ', 'へ', 'ほ'];
+                const nasals = ['な', 'に', 'ぬ', 'ね', 'の', 'ま', 'み', 'む', 'め', 'も', 'ん'];
+                const liquids = ['ら', 'り', 'る', 'れ', 'ろ', 'わ', 'を'];
+                const semivowels = ['や', 'ゆ', 'よ'];
+
+                if (plosives.includes(currentChar[0])) {
+                  setCurrentPhoneme('plosive:' + currentChar);
+                } else if (fricatives.includes(currentChar[0])) {
+                  setCurrentPhoneme('fricative:' + currentChar);
+                } else if (nasals.includes(currentChar[0])) {
+                  setCurrentPhoneme('nasal:' + currentChar);
+                } else if (liquids.includes(currentChar[0])) {
+                  setCurrentPhoneme('liquid:' + currentChar);
+                } else if (semivowels.includes(currentChar[0])) {
+                  setCurrentPhoneme('semivowel:' + currentChar);
+                } else if (currentChar === '、' || currentChar === '。') {
+                  setCurrentPhoneme('pause');
+                } else {
+                  setCurrentPhoneme('vowel:' + currentChar);
+                }
               } else {
                 setAudioLevel(0);
                 setCurrentWord('');
+                setCurrentPhoneme('');
               }
             }
             
@@ -322,6 +410,7 @@ export function useDemoElevenLabsSpeech(): DemoElevenLabsSpeechHook {
     playDemoAudio,
     stopAudio,
     currentWord,
+    currentPhoneme,
     audioLevel,
     isPlaying
   };

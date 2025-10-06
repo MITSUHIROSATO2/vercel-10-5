@@ -233,7 +233,7 @@ const EnglishPhonemeToMorphs: { [key: string]: { [morphName: string]: number } }
     'A45_Mouth_Upper_Up_Right': 0.05,
     'A48_Mouth_Press_Left': 0.28,
     'A49_Mouth_Press_Right': 0.28,
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.12,
     'Mouth_Lips_Part': 0.05
   },
   // CH - chair, match
@@ -312,7 +312,7 @@ const EnglishPhonemeToMorphs: { [key: string]: { [morphName: string]: number } }
     'A25_Jaw_Open': 0.02,
     'A44_Mouth_Upper_Up_Left': 0.05,
     'A45_Mouth_Upper_Up_Right': 0.05,
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.08,
     'A48_Mouth_Press_Left': 0.24,
     'A49_Mouth_Press_Right': 0.24,
     'Mouth_Lips_Part': 0.05
@@ -341,7 +341,7 @@ const EnglishPhonemeToMorphs: { [key: string]: { [morphName: string]: number } }
     'V_Explosive': 0.4,
     'A48_Mouth_Press_Left': 0.32,
     'A49_Mouth_Press_Right': 0.32,
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.08,
     'Mouth_Plosive': 0.35,
     'Mouth_Lips_Part': 0.05
   },
@@ -541,26 +541,26 @@ const PhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
     'Mouth_Lips_Part': 0.3
   },
   'み': {
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.0,
     'V_Wide': 0.15,
     'A25_Jaw_Open': 0.1,
     'A48_Mouth_Press_Left': 0.15,
     'A49_Mouth_Press_Right': 0.15
   },
   'む': {
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.0,
     'A25_Jaw_Open': 0.1,
     'A48_Mouth_Press_Left': 0.15,
     'A49_Mouth_Press_Right': 0.15
   },
   'め': {
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.0,
     'Mouth_Open': 0.2,
     'A25_Jaw_Open': 0.2,
     'V_Wide': 0.1
   },
   'も': {
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.0,
     'A29_Mouth_Funnel': 0.25,
     'A25_Jaw_Open': 0.3,
     'V_Tight_O': 0.2
@@ -589,13 +589,13 @@ const PhonemeToMorphs: { [key: string]: { [morphName: string]: number } } = {
   
   // ん（鼻音）
   'ん': {
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.3,
     'Mouth_Lips_Part': 0.05,
     'A20_Cheek_Puff': 0.05,
     'V_None': 0.3
   },
   'ン': {
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.3,
     'Mouth_Lips_Part': 0.05,
     'A20_Cheek_Puff': 0.05,
     'V_None': 0.3
@@ -1168,7 +1168,7 @@ const EnglishVisemeProfiles: Record<string, VisemeProfile> = {
     'Mouth_Lips_Part': 0.1,
   },
   bilabial: {
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.3,
     'A48_Mouth_Press_Left': 0.35,
     'A49_Mouth_Press_Right': 0.35,
     'Mouth_Lips_Part': 0.05,
@@ -1324,7 +1324,7 @@ const JapaneseVisemeProfiles: Record<string, VisemeProfile> = {
     'V_Tight_O': 0.28,
   },
   ja_bilabial: {
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.22,
     'A48_Mouth_Press_Left': 0.28,
     'A49_Mouth_Press_Right': 0.28,
     'Mouth_Lips_Part': 0.07,
@@ -1358,11 +1358,11 @@ const JapaneseVisemeProfiles: Record<string, VisemeProfile> = {
   },
   ja_nasal: {
     'A25_Jaw_Open': 0.14,
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.18,
     'Mouth_Lips_Part': 0.12,
   },
   ja_hold: {
-    'A37_Mouth_Close': 0.1,
+    'A37_Mouth_Close': 0.26,
     'A48_Mouth_Press_Left': 0.22,
     'A49_Mouth_Press_Right': 0.22,
   },
@@ -2981,92 +2981,89 @@ function AvatarModel({
     
     // 下の歯と歯茎を下唇の動きと連動させる（改善版）
     // CC_Base_Teeth01とCC_Base_Teeth02が下の歯のボーンかチェック
-    if (teeth01Bone.current) {
-      if (isSpeaking) {
-        // 下唇の動きを取得（より詳細に）
-        const lowerLipLeft = currentMorphValues.current['A46_Mouth_Lower_Down_Left'] || 0;
-        const lowerLipRight = currentMorphValues.current['A47_Mouth_Lower_Down_Right'] || 0;
-        const jawOpen = currentMorphValues.current['A25_Jaw_Open'] || currentMorphValues.current['Move_Jaw_Down'] || 0;
-        const mouthOpen = currentMorphValues.current['Mouth_Open'] || 0;
-        const mouthBottomLipDown = currentMorphValues.current['Mouth_Bottom_Lip_Down'] || 0;
-        
-        // 複合的な唇の動きを計算
-        const combinedLipValue = Math.max(
-          (lowerLipLeft + lowerLipRight) / 2,
-          mouthBottomLipDown
-        );
-        
-        // 下の歯を下唇に追従させる（より強い連動）
-        const teethMovementY = -(combinedLipValue * 0.015 + jawOpen * 0.008 + mouthOpen * 0.005);
-        const teethRotationX = -(combinedLipValue * 0.4 + jawOpen * 0.3 + mouthOpen * 0.2);
-        
-        // 直接適用
-        const lerpSpeed = 1.0;
-        teeth01Bone.current.position.y += (teethMovementY - teeth01Bone.current.position.y) * lerpSpeed;
-        teeth01Bone.current.rotation.x += (teethRotationX - teeth01Bone.current.rotation.x) * lerpSpeed;
-        
-        // わずかに後方への移動（自然な動き）
-        teeth01Bone.current.position.z = -jawOpen * 0.002;
-        
-        teeth01Bone.current.updateMatrixWorld(true);
-        
-      } else {
-        // 元の位置に戻す（スムーズに）
-        if (Math.abs(teeth01Bone.current.position.y) > 0.0001) {
-          teeth01Bone.current.position.y *= 0.85;
-        } else {
-          teeth01Bone.current.position.y = 0;
-        }
-        if (Math.abs(teeth01Bone.current.rotation.x) > 0.0001) {
-          teeth01Bone.current.rotation.x *= 0.85;
-        } else {
-          teeth01Bone.current.rotation.x = 0;
-        }
+    if (selectedAvatar === 'adult') {
+      if (teeth01Bone.current) {
+        teeth01Bone.current.position.set(0, 0, 0);
+        teeth01Bone.current.rotation.set(0, 0, 0);
         teeth01Bone.current.updateMatrixWorld(true);
       }
-    }
-    
-    if (teeth02Bone.current) {
-      if (isSpeaking) {
-        // 下唇の動きを取得（より詳細に）
-        const lowerLipLeft = currentMorphValues.current['A46_Mouth_Lower_Down_Left'] || 0;
-        const lowerLipRight = currentMorphValues.current['A47_Mouth_Lower_Down_Right'] || 0;
-        const jawOpen = currentMorphValues.current['A25_Jaw_Open'] || currentMorphValues.current['Move_Jaw_Down'] || 0;
-        const mouthOpen = currentMorphValues.current['Mouth_Open'] || 0;
-        const mouthBottomLipDown = currentMorphValues.current['Mouth_Bottom_Lip_Down'] || 0;
-        
-        // 複合的な唇の動きを計算
-        const combinedLipValue = Math.max(
-          (lowerLipLeft + lowerLipRight) / 2,
-          mouthBottomLipDown
-        );
-        
-        // 下の歯を下唇に追従させる（より強い連動）
-        const teethMovementY = -(combinedLipValue * 0.015 + jawOpen * 0.008 + mouthOpen * 0.005);
-        const teethRotationX = -(combinedLipValue * 0.4 + jawOpen * 0.3 + mouthOpen * 0.2);
-        
-        // 直接適用
-        const lerpSpeed = 1.0;
-        teeth02Bone.current.position.y += (teethMovementY - teeth02Bone.current.position.y) * lerpSpeed;
-        teeth02Bone.current.rotation.x += (teethRotationX - teeth02Bone.current.rotation.x) * lerpSpeed;
-        
-        // わずかに後方への移動（自然な動き）
-        teeth02Bone.current.position.z = -jawOpen * 0.002;
-        
+
+      if (teeth02Bone.current) {
+        teeth02Bone.current.position.set(0, 0, 0);
+        teeth02Bone.current.rotation.set(0, 0, 0);
         teeth02Bone.current.updateMatrixWorld(true);
-      } else {
-        // 元の位置に戻す（スムーズに）
-        if (Math.abs(teeth02Bone.current.position.y) > 0.0001) {
-          teeth02Bone.current.position.y *= 0.85;
+      }
+    } else {
+      if (teeth01Bone.current) {
+        if (isSpeaking) {
+          const lowerLipLeft = currentMorphValues.current['A46_Mouth_Lower_Down_Left'] || 0;
+          const lowerLipRight = currentMorphValues.current['A47_Mouth_Lower_Down_Right'] || 0;
+          const jawOpen = currentMorphValues.current['A25_Jaw_Open'] || currentMorphValues.current['Move_Jaw_Down'] || 0;
+          const mouthOpen = currentMorphValues.current['Mouth_Open'] || 0;
+          const mouthBottomLipDown = currentMorphValues.current['Mouth_Bottom_Lip_Down'] || 0;
+
+          const combinedLipValue = Math.max(
+            (lowerLipLeft + lowerLipRight) / 2,
+            mouthBottomLipDown
+          );
+
+          const teethMovementY = -(combinedLipValue * 0.015 + jawOpen * 0.008 + mouthOpen * 0.005);
+          const teethRotationX = -(combinedLipValue * 0.4 + jawOpen * 0.3 + mouthOpen * 0.2);
+
+          const lerpSpeed = 1.0;
+          teeth01Bone.current.position.y += (teethMovementY - teeth01Bone.current.position.y) * lerpSpeed;
+          teeth01Bone.current.rotation.x += (teethRotationX - teeth01Bone.current.rotation.x) * lerpSpeed;
+          teeth01Bone.current.position.z = -jawOpen * 0.002;
+          teeth01Bone.current.updateMatrixWorld(true);
         } else {
-          teeth02Bone.current.position.y = 0;
+          if (Math.abs(teeth01Bone.current.position.y) > 0.0001) {
+            teeth01Bone.current.position.y *= 0.85;
+          } else {
+            teeth01Bone.current.position.y = 0;
+          }
+          if (Math.abs(teeth01Bone.current.rotation.x) > 0.0001) {
+            teeth01Bone.current.rotation.x *= 0.85;
+          } else {
+            teeth01Bone.current.rotation.x = 0;
+          }
+          teeth01Bone.current.updateMatrixWorld(true);
         }
-        if (Math.abs(teeth02Bone.current.rotation.x) > 0.0001) {
-          teeth02Bone.current.rotation.x *= 0.85;
+      }
+
+      if (teeth02Bone.current) {
+        if (isSpeaking) {
+          const lowerLipLeft = currentMorphValues.current['A46_Mouth_Lower_Down_Left'] || 0;
+          const lowerLipRight = currentMorphValues.current['A47_Mouth_Lower_Down_Right'] || 0;
+          const jawOpen = currentMorphValues.current['A25_Jaw_Open'] || currentMorphValues.current['Move_Jaw_Down'] || 0;
+          const mouthOpen = currentMorphValues.current['Mouth_Open'] || 0;
+          const mouthBottomLipDown = currentMorphValues.current['Mouth_Bottom_Lip_Down'] || 0;
+
+          const combinedLipValue = Math.max(
+            (lowerLipLeft + lowerLipRight) / 2,
+            mouthBottomLipDown
+          );
+
+          const teethMovementY = -(combinedLipValue * 0.015 + jawOpen * 0.008 + mouthOpen * 0.005);
+          const teethRotationX = -(combinedLipValue * 0.4 + jawOpen * 0.3 + mouthOpen * 0.2);
+
+          const lerpSpeed = 1.0;
+          teeth02Bone.current.position.y += (teethMovementY - teeth02Bone.current.position.y) * lerpSpeed;
+          teeth02Bone.current.rotation.x += (teethRotationX - teeth02Bone.current.rotation.x) * lerpSpeed;
+          teeth02Bone.current.position.z = -jawOpen * 0.002;
+          teeth02Bone.current.updateMatrixWorld(true);
         } else {
-          teeth02Bone.current.rotation.x = 0;
+          if (Math.abs(teeth02Bone.current.position.y) > 0.0001) {
+            teeth02Bone.current.position.y *= 0.85;
+          } else {
+            teeth02Bone.current.position.y = 0;
+          }
+          if (Math.abs(teeth02Bone.current.rotation.x) > 0.0001) {
+            teeth02Bone.current.rotation.x *= 0.85;
+          } else {
+            teeth02Bone.current.rotation.x = 0;
+          }
+          teeth02Bone.current.updateMatrixWorld(true);
         }
-        teeth02Bone.current.updateMatrixWorld(true);
       }
     }
     

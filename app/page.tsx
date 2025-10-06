@@ -76,6 +76,7 @@ export default function Home() {
     playDemoAudio,
     stopAudio: stopDemoAudio,
     currentWord: demoCurrentWord,
+    currentPhoneme: demoCurrentPhoneme,
     audioLevel: demoAudioLevel,
     isPlaying: isDemoAudioPlaying
   } = useDemoElevenLabsSpeech();
@@ -851,7 +852,7 @@ export default function Home() {
                   isSpeaking={isSpeaking || isCurrentlySpeaking || isDemoAudioPlaying}
                   currentWord={isDemoAudioPlaying ? demoCurrentWord : currentWord}
                   audioLevel={isDemoAudioPlaying ? demoAudioLevel : audioLevel}
-                  currentPhoneme={currentPhoneme}
+                  currentPhoneme={isDemoAudioPlaying ? demoCurrentPhoneme : currentPhoneme}
                   speechProgress={speechProgress}
                   modelPath={memoizedModelPath}
                   selectedAvatar={selectedAvatar}

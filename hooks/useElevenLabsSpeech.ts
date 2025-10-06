@@ -1,4 +1,10 @@
 import { useCallback, useRef, useState } from 'react';
+import {
+  estimateWordTimings,
+  getCurrentPhoneme as getCurrentEnglishPhoneme,
+  preprocessTextForTiming,
+  type WordTiming
+} from '@/lib/improvedEnglishLipSync';
 
 interface ElevenLabsSpeechHook {
   speak: (text: string, onEnd?: () => void, onProgress?: (progress: number) => void, language?: 'ja' | 'en') => Promise<void>;
@@ -28,11 +34,13 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
   const animationRef = useRef<number | null>(null);
   const audioInitializedRef = useRef(false);
   const audioLevelRef = useRef(0);
+  const languageRef = useRef<'ja' | 'en'>('ja');
+  const englishWordTimingsRef = useRef<WordTiming[]>([]);
+  const lastEnglishPhonemeRef = useRef<string>('');
+  const lastEnglishWordRef = useRef<string>('');
 
   // テキストから感情を検出する関数（より精度を高めた判定）
   const detectEmotion = (text: string): string => {
-    const lowerText = text.toLowerCase();
-    
     // 痛みの強度をスコア化
     let painScore = 0;
     if (text.includes('痛い') || text.includes('いたい')) painScore += 2;
@@ -104,6 +112,11 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       setIsCurrentlySpeaking(false);
       setSpeechProgress(0);
       setCurrentWord('');
+      setCurrentPhoneme('');
+      languageRef.current = language;
+      englishWordTimingsRef.current = [];
+      lastEnglishPhonemeRef.current = '';
+      lastEnglishWordRef.current = '';
 
       // 既存の音声を停止
       if (audioRef.current) {
@@ -290,7 +303,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         sourceRef.current = audioContextRef.current.createMediaElementSource(audio);
         sourceRef.current.connect(analyserRef.current);
         analyserRef.current.connect(audioContextRef.current.destination);
-      } catch (error) {
+      } catch {
         // console.warn('Web Audio API setup failed:', error);
       }
       
@@ -306,6 +319,10 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       
       audio.onloadedmetadata = () => {
         // console.log('Audio loaded, duration:', audio.duration);
+        if (language === 'en' && audio.duration > 0) {
+          const processed = preprocessTextForTiming(text);
+          englishWordTimingsRef.current = estimateWordTimings(processed, audio.duration);
+        }
       };
       
       // canplayイベントで再生可能を検知
@@ -315,142 +332,155 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       };
 
       // 音声解析の準備
-      let lastUpdateTime = 0;
-      const analyzeAudio = (timestamp?: number) => {
+      const analyzeAudio = () => {
         if (analyserRef.current && !audio.paused) {
-            // 毎フレーム更新（最高精度でリップシンク）
-            const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
-            analyserRef.current.getByteFrequencyData(dataArray);
-            
-            // より精度の高い音声レベル計算
-            // 低周波数帯域（声の基本周波数）に焦点を当てる
-            const voiceRange = dataArray.slice(0, Math.floor(dataArray.length * 0.5));
-            const average = voiceRange.reduce((sum, value) => sum + value, 0) / voiceRange.length;
-            // より積極的な正規化（音声をより強く検出）
-            const normalizedLevel = Math.max(0, Math.min((average - 10) / 60, 1));
-            // 即座に反応（スムージングを最小化）
-            const currentLevel = audioLevelRef.current || 0;
-            const smoothedLevel = currentLevel * 0.1 + normalizedLevel * 0.9;  // ほぼ即座に反応
-            audioLevelRef.current = smoothedLevel;
-            setAudioLevel(Math.max(smoothedLevel, 0.2));  // 最小値を保証
-            
-            // 音素の推定（音声レベルと連動した改善版）
-            const currentTime = audio.currentTime;
-            const duration = audio.duration;
-            const progress = currentTime / duration;
-            
-            // 現在の単語を取得（音声レベルが高い時だけ更新）
-            if (wordsRef.current.length > 0) {
-              const wordIndex = Math.floor(progress * wordsRef.current.length);
-              const word = wordsRef.current[wordIndex] || '';
-              setCurrentWord(word);
-              
-              // より精度の高い文字位置推定（音節単位）
-              const wordStartProgress = wordIndex / wordsRef.current.length;
-              const wordEndProgress = (wordIndex + 1) / wordsRef.current.length;
-              const wordRelativeProgress = Math.max(0, Math.min(1, (progress - wordStartProgress) / (wordEndProgress - wordStartProgress)));
-              
-              // 日本語の音節（モーラ）単位で処理
-              const moraCount = word.replace(/[ゃゅょャュョ]/g, '').length;
-              const moraIndex = Math.min(Math.floor(wordRelativeProgress * moraCount), moraCount - 1);
-              
-              // 現在の音節を取得
-              let currentMora = '';
-              let count = 0;
-              for (let i = 0; i < word.length; i++) {
-                if (count === moraIndex) {
-                  currentMora = word[i];
-                  // 拗音をチェック
-                  if (i + 1 < word.length && 'ゃゅょャュョ'.includes(word[i + 1])) {
-                    currentMora += word[i + 1];
-                  }
+          const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+          analyserRef.current.getByteFrequencyData(dataArray);
+
+          const voiceRange = dataArray.slice(0, Math.floor(dataArray.length * 0.5));
+          const average = voiceRange.reduce((sum, value) => sum + value, 0) / voiceRange.length;
+          const normalizedLevel = Math.max(0, Math.min((average - 10) / 60, 1));
+          const currentLevel = audioLevelRef.current || 0;
+          const smoothedLevel = currentLevel * 0.4 + normalizedLevel * 0.6;
+          audioLevelRef.current = smoothedLevel;
+
+          const currentTime = audio.currentTime;
+          const duration = audio.duration || 0;
+          const progress = duration > 0 ? currentTime / duration : 0;
+          let targetAudioLevel = Math.max(smoothedLevel, 0.15);
+          let handledByEnglish = false;
+
+          if (languageRef.current === 'en' && duration > 0) {
+            if (englishWordTimingsRef.current.length === 0) {
+              const processed = preprocessTextForTiming(text);
+              englishWordTimingsRef.current = estimateWordTimings(processed, duration);
+            }
+          }
+
+          if (languageRef.current === 'en' && englishWordTimingsRef.current.length > 0 && duration > 0) {
+            const phonemeInfo = getCurrentEnglishPhoneme(englishWordTimingsRef.current, currentTime);
+            if (phonemeInfo) {
+              handledByEnglish = true;
+
+              if (phonemeInfo.phoneme !== lastEnglishPhonemeRef.current) {
+                lastEnglishPhonemeRef.current = phonemeInfo.phoneme;
+                setCurrentPhoneme(phonemeInfo.phoneme);
+              }
+
+              let matchedWord = '';
+              for (const timing of englishWordTimingsRef.current) {
+                if (currentTime >= timing.startTime && currentTime <= timing.endTime) {
+                  matchedWord = timing.word;
                   break;
                 }
-                if (!'ゃゅょャュョ'.includes(word[i])) {
-                  count++;
-                }
               }
-              const currentChar = currentMora || word[0] || '';
-              
-              // 拡張された音素マッピング（より多くの文字に対応）
-              const phonemeMap: { [key: string]: string } = {
-                'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
-                'か': 'a', 'き': 'i', 'く': 'u', 'け': 'e', 'こ': 'o',
-                'さ': 'a', 'し': 'i', 'す': 'u', 'せ': 'e', 'そ': 'o',
-                'た': 'a', 'ち': 'i', 'つ': 'u', 'て': 'e', 'と': 'o',
-                'な': 'a', 'に': 'i', 'ぬ': 'u', 'ね': 'e', 'の': 'o',
-                'は': 'a', 'ひ': 'i', 'ふ': 'u', 'へ': 'e', 'ほ': 'o',
-                'ま': 'a', 'み': 'i', 'む': 'u', 'め': 'e', 'も': 'o',
-                'や': 'a', 'ゆ': 'u', 'よ': 'o',
-                'ら': 'a', 'り': 'i', 'る': 'u', 'れ': 'e', 'ろ': 'o',
-                'わ': 'a', 'を': 'o', 'ん': 'n',
-                'が': 'a', 'ぎ': 'i', 'ぐ': 'u', 'げ': 'e', 'ご': 'o',
-                'ざ': 'a', 'じ': 'i', 'ず': 'u', 'ぜ': 'e', 'ぞ': 'o',
-                'だ': 'a', 'ぢ': 'i', 'づ': 'u', 'で': 'e', 'ど': 'o',
-                'ば': 'a', 'び': 'i', 'ぶ': 'u', 'べ': 'e', 'ぼ': 'o',
-                'ぱ': 'a', 'ぴ': 'i', 'ぷ': 'u', 'ぺ': 'e', 'ぽ': 'o',
-                // 拗音や特殊音
-                'きゃ': 'a', 'きゅ': 'u', 'きょ': 'o',
-                'しゃ': 'a', 'しゅ': 'u', 'しょ': 'o',
-                'ちゃ': 'a', 'ちゅ': 'u', 'ちょ': 'o',
-                'にゃ': 'a', 'にゅ': 'u', 'にょ': 'o',
-                'ひゃ': 'a', 'ひゅ': 'u', 'ひょ': 'o',
-                'みゃ': 'a', 'みゅ': 'u', 'みょ': 'o',
-                'りゃ': 'a', 'りゅ': 'u', 'りょ': 'o',
-                'ぎゃ': 'a', 'ぎゅ': 'u', 'ぎょ': 'o',
-                'じゃ': 'a', 'じゅ': 'u', 'じょ': 'o',
-                'びゃ': 'a', 'びゅ': 'u', 'びょ': 'o',
-                'ぴゃ': 'a', 'ぴゅ': 'u', 'ぴょ': 'o'
-              };
-              
-              // 拗音のチェックと音素マッピング
-              let phoneme = '';
-              // currentMora（現在の音節）が拗音を含む場合はそれを使用
-              if (currentMora.length > 1 && phonemeMap[currentMora]) {
-                phoneme = phonemeMap[currentMora];
-              } else if (phonemeMap[currentChar]) {
-                phoneme = phonemeMap[currentChar];
-              } else {
-                // マッピングがない場合はデフォルト値
-                phoneme = currentChar.toLowerCase();
+              if (matchedWord !== lastEnglishWordRef.current) {
+                lastEnglishWordRef.current = matchedWord;
+                setCurrentWord(matchedWord);
               }
-              
-              // 音素の詳細な分類
-              const plosives = ['か', 'き', 'く', 'け', 'こ', 'が', 'ぎ', 'ぐ', 'げ', 'ご', 'た', 'て', 'と', 'だ', 'で', 'ど', 'ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ'];
-              const fricatives = ['さ', 'し', 'す', 'せ', 'そ', 'ざ', 'じ', 'ず', 'ぜ', 'ぞ', 'は', 'ひ', 'ふ', 'へ', 'ほ'];
-              const nasals = ['な', 'に', 'ぬ', 'ね', 'の', 'ま', 'み', 'む', 'め', 'も', 'ん'];
-              const liquids = ['ら', 'り', 'る', 'れ', 'ろ', 'わ', 'を'];
-              const semivowels = ['や', 'ゆ', 'よ'];
-              
-              if (plosives.includes(currentChar[0])) {
-                // 破裂音：一時的に口を閉じる
-                setCurrentPhoneme('plosive:' + phoneme);
-              } else if (fricatives.includes(currentChar[0])) {
-                // 摩擦音：口を細める
-                setCurrentPhoneme('fricative:' + phoneme);
-              } else if (nasals.includes(currentChar[0])) {
-                // 鼻音：鼻腔を使う
-                setCurrentPhoneme('nasal:' + phoneme);
-              } else if (liquids.includes(currentChar[0])) {
-                // 流音：舌の位置が重要
-                setCurrentPhoneme('liquid:' + phoneme);
-              } else if (semivowels.includes(currentChar[0])) {
-                // 半母音：母音に近い
-                setCurrentPhoneme('semivowel:' + phoneme);
-              } else if (currentChar === '、' || currentChar === '。') {
-                // 句読点：口を閉じる
-                setCurrentPhoneme('pause');
-              } else {
-                // 母音またはその他
-                setCurrentPhoneme('vowel:' + phoneme);
-              }
-              
-              // 進捗を更新
-              setSpeechProgress(progress * 100);
-              if (onProgress) onProgress(progress * 100);
+
+              const easedIntensity = Math.min(0.9, phonemeInfo.intensity * 0.85 + 0.05);
+              targetAudioLevel = Math.max(targetAudioLevel, easedIntensity);
             }
-            
-            animationRef.current = requestAnimationFrame(analyzeAudio);
+          }
+
+          if (!handledByEnglish && wordsRef.current.length > 0) {
+            const wordIndex = Math.floor(progress * wordsRef.current.length);
+            const word = wordsRef.current[wordIndex] || '';
+            if (lastEnglishWordRef.current !== '') {
+              lastEnglishWordRef.current = '';
+            }
+            setCurrentWord(word);
+
+            const wordStartProgress = wordIndex / wordsRef.current.length;
+            const wordEndProgress = (wordIndex + 1) / wordsRef.current.length;
+            const wordRelativeProgress = Math.max(0, Math.min(1, (progress - wordStartProgress) / (wordEndProgress - wordStartProgress)));
+
+            const moraCount = word.replace(/[ゃゅょャュョ]/g, '').length;
+            const moraIndex = Math.min(Math.floor(wordRelativeProgress * moraCount), Math.max(moraCount - 1, 0));
+
+            let currentMora = '';
+            let count = 0;
+            for (let i = 0; i < word.length; i++) {
+              if (count === moraIndex) {
+                currentMora = word[i];
+                if (i + 1 < word.length && 'ゃゅょャュョ'.includes(word[i + 1])) {
+                  currentMora += word[i + 1];
+                }
+                break;
+              }
+              if (!'ゃゅょャュョ'.includes(word[i])) {
+                count++;
+              }
+            }
+            const currentChar = currentMora || word[0] || '';
+
+            const phonemeMap: { [key: string]: string } = {
+              'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
+              'か': 'a', 'き': 'i', 'く': 'u', 'け': 'e', 'こ': 'o',
+              'さ': 'a', 'し': 'i', 'す': 'u', 'せ': 'e', 'そ': 'o',
+              'た': 'a', 'ち': 'i', 'つ': 'u', 'て': 'e', 'と': 'o',
+              'な': 'a', 'に': 'i', 'ぬ': 'u', 'ね': 'e', 'の': 'o',
+              'は': 'a', 'ひ': 'i', 'ふ': 'u', 'へ': 'e', 'ほ': 'o',
+              'ま': 'a', 'み': 'i', 'む': 'u', 'め': 'e', 'も': 'o',
+              'や': 'a', 'ゆ': 'u', 'よ': 'o',
+              'ら': 'a', 'り': 'i', 'る': 'u', 'れ': 'e', 'ろ': 'o',
+              'わ': 'a', 'を': 'o', 'ん': 'n',
+              'が': 'a', 'ぎ': 'i', 'ぐ': 'u', 'げ': 'e', 'ご': 'o',
+              'ざ': 'a', 'じ': 'i', 'ず': 'u', 'ぜ': 'e', 'ぞ': 'o',
+              'だ': 'a', 'ぢ': 'i', 'づ': 'u', 'で': 'e', 'ど': 'o',
+              'ば': 'a', 'び': 'i', 'ぶ': 'u', 'べ': 'e', 'ぼ': 'o',
+              'ぱ': 'a', 'ぴ': 'i', 'ぷ': 'u', 'ぺ': 'e', 'ぽ': 'o',
+              'きゃ': 'a', 'きゅ': 'u', 'きょ': 'o',
+              'しゃ': 'a', 'しゅ': 'u', 'しょ': 'o',
+              'ちゃ': 'a', 'ちゅ': 'u', 'ちょ': 'o',
+              'にゃ': 'a', 'にゅ': 'u', 'にょ': 'o',
+              'ひゃ': 'a', 'ひゅ': 'u', 'ひょ': 'o',
+              'みゃ': 'a', 'みゅ': 'u', 'みょ': 'o',
+              'りゃ': 'a', 'りゅ': 'u', 'りょ': 'o',
+              'ぎゃ': 'a', 'ぎゅ': 'u', 'ぎょ': 'o',
+              'じゃ': 'a', 'じゅ': 'u', 'じょ': 'o',
+              'びゃ': 'a', 'びゅ': 'u', 'びょ': 'o',
+              'ぴゃ': 'a', 'ぴゅ': 'u', 'ぴょ': 'o'
+            };
+
+            let phoneme = '';
+            if (currentMora.length > 1 && phonemeMap[currentMora]) {
+              phoneme = phonemeMap[currentMora];
+            } else if (phonemeMap[currentChar]) {
+              phoneme = phonemeMap[currentChar];
+            } else {
+              phoneme = currentChar.toLowerCase();
+            }
+
+            const plosives = ['か', 'き', 'く', 'け', 'こ', 'が', 'ぎ', 'ぐ', 'げ', 'ご', 'た', 'て', 'と', 'だ', 'で', 'ど', 'ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ'];
+            const fricatives = ['さ', 'し', 'す', 'せ', 'そ', 'ざ', 'じ', 'ず', 'ぜ', 'ぞ', 'は', 'ひ', 'ふ', 'へ', 'ほ'];
+            const nasals = ['な', 'に', 'ぬ', 'ね', 'の', 'ま', 'み', 'む', 'め', 'も', 'ん'];
+            const liquids = ['ら', 'り', 'る', 'れ', 'ろ', 'わ', 'を'];
+            const semivowels = ['や', 'ゆ', 'よ'];
+
+            if (plosives.includes(currentChar[0])) {
+              setCurrentPhoneme('plosive:' + phoneme);
+            } else if (fricatives.includes(currentChar[0])) {
+              setCurrentPhoneme('fricative:' + phoneme);
+            } else if (nasals.includes(currentChar[0])) {
+              setCurrentPhoneme('nasal:' + phoneme);
+            } else if (liquids.includes(currentChar[0])) {
+              setCurrentPhoneme('liquid:' + phoneme);
+            } else if (semivowels.includes(currentChar[0])) {
+              setCurrentPhoneme('semivowel:' + phoneme);
+            } else if (currentChar === '、' || currentChar === '。') {
+              setCurrentPhoneme('pause');
+            } else {
+              setCurrentPhoneme('vowel:' + phoneme);
+            }
+          }
+
+          setAudioLevel(targetAudioLevel);
+          setSpeechProgress(progress * 100);
+          if (onProgress) onProgress(progress * 100);
+
+          animationRef.current = requestAnimationFrame(analyzeAudio);
         }
       };
       
@@ -587,7 +617,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
                 // console.log('Fallback speech completed');
               };
               
-              utterance.onerror = (error) => {
+              utterance.onerror = (_error) => {
                 // console.error('Web Speech API error:', error);
                 setIsCurrentlySpeaking(false);
                 setIsLoading(false);
@@ -612,7 +642,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
                 }
               };
               updateProgress();
-            } catch (fallbackError) {
+            } catch {
               // console.error('Web Speech API fallback failed:', fallbackError);
               setIsCurrentlySpeaking(false);
               setIsLoading(false);
@@ -637,7 +667,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         }
         if (onEnd) onEnd();
       }
-    } catch (error) {
+    } catch {
       // console.error('ElevenLabs speech error:', error);
       setIsLoading(false);
       setIsCurrentlySpeaking(false);
@@ -703,7 +733,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         
         audioInitializedRef.current = true;
         // console.log('Audio context initialized successfully');
-      } catch (error) {
+      } catch {
         // console.error('Failed to initialize audio context:', error);
         // エラーが発生してもフラグは立てる（フォールバックを使用）
         audioInitializedRef.current = true;
