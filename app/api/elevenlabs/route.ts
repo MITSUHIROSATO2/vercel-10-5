@@ -111,6 +111,14 @@ export async function POST(request: NextRequest) {
   
   try {
     const { text, emotion = 'neutral', voiceId, voiceRole, language = 'ja' } = await request.json();
+    const requestMeta = {
+      language,
+      voiceRole: voiceRole ?? 'default',
+      emotion,
+      textPreview: text?.slice(0, 40) ?? '',
+    };
+
+    console.log('[ElevenLabs] Incoming request', requestMeta);
     
     if (!text) {
       return NextResponse.json(
@@ -129,14 +137,11 @@ export async function POST(request: NextRequest) {
     const selectedVoiceId = voiceId || (voiceRole ? voiceRoleMap[voiceRole] : undefined) || ELEVENLABS_VOICE_ID;
 
     if (!ELEVENLABS_API_KEY || !selectedVoiceId) {
-      if (!isProduction) {
-        console.error('ElevenLabs configuration check:');
-        console.error('- API Key exists:', !!ELEVENLABS_API_KEY);
-        console.error('- Voice ID exists:', !!selectedVoiceId);
-        console.error('- Voice Role:', voiceRole);
-      } else {
-        console.error('ElevenLabs API configuration missing');
-      }
+      console.error('[ElevenLabs] Missing configuration', {
+        hasApiKey: !!ELEVENLABS_API_KEY,
+        resolvedVoiceId: selectedVoiceId ?? null,
+        ...requestMeta,
+      });
       return NextResponse.json(
         { error: 'ElevenLabs APIが設定されていません' },
         { status: 500 }
@@ -144,6 +149,12 @@ export async function POST(request: NextRequest) {
     }
 
     debugLog(`🎙️ Voice role: ${voiceRole ?? 'default'} (resolved=${selectedVoiceId ? 'yes' : 'no'})`);
+    if (isProduction) {
+      console.log('[ElevenLabs] Using voice configuration', {
+        selectedVoiceId,
+        ...requestMeta,
+      });
+    }
 
     // 辞書ベースでテキストを音声用に変換
     let processedTextForTTS: string = text;
@@ -585,11 +596,13 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      if (!isProduction) {
-        console.error('ElevenLabs API Error:', response.status, errorText);
-      } else {
-        console.error('ElevenLabs API Error:', response.status);
-      }
+      console.error('[ElevenLabs] API Error', {
+        status: response.status,
+        statusText: response.statusText,
+        bodyPreview: errorText.slice(0, 200),
+        selectedVoiceId,
+        ...requestMeta,
+      });
       return NextResponse.json(
         { error: `音声生成エラー: ${response.status}` },
         { status: response.status }
@@ -601,6 +614,12 @@ export async function POST(request: NextRequest) {
     const audioBase64 = Buffer.from(audioBuffer).toString('base64');
     
     debugLog('Speech generated successfully');
+    if (isProduction) {
+      console.log('[ElevenLabs] Speech generated', {
+        audioBytes: audioBase64.length,
+        ...requestMeta,
+      });
+    }
 
     return NextResponse.json({ 
       audio: audioBase64,
@@ -608,11 +627,9 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    if (!isProduction) {
-      console.error('ElevenLabs API Error:', error);
-    } else {
-      console.error('ElevenLabs API Error occurred');
-    }
+    console.error('[ElevenLabs] Unexpected error', {
+      error,
+    });
     return NextResponse.json(
       { error: 'エラーが発生しました' },
       { status: 500 }
