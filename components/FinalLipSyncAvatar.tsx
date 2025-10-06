@@ -2197,11 +2197,11 @@ function AvatarModel({
                 mat.transparent = false;
                 mat.opacity = 1.0;
               } else if (matName.includes('std_tongue')) {
-                mat.color = new THREE.Color(0x0000ff);
-                mat.roughness = 0.2;
-                mat.metalness = 0.02;
+                mat.color = new THREE.Color(0xb54f60);
+                mat.roughness = 0.15;
+                mat.metalness = 0.0;
                 if (mat.emissive) {
-                  mat.emissive = new THREE.Color(0x0000ff);
+                  mat.emissive = new THREE.Color(0xb54f60);
                   mat.emissiveIntensity = 1.0;
                 }
                 mat.transparent = false;
@@ -3212,9 +3212,9 @@ function AvatarModel({
     }
     */
     
-    // 女性アバター用の下の歯制御（固定位置）
-    if ((teeth02Bone.current || nugLowerTeethMesh.current) && selectedAvatar === 'female') {
-      const fixedOffsetY = -0.6; // 下に固定
+    // 女性・少年アバター用の下の歯制御（固定位置）
+    if ((teeth02Bone.current || nugLowerTeethMesh.current) && (selectedAvatar === 'female' || selectedAvatar === 'boy' || selectedAvatar === 'boy_improved')) {
+      const fixedOffsetY = selectedAvatar === 'female' ? -0.6 : -0.6; // 下に固定
 
       if (teeth02Bone.current) {
         teeth02Bone.current.position.y = fixedOffsetY;
@@ -3233,9 +3233,8 @@ function AvatarModel({
       }
     }
 
-    // 少年アバター用の下の歯制御
-    // NUG_Base_Teeth_2メッシュとCC_Base_Teeth02ボーンの両方を制御
-    if ((teeth02Bone.current || nugLowerTeethMesh.current) && (selectedAvatar === 'boy' || selectedAvatar === 'boy_improved')) {
+    // 以下は使用されなくなった少年アバター用の動的制御（削除予定）
+    if (false && (teeth02Bone.current || nugLowerTeethMesh.current) && (selectedAvatar === 'boy' || selectedAvatar === 'boy_improved')) {
       if (isSpeaking) {
         const jawOpenValue = currentMorphValues.current['A25_Jaw_Open'] || currentMorphValues.current['Move_Jaw_Down'] || 0;
         const mouthOpenValue = currentMorphValues.current['Mouth_Open'] || 0;
