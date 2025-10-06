@@ -3676,7 +3676,7 @@ function FinalLipSyncAvatarComponent({
     ? { position: [0, 1.71, 0.8], fov: 27, target: [0, 1.71, 0] } // 少年用：拡大（fov 30→27）
     : isFemaleModel
     ? { position: [0, 1.49, 0.8], fov: 30, target: [0, 1.49, 0] } // 女性用：水平視点
-    : { position: [0, 1.68, 0.7], fov: 28, target: [0, 1.7, 0] }; // 成人男性用
+    : { position: [0, 1.68, 0.8], fov: 28, target: [0, 1.7, 0] }; // 成人男性用
   
   // リップシンク強度設定（少年と少年改は同じ強度）
   const lipSyncIntensity = (isBoyModel || isBoyImprovedModel) ? 1.0 : 1.0;
