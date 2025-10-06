@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, useLayoutEffect, useState, Suspense } from 'react';
+import React, { useRef, useEffect, useLayoutEffect, useState, Suspense, useCallback } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment } from '@react-three/drei';
 import * as THREE from 'three';
@@ -1452,6 +1452,11 @@ function isJapaneseCharacter(char: string): boolean {
   return JAPANESE_CHAR_REGEX.test(char);
 }
 
+const LOWER_TEETH_REST_POSE: Record<string, { y: number; rotX: number; z: number }> = {
+  adult: { y: -0.02, rotX: -0.08, z: 0 },
+  adult_improved: { y: -0.02, rotX: -0.08, z: 0 }
+};
+
 
 function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): boolean {
   if (!scene || scene.userData.texturesApplied) {
@@ -2024,11 +2029,44 @@ function AvatarModel({
   const previousWord = useRef<string>('');
   const wordChangeTime = useRef<number>(0);
   const anticipationMorphs = useRef<{ [key: string]: number }>({});
+  const anticipationReady = useRef(false);
   const audioHistory = useRef<number[]>([]);
   const smoothedAudioLevel = useRef<number>(0);
   const peakDetectionThreshold = useRef<number>(0.3);
   const lastPeakTime = useRef<number>(0);
   const lastDebugTime = useRef<number>(0);
+  const applyLowerTeethRestPose = useCallback(() => {
+    const restPose = LOWER_TEETH_REST_POSE[selectedAvatar];
+    if (!restPose) {
+      return;
+    }
+
+    if (teeth01Bone.current) {
+      teeth01Bone.current.position.set(0, restPose.y, restPose.z);
+      teeth01Bone.current.rotation.set(restPose.rotX, 0, 0);
+      teeth01Bone.current.updateMatrixWorld(true);
+    }
+
+    if (teeth02Bone.current) {
+      teeth02Bone.current.position.set(0, restPose.y, restPose.z);
+      teeth02Bone.current.rotation.set(restPose.rotX, 0, 0);
+      teeth02Bone.current.updateMatrixWorld(true);
+    }
+
+    if (lowerTeethMesh.current && !lowerTeethMesh.current.isSkinnedMesh) {
+      lowerTeethMesh.current.position.y = lowerTeethOriginalY.current + restPose.y;
+      lowerTeethMesh.current.position.z = restPose.z;
+      lowerTeethMesh.current.rotation.x = restPose.rotX;
+      lowerTeethMesh.current.updateMatrixWorld(true);
+    }
+
+    if (nugLowerTeethMesh.current) {
+      nugLowerTeethMesh.current.position.y = lowerTeethOriginalY.current + restPose.y;
+      nugLowerTeethMesh.current.position.z = restPose.z;
+      nugLowerTeethMesh.current.rotation.x = restPose.rotX;
+      nugLowerTeethMesh.current.updateMatrixWorld(true);
+    }
+  }, [selectedAvatar]);
   
   // GLBファイル読み込み（Suspenseと連携）
   // modelPathは既にmodelPaths.tsでクリーニング済み
@@ -2177,6 +2215,7 @@ function AvatarModel({
             });
 
             scene.userData.adultTexturesApplied = true;
+            applyLowerTeethRestPose();
           } catch (error) {
             console.warn('[AvatarModel] 成人男性アバターのマテリアル処理でエラー:', error);
           }
@@ -2246,14 +2285,32 @@ function AvatarModel({
           jawBoneOriginalRotation.current = child.rotation.clone();
         } else if (child.name === 'CC_Base_Teeth01' || child.name === 'DEF-teethT' || child.name === 'teethT') {
           teeth01Bone.current = child;
+          const restPose = LOWER_TEETH_REST_POSE[selectedAvatar];
+          if (restPose) {
+            child.position.set(0, restPose.y, restPose.z);
+            child.rotation.set(restPose.rotX, 0, 0);
+            child.updateMatrixWorld(true);
+          }
         } else if (child.name === 'CC_Base_Teeth02') {
           // CC_Base_Teeth02を優先的に使用
           teeth02Bone.current = child;
           lowerTeethBone.current = child;  // 下の歯ボーンとして記録
+          const restPose = LOWER_TEETH_REST_POSE[selectedAvatar];
+          if (restPose) {
+            child.position.set(0, restPose.y, restPose.z);
+            child.rotation.set(restPose.rotX, 0, 0);
+            child.updateMatrixWorld(true);
+          }
         } else if ((child.name === 'DEF-teethB' || child.name === 'teethB') && !teeth02Bone.current) {
           // CC_Base_Teeth02が見つからない場合のフォールバック
           teeth02Bone.current = child;
           lowerTeethBone.current = child;
+          const restPose = LOWER_TEETH_REST_POSE[selectedAvatar];
+          if (restPose) {
+            child.position.set(0, restPose.y, restPose.z);
+            child.rotation.set(restPose.rotX, 0, 0);
+            child.updateMatrixWorld(true);
+          }
         } else if (child.name === 'CC_Base_Tongue01') {
           tongue01Bone.current = child;
           tongueBonesOriginal.current['tongue01'] = {
@@ -2317,8 +2374,18 @@ function AvatarModel({
           const worldPos = new THREE.Vector3();
           child.getWorldPosition(worldPos);
           lowerTeethOriginalY.current = worldPos.y;
+          const restPose = LOWER_TEETH_REST_POSE[selectedAvatar];
+          if (restPose && !child.isSkinnedMesh) {
+            child.position.y = worldPos.y + restPose.y;
+            child.position.z = restPose.z;
+            child.rotation.x = restPose.rotX;
+            child.updateMatrixWorld(true);
+            const updatedPos = new THREE.Vector3();
+            child.getWorldPosition(updatedPos);
+            lowerTeethOriginalY.current = updatedPos.y - restPose.y;
+          }
         } else if (child.name === 'CC_Base_Body_8' ||
-                   (child.material && child.material.name && child.material.name.includes('Std_Upper_Teeth'))) {
+            (child.material && child.material.name && child.material.name.includes('Std_Upper_Teeth'))) {
           upperTeethMesh.current = child;
         } else if (child.name === 'CC_Base_Body_1' ||
                    (child.material && child.material.name && child.material.name.includes('Std_Tongue'))) {
@@ -2420,10 +2487,17 @@ function AvatarModel({
     setMorphTargets(morphMeshes);
     setOralMeshes(oralMeshList);
     })(); // async即時実行関数の終了
-  }, [scene, onLoaded, modelPath, selectedAvatar, isBoyImprovedModel]); // 依存配列を適切に設定
+  }, [scene, onLoaded, modelPath, selectedAvatar, isBoyImprovedModel, applyLowerTeethRestPose]); // 依存配列を適切に設定
   
   useFrame((state, delta) => {
     if (!group.current) return;
+
+    if (!isSpeaking) {
+      anticipationReady.current = false;
+      if (Object.keys(anticipationMorphs.current).length > 0) {
+        anticipationMorphs.current = {};
+      }
+    }
 
     // 少年アバターの髪と眉毛の環境マップを強制的に削除（マット仕上げを維持）
     if (selectedAvatar === 'boy' && scene) {
@@ -2580,9 +2654,13 @@ function AvatarModel({
         const nextMapping = getPhonemeMapping(nextChar, selectedAvatar);
         
         // 先行動作として口の形を準備（50%の強度で）
-        Object.entries(nextMapping).forEach(([morphName, value]) => {
-          anticipationMorphs.current[morphName] = value * 0.5;
-        });
+        if (anticipationReady.current) {
+          Object.entries(nextMapping).forEach(([morphName, value]) => {
+            anticipationMorphs.current[morphName] = value * 0.5;
+          });
+        } else {
+          anticipationMorphs.current = {};
+        }
       }
     }
     
@@ -2621,6 +2699,9 @@ function AvatarModel({
       // 実際の音声レベルを使用（スムージング済み）
       const realAudioLevel = smoothedAudioLevel.current || audioLevel || 0.3;
       const baseLevel = Math.min(realAudioLevel * 2, 1.0); // 音声レベルを増幅
+      if (realAudioLevel > 0.06) {
+        anticipationReady.current = true;
+      }
       
       // 周波数成分による口の形の調整
       let frequencyModifier = 1.0;
@@ -2692,25 +2773,34 @@ function AvatarModel({
           phonemeContext = 'japanese';
         }
 
-        // 音声レベルに完全に同期した口の動き
-        Object.entries(currentMapping).forEach(([morphName, value]) => {
-          // 音声波形の強度に直接連動
-          const syncedValue = value * baseLevel * frequencyModifier;
+        if (!(phonemeContext === 'english' && !anticipationReady.current)) {
+          // 音声レベルに完全に同期した口の動き
+          Object.entries(currentMapping).forEach(([morphName, value]) => {
+            const syncedValue = value * baseLevel * frequencyModifier;
 
-          // 顎の動きは音声レベルに特に敏感に反応
-          if (morphName === 'A25_Jaw_Open' || morphName === 'Move_Jaw_Down') {
-            targetMorphs[morphName] = syncedValue * (0.8 + realAudioLevel * 0.4);
-          } else {
-            targetMorphs[morphName] = syncedValue;
-          }
-        });
-        
+            if (morphName === 'A25_Jaw_Open' || morphName === 'Move_Jaw_Down') {
+              targetMorphs[morphName] = syncedValue * (0.8 + realAudioLevel * 0.4);
+            } else {
+              targetMorphs[morphName] = syncedValue;
+            }
+          });
+        }
+
         // 次の音素への準備は削除（予備動作なし）
-        
-        // 音声レベルによる追加の口の開き（リアルタイム同期）
-        const additionalOpen = realAudioLevel * 0.3;
-        targetMorphs['A25_Jaw_Open'] = (targetMorphs['A25_Jaw_Open'] || 0) + additionalOpen;
-        targetMorphs['Mouth_Open'] = (targetMorphs['Mouth_Open'] || 0) + additionalOpen * 0.7;
+
+        if (phonemeContext === 'english' && anticipationReady.current) {
+          const flapLevel = baseLevel;
+          const animeJaw = flapLevel < 0.22 ? 0.05 : flapLevel < 0.45 ? 0.26 : 0.48;
+          const animeMouth = animeJaw * 0.65;
+          targetMorphs['A25_Jaw_Open'] = Math.min(Math.max(targetMorphs['A25_Jaw_Open'] || 0, animeJaw), 0.5);
+          targetMorphs['Mouth_Open'] = Math.min(Math.max(targetMorphs['Mouth_Open'] || 0, animeMouth), 0.38);
+        }
+
+        if (anticipationReady.current || phonemeContext !== 'english') {
+          const additionalOpen = realAudioLevel * 0.18;
+          targetMorphs['A25_Jaw_Open'] = (targetMorphs['A25_Jaw_Open'] || 0) + additionalOpen;
+          targetMorphs['Mouth_Open'] = (targetMorphs['Mouth_Open'] || 0) + additionalOpen * 0.7;
+        }
         
       } else {
         // デフォルトでも音声レベルに応じて口を動かす
@@ -2721,7 +2811,7 @@ function AvatarModel({
       // 音声の立ち上がり・立ち下がり検出は削除（予備動作なし）
     }
 
-    if (Object.keys(anticipationMorphs.current).length > 0) {
+    if (anticipationReady.current && Object.keys(anticipationMorphs.current).length > 0) {
       Object.entries(anticipationMorphs.current).forEach(([morphName, value]) => {
         const anticipationWeight = phonemeContext === 'english' ? 0.3 : phonemeContext === 'japanese' ? 0.25 : 0.2;
         const weightedValue = value * anticipationWeight;
@@ -2981,18 +3071,8 @@ function AvatarModel({
     
     // 下の歯と歯茎を下唇の動きと連動させる（改善版）
     // CC_Base_Teeth01とCC_Base_Teeth02が下の歯のボーンかチェック
-    if (selectedAvatar === 'adult') {
-      if (teeth01Bone.current) {
-        teeth01Bone.current.position.set(0, 0, 0);
-        teeth01Bone.current.rotation.set(0, 0, 0);
-        teeth01Bone.current.updateMatrixWorld(true);
-      }
-
-      if (teeth02Bone.current) {
-        teeth02Bone.current.position.set(0, 0, 0);
-        teeth02Bone.current.rotation.set(0, 0, 0);
-        teeth02Bone.current.updateMatrixWorld(true);
-      }
+    if (LOWER_TEETH_REST_POSE[selectedAvatar]) {
+      applyLowerTeethRestPose();
     } else {
       if (teeth01Bone.current) {
         if (isSpeaking) {
