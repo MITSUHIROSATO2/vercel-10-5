@@ -53,6 +53,7 @@ export default function AIEvaluationResult({
   const [activeTab, setActiveTab] = useState('overview');
   const [showScenarioSelector, setShowScenarioSelector] = useState(false);
   const [hasEvaluated, setHasEvaluated] = useState(false);
+  const evaluationModelLabel = process.env.NEXT_PUBLIC_OPENAI_EVALUATION_MODEL_LABEL || 'OpenAI GPT-4o';
 
   const generateEvaluation = useCallback(async () => {
     setIsLoading(true);
@@ -252,7 +253,7 @@ export default function AIEvaluationResult({
                 <span>🤖</span> {language === 'ja' ? 'AI医療面接評価' : 'AI Medical Interview Evaluation'}
               </h2>
               <p className="text-gray-400 mt-1 text-sm">
-                {language === 'ja' ? 'OpenAI GPT-5 による自動評価結果' : 'Automatic Evaluation by OpenAI GPT-5'}
+                {language === 'ja' ? `${evaluationModelLabel} による自動評価結果` : `Automatic Evaluation by ${evaluationModelLabel}`}
               </p>
             </div>
             <button

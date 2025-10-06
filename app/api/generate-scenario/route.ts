@@ -5,6 +5,9 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const SCENARIO_MODEL = process.env.OPENAI_SCENARIO_MODEL?.trim() || 'gpt-4o-mini';
+const SCENARIO_FALLBACK_MODEL = process.env.OPENAI_SCENARIO_FALLBACK_MODEL?.trim() || 'gpt-4o';
+
 export async function POST(request: Request) {
   try {
     const { theme, language } = await request.json();
@@ -167,17 +170,37 @@ Generate realistic and specific content for each field.
 Leave specialCircumstances blank unless there are special considerations needed.
 `;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-5',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: themePrompts[theme] || themePrompts.random }
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.8,
-    });
+    const generateScenarioWithModel = async (model: string) => {
+      const completion = await openai.chat.completions.create({
+        model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: themePrompts[theme] || themePrompts.random }
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.8,
+      });
 
-    const generatedScenario = JSON.parse(response.choices[0].message.content || '{}');
+      const content = completion.choices[0].message.content;
+      if (!content) {
+        throw new Error(`Scenario generation returned empty content (model: ${model})`);
+      }
+
+      return JSON.parse(content);
+    };
+
+    let generatedScenario;
+
+    try {
+      generatedScenario = await generateScenarioWithModel(SCENARIO_MODEL);
+    } catch (modelError: any) {
+      if (modelError?.response?.status === 404 || modelError?.code === 'model_not_found') {
+        console.warn(`Scenario model ${SCENARIO_MODEL} not available. Falling back to ${SCENARIO_FALLBACK_MODEL}.`);
+        generatedScenario = await generateScenarioWithModel(SCENARIO_FALLBACK_MODEL);
+      } else {
+        throw modelError;
+      }
+    }
 
     return NextResponse.json({ scenario: generatedScenario });
   } catch (error) {

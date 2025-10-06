@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       }
 
       // If API fails, fall back to mock response
-      const mockResponse = getRandomMockResponse();
+      const mockResponse = getRandomMockResponse(language);
       if (!isProduction) {
         console.log('Falling back to mock response');
       }

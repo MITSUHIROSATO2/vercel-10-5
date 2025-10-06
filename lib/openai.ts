@@ -18,6 +18,9 @@ const createOpenAIClient = () => {
 
 const openai = createOpenAIClient();
 
+const DEFAULT_PATIENT_MODEL = (process.env.OPENAI_API_MODEL?.trim() || 'gpt-4o-mini');
+const FALLBACK_PATIENT_MODEL = (process.env.OPENAI_API_FALLBACK_MODEL?.trim() || 'gpt-3.5-turbo');
+
 export interface PatientMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -541,7 +544,7 @@ Hesitation expressions:
 You are a simulated patient cooperating with medical education. Provide information gradually to help learners practice appropriate questioning skills and offer good interview practice opportunities.`;
 
     const completion = await openai.chat.completions.create({
-      model: process.env.OPENAI_API_MODEL || 'gpt-5',  // 環境変数からモデルを取得（デフォルト: GPT-5）
+      model: DEFAULT_PATIENT_MODEL,  // 環境変数からモデルを取得（デフォルト: gpt-4o-mini）
       messages: [
         { role: 'system', content: systemPrompt },
         ...messages
@@ -559,10 +562,10 @@ You are a simulated patient cooperating with medical education. Provide informat
   } catch (error: any) {
     console.error('OpenAI API Error:', error);
     
-    // GPT-4が使用できない場合はGPT-3.5にフォールバック
+    // 指定モデルが使用できない場合はフォールバックモデルに切り替え
     if (error.response?.status === 404 || error.code === 'model_not_found') {
       try {
-        console.log('Falling back to GPT-3.5-turbo...');
+        console.log(`Falling back to ${FALLBACK_PATIENT_MODEL}...`);
         const systemPrompt = `あなたは歯科医院を訪れた模擬患者（SP）です。
 
 患者情報：
@@ -595,7 +598,7 @@ ${patientScenario}
 × 同じ情報の繰り返し`;
 
         const completion = await openai.chat.completions.create({
-          model: process.env.OPENAI_API_MODEL || 'gpt-5',
+          model: FALLBACK_PATIENT_MODEL,
           messages: [
             { role: 'system', content: systemPrompt },
             ...messages
@@ -608,7 +611,7 @@ ${patientScenario}
         
         return improveJapaneseResponse(completion.choices[0].message.content || '');
       } catch (fallbackError) {
-        console.error('Fallback to GPT-3.5 also failed:', fallbackError);
+        console.error(`Fallback to ${FALLBACK_PATIENT_MODEL} also failed:`, fallbackError);
         throw fallbackError;
       }
     }

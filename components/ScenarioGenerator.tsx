@@ -12,6 +12,7 @@ interface ScenarioGeneratorProps {
 export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja' }: ScenarioGeneratorProps) {
   const [selectedTheme, setSelectedTheme] = useState<string>('random');
   const [isGenerating, setIsGenerating] = useState(false);
+  const scenarioModelLabel = process.env.NEXT_PUBLIC_OPENAI_SCENARIO_MODEL_LABEL || 'OpenAI GPT-4o mini';
 
   const themes = language === 'ja' ? [
     { id: 'random', label: '完全ランダム', icon: '🎲', description: 'すべての要素をランダムに生成' },
@@ -77,7 +78,7 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
         <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 p-6 border-b border-cyan-500/30">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
-              {language === 'ja' ? 'シナリオ新規自動生成 by OpenAI GPT-5' : 'Generate New Scenario by OpenAI GPT-5'}
+              {language === 'ja' ? `シナリオ新規自動生成 by ${scenarioModelLabel}` : `Generate New Scenario with ${scenarioModelLabel}`}
             </h2>
             <div className="flex gap-2">
               <button
