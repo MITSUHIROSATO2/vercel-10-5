@@ -139,14 +139,22 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       const emotion = detectEmotion(text);
       console.log(`Detected emotion: ${emotion} for text: "${text.substring(0, 50)}..."`)
 
-      // ElevenLabs APIを呼び出し（感情パラメータと言語設定付き）
-      const response = await fetch('/api/elevenlabs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text, emotion, language, voiceRole }),
-      });
+      const requestSpeech = async (role?: VoiceRole) => {
+        return fetch('/api/elevenlabs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text, emotion, language, voiceRole: role }),
+        });
+      };
+
+      let response = await requestSpeech(voiceRole);
+
+      if (!response.ok && voiceRole) {
+        console.warn(`ElevenLabs API error with voiceRole=${voiceRole}. Retrying with default voice.`);
+        response = await requestSpeech(undefined);
+      }
 
       if (!response.ok) {
         console.warn(`ElevenLabs API error: ${response.status}. Falling back to Web Speech API.`);
@@ -204,7 +212,22 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         throw new Error(`音声生成エラー: ${response.status}`);
       }
 
-      const data = await response.json();
+      let data = await response.json();
+
+      if (data.error && voiceRole) {
+        console.warn(`ElevenLabs API returned error for voiceRole=${voiceRole}. Retrying with default voice.`);
+        const retryResponse = await requestSpeech(undefined);
+        if (retryResponse.ok) {
+          data = await retryResponse.json();
+        } else {
+          console.warn(`Retry without voiceRole failed with status ${retryResponse.status}.`);
+          if (typeof window !== 'undefined' && window.speechSynthesis) {
+            // fall through to Web Speech fallback below
+          } else {
+            throw new Error(`音声生成エラー: ${retryResponse.status}`);
+          }
+        }
+      }
 
       if (data.error) {
         console.warn(`ElevenLabs API returned error: ${data.error}. Falling back to Web Speech API.`);
@@ -605,7 +628,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
           if (typeof window !== 'undefined' && window.speechSynthesis) {
             try {
               const utterance = new SpeechSynthesisUtterance(text);
-              utterance.lang = 'ja-JP';
+              utterance.lang = language === 'en' ? 'en-US' : 'ja-JP';
               utterance.rate = 1.0;
               utterance.pitch = 1.0;
               utterance.volume = 0.8;
