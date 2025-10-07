@@ -717,7 +717,6 @@ export default function Home() {
   const handleSaveEvaluation = (evaluation: EvaluationType) => {
     // 新規作成のみ
     setEvaluations(prev => [...prev, evaluation]);
-    setShowAIEvaluation(false);
 
     // localStorageに保存
     const storedEvaluations = localStorage.getItem('evaluations');
@@ -1255,6 +1254,7 @@ export default function Home() {
           onNewScenario={() => {
             // シナリオ選択機能を有効化（ボタンのクリックで処理）
           }}
+          interviewDurationSeconds={interviewTime}
         />
       )}
 

@@ -13,6 +13,7 @@ interface AIEvaluationResultProps {
   language?: 'ja' | 'en';
   availableScenarios?: Array<{ id: string; name: string }>;
   onScenarioSelect?: (scenarioId: string) => void;
+  interviewDurationSeconds?: number;
 }
 
 interface EvaluationResult {
@@ -34,7 +35,29 @@ interface EvaluationResult {
     medicalInfo: string;
     overall: string;
   };
+  interviewDurationSeconds?: number;
+  interviewDurationFormatted?: string;
 }
+
+const formatDuration = (seconds?: number) => {
+  if (typeof seconds !== 'number' || Number.isNaN(seconds) || seconds < 0) {
+    return '00:00';
+  }
+  const totalSeconds = Math.floor(seconds);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const secs = totalSeconds % 60;
+
+  const mm = minutes.toString().padStart(2, '0');
+  const ss = secs.toString().padStart(2, '0');
+
+  if (hours > 0) {
+    const hh = hours.toString().padStart(2, '0');
+    return `${hh}:${mm}:${ss}`;
+  }
+
+  return `${mm}:${ss}`;
+};
 
 export default function AIEvaluationResult({
   messages,
@@ -45,7 +68,8 @@ export default function AIEvaluationResult({
   onNewScenario,
   language = 'ja',
   availableScenarios = [],
-  onScenarioSelect
+  onScenarioSelect,
+  interviewDurationSeconds = 0
 }: AIEvaluationResultProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
@@ -58,6 +82,7 @@ export default function AIEvaluationResult({
   const generateEvaluation = useCallback(async () => {
     setIsLoading(true);
     setError(null);
+    const formattedDuration = formatDuration(interviewDurationSeconds);
     
     try {
       // LocalStorageからカスタム評価項目を取得
@@ -80,7 +105,12 @@ export default function AIEvaluationResult({
       }
 
       const data = await response.json();
-      setEvaluation(data.evaluation);
+      const enrichedEvaluation: EvaluationResult = {
+        ...data.evaluation,
+        interviewDurationSeconds,
+        interviewDurationFormatted: formattedDuration
+      };
+      setEvaluation(enrichedEvaluation);
 
       // 評価を保存（会話ログとAI評価を含む）
       if (onSave && data.evaluation) {
@@ -173,6 +203,8 @@ export default function AIEvaluationResult({
           id: `eval_${Date.now()}`,
           scenarioId,
           timestamp: new Date(),
+          interviewDurationSeconds,
+          interviewDurationFormatted: formattedDuration,
           totalScore: data.evaluation.totalScore || 0,
           maxScore: data.evaluation.maxScore || 100,
           evaluatorName: data.evaluation.evaluatorName || 'AI自動評価システム',
@@ -203,7 +235,7 @@ export default function AIEvaluationResult({
     } finally {
       setIsLoading(false);
     }
-  }, [language, messages, onSave, scenarioId]);
+  }, [interviewDurationSeconds, language, messages, onSave, scenarioId]);
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-400';
@@ -311,18 +343,29 @@ export default function AIEvaluationResult({
               </div>
 
               {/* 総合評価タブ */}
-              {activeTab === 'overview' && (
-                <div className="space-y-6">
-                  {/* スコア */}
-                  <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/20">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-white">
-                        {language === 'ja' ? '総合スコア' : 'Total Score'}
-                      </h3>
-                      <span className={`text-4xl font-bold ${getScoreColor(evaluation.totalScore)}`}>
-                        {evaluation.totalScore}{language === 'ja' ? '点' : ' points'}
+          {activeTab === 'overview' && (
+            <div className="space-y-6">
+              {/* スコア */}
+              <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/20">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">
+                      {language === 'ja' ? '総合スコア' : 'Total Score'}
+                    </h3>
+                    <div className="mt-2 inline-flex items-center gap-2 text-sm text-gray-300 bg-gray-900/40 border border-cyan-500/20 px-3 py-1 rounded-lg">
+                      <span>⏱️</span>
+                      <span className="text-gray-400">
+                        {language === 'ja' ? '面接時間' : 'Interview Duration'}:
+                      </span>
+                      <span className="text-white font-semibold">
+                        {evaluation.interviewDurationFormatted ?? formatDuration(evaluation.interviewDurationSeconds ?? interviewDurationSeconds)}
                       </span>
                     </div>
+                  </div>
+                  <span className={`text-4xl font-bold ${getScoreColor(evaluation.totalScore)}`}>
+                    {evaluation.totalScore}{language === 'ja' ? '点' : ' points'}
+                  </span>
+                </div>
                     <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
                       <div
                         className={`h-full transition-all duration-1000 ${

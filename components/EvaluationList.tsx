@@ -40,6 +40,28 @@ export default function EvaluationList({
     });
   };
 
+  const formatDuration = (seconds?: number) => {
+    if (typeof seconds !== 'number' || Number.isNaN(seconds) || seconds < 0) {
+      return '00:00';
+    }
+    const totalSeconds = Math.floor(seconds);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+    const mm = minutes.toString().padStart(2, '0');
+    const ss = secs.toString().padStart(2, '0');
+    if (hours > 0) {
+      const hh = hours.toString().padStart(2, '0');
+      return `${hh}:${mm}:${ss}`;
+    }
+    return `${mm}:${ss}`;
+  };
+
+  const getDurationLabel = (evaluation: InterviewEvaluation) => {
+    if (evaluation.interviewDurationFormatted) return evaluation.interviewDurationFormatted;
+    return formatDuration(evaluation.interviewDurationSeconds);
+  };
+
   // 評価詳細をDOCXファイルとしてエクスポート
   const exportEvaluation = async (evaluation: InterviewEvaluation) => {
     const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = await loadDocxModule();
@@ -77,6 +99,12 @@ export default function EvaluationList({
         children: [
           new TextRun({ text: language === 'ja' ? '評価日時: ' : 'Evaluation Date: ', bold: true }),
           new TextRun(formatDate(evaluation.timestamp))
+        ]
+      }),
+      new Paragraph({
+        children: [
+          new TextRun({ text: language === 'ja' ? '面接時間: ' : 'Interview Duration: ', bold: true }),
+          new TextRun(getDurationLabel(evaluation))
         ]
       }),
       new Paragraph({
@@ -505,6 +533,12 @@ export default function EvaluationList({
         }),
         new Paragraph({
           children: [
+            new TextRun({ text: language === 'ja' ? '面接時間: ' : 'Interview Duration: ', bold: true }),
+            new TextRun(getDurationLabel(evaluation))
+          ]
+        }),
+        new Paragraph({
+          children: [
             new TextRun({ text: language === 'ja' ? '評価者: ' : 'Evaluator: ', bold: true }),
             new TextRun(evaluation.evaluatorName || (language === 'ja' ? '未記入' : 'Not entered'))
           ]
@@ -655,6 +689,12 @@ export default function EvaluationList({
                               {evaluation.totalScore || 0} / {evaluation.maxScore || 100} {language === 'ja' ? '点' : 'points'}
                             </span>
                           </div>
+                          <div>
+                            <span className="text-gray-400">
+                              {language === 'ja' ? '面接時間' : 'Interview Duration'}:
+                            </span>
+                            <span className="text-white">{getDurationLabel(evaluation)}</span>
+                          </div>
                         </div>
 
                         {evaluation.notes && (
@@ -740,6 +780,14 @@ export default function EvaluationList({
                                         {evaluation.totalScore && evaluation.maxScore
                                           ? Math.round((evaluation.totalScore / evaluation.maxScore) * 100)
                                           : 0}%
+                                      </p>
+                                    </div>
+                                    <div className="col-span-2 sm:col-span-1">
+                                      <span className="text-gray-400 text-xs">
+                                        {language === 'ja' ? '面接時間' : 'Interview Duration'}
+                                      </span>
+                                      <p className="text-xl font-semibold text-white">
+                                        {getDurationLabel(evaluation)}
                                       </p>
                                     </div>
                                   </div>

@@ -20,6 +20,8 @@ export interface InterviewEvaluation {
   id: string;
   scenarioId: string;
   timestamp: Date;
+  interviewDurationSeconds?: number;
+  interviewDurationFormatted?: string;
   totalScore: number;
   maxScore: number;
   categories: {
@@ -62,6 +64,8 @@ export const evaluationTemplate: InterviewEvaluation = {
   id: '',
   scenarioId: '',
   timestamp: new Date(),
+  interviewDurationSeconds: 0,
+  interviewDurationFormatted: '00:00',
   totalScore: 0,
   maxScore: 100,
   categories: {
