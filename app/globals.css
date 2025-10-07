@@ -156,14 +156,14 @@
   }
 
   .responsive-container {
-    width: min(1200px, calc(100vw - 2.5rem));
+    width: min(1280px, calc(100vw - 2.5rem));
     margin-left: auto;
     margin-right: auto;
   }
 
   @media (min-width: 1600px) {
     .responsive-container {
-      width: min(1400px, calc(100vw - 4rem));
+      width: min(1440px, calc(100vw - 4rem));
     }
   }
 }

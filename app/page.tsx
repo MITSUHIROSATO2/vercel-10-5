@@ -769,17 +769,17 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-cyan-900 via-slate-900 to-blue-900 tech-grid">
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent" />
       
-      <div className="responsive-container px-4 py-8 sm:px-6 lg:px-8 relative z-10">
-        <header className="text-center mb-8">
-          <h1 className="heading-hero font-bold mb-4" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+      <div className="responsive-container px-4 py-6 sm:px-6 lg:px-8 relative z-10">
+        <header className="text-center mb-6">
+          <h1 className="heading-display font-bold mb-3 text-balance" style={{ fontFamily: 'Orbitron, sans-serif' }}>
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent neon-glow">
               AI DENTAL INTERVIEW SIMULATION
             </span>
           </h1>
-          <div className="mt-4 w-32 h-1 mx-auto bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
+          <div className="mt-3 w-28 h-1 mx-auto bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
         </header>
 
-        <div className="space-y-6">
+        <div className="space-y-5">
           {/* 上部：アバター表示 */}
           <div className="glass-effect rounded-2xl border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
             <div className="relative z-0 w-full">
@@ -862,7 +862,7 @@ export default function Home() {
                 </>
               )}
               {/* リップシンク対応アバター表示部分 */}
-              <div className="scan-overlay" style={{ minHeight: '400px' }}>
+              <div className="scan-overlay" style={{ minHeight: 'clamp(260px, 42vw, 360px)' }}>
                 <FinalLipSyncAvatar
                   key={selectedAvatar} // アバター変更時に完全に再マウント
                   isSpeaking={isSpeaking || isCurrentlySpeaking || isDemoAudioPlaying}
@@ -879,9 +879,9 @@ export default function Home() {
           </div>
 
           {/* 下部：シナリオ選択、AI患者情報、医療面接 */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
             {/* 左側：シナリオ選択とAI患者情報ボタン */}
-            <div className="flex flex-col h-[400px] gap-4">
+            <div className="flex flex-col gap-4">
             <div className="glass-effect rounded-2xl p-4 border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="heading-section font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
@@ -992,7 +992,7 @@ export default function Home() {
             </div>
 
             {/* 右側：医療面接 */}
-            <div className="glass-effect rounded-2xl p-4 flex flex-col h-[400px] border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
+            <div className="glass-effect rounded-2xl p-4 flex flex-col border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
             <div className="flex items-center justify-between mb-3">
               <h2 className="heading-section font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                 {language === 'ja' ? '医療面接' : 'Medical Interview'}
