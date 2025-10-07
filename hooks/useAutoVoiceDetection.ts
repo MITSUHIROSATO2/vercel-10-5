@@ -354,7 +354,19 @@ export function useAutoVoiceDetection(): AutoVoiceDetectionHook {
   const setSpeakingState = useCallback((speaking: boolean) => {
     // console.log('Setting speaking state:', speaking);
     setIsSpeaking(speaking);
-    
+
+    if (speaking && recognition) {
+      if (isListening) {
+        try {
+          recognition.stop();
+        } catch (e) {
+          // console.log('Failed to stop recognition while speaking:', e);
+        }
+      }
+      setIsListening(false);
+      return;
+    }
+
     // 音声再生が完了したら音声認識を再開
     if (!speaking && isConversationActiveRef.current && isAutoMode && !isProcessing) {
       setTimeout(() => {
