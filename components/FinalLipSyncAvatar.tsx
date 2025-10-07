@@ -8,13 +8,19 @@ import { getModelPath } from '@/lib/modelPaths';
 import { textToPhonemes, phonemeToViseme } from '@/lib/englishPhonemeConverter';
 import { applyMotherAvatarTextures, resetMotherAvatarTextureCache } from '@/utils/applyMotherAvatarTextures';
 
+const isAvatarLoggingEnabled = process.env.NEXT_PUBLIC_ENABLE_AVATAR_DEBUG === 'true';
+const avatarDebugLog = (...params: unknown[]) => {
+  if (!isAvatarLoggingEnabled) return;
+  console.log(...params);
+};
+
 // WebGLコンテキストロスト対策コンポーネント
 function WebGLContextHandler() {
   const { gl } = useThree();
 
   useEffect(() => {
     const canvas = gl.domElement;
-    console.log('[WebGL] Context handler initialized');
+    avatarDebugLog('[WebGL] Context handler initialized');
 
     const handleContextLost = (event: Event) => {
       event.preventDefault();
@@ -27,21 +33,21 @@ function WebGLContextHandler() {
     };
 
     const handleContextRestored = () => {
-      console.log('[WebGL] Context restored successfully');
+      avatarDebugLog('[WebGL] Context restored successfully');
       resetMotherAvatarTextureCache();
       const femaleScene = (window as any).__FEMALE_AVATAR_SCENE__;
-      console.log('[WebGL] Female scene found:', !!femaleScene);
+      avatarDebugLog('[WebGL] Female scene found:', !!femaleScene);
       if (femaleScene) {
         try {
-          console.log('[WebGL] Reapplying female textures and hiding cornea...');
+          avatarDebugLog('[WebGL] Reapplying female textures and hiding cornea...');
           femaleScene.userData.femaleTexturesApplied = false;
           applyMotherAvatarTextures(femaleScene);
-          console.log('[WebGL] Female textures reapplied successfully');
+          avatarDebugLog('[WebGL] Female textures reapplied successfully');
         } catch (error) {
           console.warn('[WebGL] Failed to reapply female textures after context restore:', error);
         }
       } else {
-        console.log('[WebGL] No female scene to restore');
+        avatarDebugLog('[WebGL] No female scene to restore');
       }
     };
 
@@ -68,7 +74,7 @@ if (typeof window !== 'undefined') {
       const modelPath = getModelPath(type);
       const safePath = encodeURI(modelPath);
       useGLTF.preload(safePath);
-      // console.log(`Preloading model ${type}: ${modelPath}`);
+      // avatarDebugLog(`Preloading model ${type}: ${modelPath}`);
     } catch (error) {
       console.warn(`Model preload skipped for ${type}:`, error);
     }
@@ -1540,13 +1546,13 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
           lowerMeshName.includes('stubble')
         ) {
           child.visible = false;
-          console.log(`  -> 非表示: ${meshName}`);
+          avatarDebugLog(`  -> 非表示: ${meshName}`);
           return;
         }
 
         if (lowerMeshName.includes('cornea')) {
           child.visible = false;
-          console.log(`  -> 角膜を非表示: ${meshName}`);
+          avatarDebugLog(`  -> 角膜を非表示: ${meshName}`);
           return;
         }
 
@@ -1567,13 +1573,13 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
         });
       });
 
-      console.log(`マテリアル総数: ${materialsToUpdate.size}`);
+      avatarDebugLog(`マテリアル総数: ${materialsToUpdate.size}`);
 
       materialsToUpdate.forEach((material: THREE.Material) => {
         const mat = material as any;
         const matName = material.name?.toLowerCase() || '';
 
-        console.log(`マテリアル処理: ${material.name} (type: ${material.type})`);
+        avatarDebugLog(`マテリアル処理: ${material.name} (type: ${material.type})`);
 
         mat.vertexColors = false;
         mat.side = THREE.DoubleSide;
@@ -1633,7 +1639,7 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
               mat.envMapIntensity = 0.0; // 環境反射を無効化
             }
             mat.needsUpdate = true; // マテリアル更新を強制
-            console.log(`  -> 髪: 茶色（完全マット・テクスチャなし）`);
+            avatarDebugLog(`  -> 髪: 茶色（完全マット・テクスチャなし）`);
             break;
 
           case 'eyebrow_transparency':
@@ -1650,7 +1656,7 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
               mat.envMapIntensity = 0.0; // 環境反射を無効化
             }
             mat.needsUpdate = true; // マテリアル更新を強制
-            console.log(`  -> 眉毛: 茶色（完全マット・テクスチャなし）`);
+            avatarDebugLog(`  -> 眉毛: 茶色（完全マット・テクスチャなし）`);
             break;
 
           case 'nug_eye_r': {
@@ -1672,14 +1678,14 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
                 mat.map = texture;
                 mat.color = new THREE.Color(0xffffff);
                 mat.needsUpdate = true;
-                console.log(`  -> 右目: テクスチャ読み込み完了`);
+                avatarDebugLog(`  -> 右目: テクスチャ読み込み完了`);
               },
               undefined,
               (error) => {
                 console.error(`  -> 右目: テクスチャ読み込みエラー`, error);
               }
             );
-            console.log(`  -> 右目: 茶色虹彩（フォールバック色設定）`);
+            avatarDebugLog(`  -> 右目: 茶色虹彩（フォールバック色設定）`);
             break;
           }
 
@@ -1702,14 +1708,14 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
                 mat.map = texture;
                 mat.color = new THREE.Color(0xffffff);
                 mat.needsUpdate = true;
-                console.log(`  -> 左目: テクスチャ読み込み完了`);
+                avatarDebugLog(`  -> 左目: テクスチャ読み込み完了`);
               },
               undefined,
               (error) => {
                 console.error(`  -> 左目: テクスチャ読み込みエラー`, error);
               }
             );
-            console.log(`  -> 左目: 茶色虹彩（フォールバック色設定）`);
+            avatarDebugLog(`  -> 左目: 茶色虹彩（フォールバック色設定）`);
             break;
           }
 
@@ -1722,7 +1728,7 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             mat.metalness = 0.0;
             mat.depthWrite = false;
             mat.visible = false;
-            console.log(`  -> 角膜: 完全透明（非表示）`);
+            avatarDebugLog(`  -> 角膜: 完全透明（非表示）`);
             break;
 
           case 'nug_skin_head':
@@ -1734,7 +1740,7 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             mat.emissiveIntensity = 0.15;
             mat.roughness = 0.45;
             mat.metalness = 0.0;
-            console.log(`  -> 肌: 自然なベージュ`);
+            avatarDebugLog(`  -> 肌: 自然なベージュ`);
             break;
 
           case 'nug_upper_teeth':
@@ -1747,7 +1753,7 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             }
             mat.transparent = false;
             mat.opacity = 1.0;
-            console.log(`  -> 上の歯: アイボリー`);
+            avatarDebugLog(`  -> 上の歯: アイボリー`);
             break;
 
           case 'nug_lower_teeth':
@@ -1760,7 +1766,7 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             }
             mat.transparent = false;
             mat.opacity = 1.0;
-            console.log(`  -> 下の歯: アイボリー`);
+            avatarDebugLog(`  -> 下の歯: アイボリー`);
             break;
 
           case 'nug_tongue':
@@ -1773,14 +1779,14 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             }
             mat.transparent = false;
             mat.opacity = 1.0;
-            console.log(`  -> 舌: 暗めのピンク (ライト影響なし)`);
+            avatarDebugLog(`  -> 舌: 暗めのピンク (ライト影響なし)`);
             break;
 
           case 'nug_nails':
             mat.color = new THREE.Color(0xf5c9a6);
             mat.roughness = 0.3;
             mat.metalness = 0.0;
-            console.log(`  -> 爪: 薄いベージュ`);
+            avatarDebugLog(`  -> 爪: 薄いベージュ`);
             break;
 
           case 'fit_shirts':
@@ -1789,7 +1795,7 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             mat.emissiveIntensity = 0.1;
             mat.roughness = 0.7;
             mat.metalness = 0.0;
-            console.log(`  -> シャツ: 緑`);
+            avatarDebugLog(`  -> シャツ: 緑`);
             break;
 
           case 'pants':
@@ -1798,14 +1804,14 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             mat.emissiveIntensity = 0.1;
             mat.roughness = 0.6;
             mat.metalness = 0.0;
-            console.log(`  -> パンツ: 青`);
+            avatarDebugLog(`  -> パンツ: 青`);
             break;
 
           case 'boat_shoes':
             mat.color = new THREE.Color(0x4a3c28);
             mat.roughness = 0.4;
             mat.metalness = 0.1;
-            console.log(`  -> 靴: 茶色`);
+            avatarDebugLog(`  -> 靴: 茶色`);
             break;
 
           case 'nug_eyelash':
@@ -1816,27 +1822,27 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
             mat.emissiveIntensity = 0.15;
             mat.roughness = 0.5;
             mat.metalness = 0.0;
-            console.log(`  -> まつ毛/ティアライン: 肌色`);
+            avatarDebugLog(`  -> まつ毛/ティアライン: 肌色`);
             break;
 
           case 'beard_base_transparency':
           case 'nug_eye_onuglusion_r':
           case 'nug_eye_onuglusion_l':
-            console.log(`  -> スキップ: ${matName}`);
+            avatarDebugLog(`  -> スキップ: ${matName}`);
             break;
 
           default:
             mat.color = new THREE.Color(0xc08870);
             mat.roughness = 0.5;
             mat.metalness = 0.0;
-            console.log(`  -> デフォルト肌色: ${matName}`);
+            avatarDebugLog(`  -> デフォルト肌色: ${matName}`);
             break;
         }
 
         mat.needsUpdate = true;
 
         if (mat.color) {
-          console.log(`  最終的な色: #${mat.color.getHexString()}`);
+          avatarDebugLog(`  最終的な色: #${mat.color.getHexString()}`);
         }
       });
 
@@ -1846,17 +1852,17 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
 
         if (lowerMeshName.includes('occlusion') || lowerMeshName.includes('onuglusion')) {
           child.visible = false;
-          console.log(`  -> 非表示設定: ${child.name}`);
+          avatarDebugLog(`  -> 非表示設定: ${child.name}`);
         }
 
         if (lowerMeshName.includes('nug_base_eye') && !lowerMeshName.includes('onuglusion')) {
           child.visible = true;
-          console.log(`  -> 目を表示: ${child.name}`);
+          avatarDebugLog(`  -> 目を表示: ${child.name}`);
         }
 
         if (lowerMeshName.includes('cornea')) {
           child.visible = true;
-          console.log(`  -> 角膜を表示: ${child.name}`);
+          avatarDebugLog(`  -> 角膜を表示: ${child.name}`);
         }
       });
     };
@@ -1864,7 +1870,7 @@ function setupBoyAvatarMaterials(scene: THREE.Object3D, onReady?: () => void): b
     applyBoyOralBase();
     processBoyMaterials();
 
-    console.log('[AvatarModel] 少年アバターの色設定完了');
+    avatarDebugLog('[AvatarModel] 少年アバターの色設定完了');
     scene.userData.texturesApplied = true;
     const restoreVisibility = () => {
       hiddenOralMeshes.forEach(mesh => {
@@ -1982,7 +1988,7 @@ function AvatarModel({
   const isChildModel = decodedModelPath.includes('Baby main') || decodedModelPath.includes('baby') || modelPath.includes('Baby%20main');
 
   // デバッグログ
-  console.log('[Model Detection]', {
+  avatarDebugLog('[Model Detection]', {
     modelPath,
     decodedModelPath,
     selectedAvatar,
@@ -2072,7 +2078,7 @@ function AvatarModel({
   // modelPathは既にmodelPaths.tsでクリーニング済み
   const hasLoggedRef = useRef(false);
   if (!hasLoggedRef.current) {
-    console.log(`[FinalLipSyncAvatar] Loading model: ${modelPath} for avatar: ${selectedAvatar}`);
+    avatarDebugLog(`[FinalLipSyncAvatar] Loading model: ${modelPath} for avatar: ${selectedAvatar}`);
     hasLoggedRef.current = true;
   }
   const safeModelPath = encodeURI(modelPath);
@@ -2144,17 +2150,17 @@ function AvatarModel({
     
     if (modelPath.includes('少年アバター') || modelPath.includes('%E5%B0%91%E5%B9%B4%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC') || modelPath.includes('boy-avatar') || isBoyModel) {
       // マテリアル処理は1回のみ実行（開発モードでもリセットしない）
-      console.log('[AvatarModel] Applying boy avatar materials');
+      avatarDebugLog('[AvatarModel] Applying boy avatar materials');
       const applied = setupBoyAvatarMaterials(scene, notifyLoaded);
       if (!applied) {
         notifyLoaded();
       }
     } else if (modelPath.includes('少年改') || modelPath.includes('%E5%B0%91%E5%B9%B4%E6%94%B9') || decodedPath.includes('少年改') || isBoyImprovedModel) {
       // 少年改アバターのテクスチャ適用を一時的にスキップ
-      console.log('[AvatarModel] 少年改アバターのテクスチャ適用を一時的にスキップ');
+      avatarDebugLog('[AvatarModel] 少年改アバターのテクスチャ適用を一時的にスキップ');
       
       if (onLoaded) {
-        console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
+        avatarDebugLog(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
         notifyLoaded();
       }
     } else if (isAdultModel) {
@@ -2242,14 +2248,14 @@ function AvatarModel({
       // テクスチャ適用は初回のみ（フラグで管理）
       if (!scene.userData.femaleTexturesApplied) {
         try {
-          console.log('[AvatarModel] Starting texture application for female avatar');
+          avatarDebugLog('[AvatarModel] Starting texture application for female avatar');
           // テクスチャ適用完了を待ってからonLoadedを呼ぶ
           await applyMotherAvatarTextures(scene);
-          console.log('[AvatarModel] 女性アバターのマテリアル適用を完了');
+          avatarDebugLog('[AvatarModel] 女性アバターのマテリアル適用を完了');
 
           // テクスチャ適用完了後にonLoadedを呼ぶ
           if (onLoaded) {
-            console.log(`[FinalLipSyncAvatar] Female model ready, calling onLoaded for ${selectedAvatar}`);
+            avatarDebugLog(`[FinalLipSyncAvatar] Female model ready, calling onLoaded for ${selectedAvatar}`);
             notifyLoaded();
           }
         } catch (error) {
@@ -2260,16 +2266,16 @@ function AvatarModel({
           }
         }
       } else {
-        console.log('[AvatarModel] 女性アバターのテクスチャは既に適用済み');
+        avatarDebugLog('[AvatarModel] 女性アバターのテクスチャは既に適用済み');
         if (onLoaded) {
-          console.log(`[FinalLipSyncAvatar] Female model ready, calling onLoaded for ${selectedAvatar}`);
+          avatarDebugLog(`[FinalLipSyncAvatar] Female model ready, calling onLoaded for ${selectedAvatar}`);
           notifyLoaded();
         }
       }
     } else {
       // 成人男性モデルの場合はすぐに通知
       if (onLoaded) {
-        console.log(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
+        avatarDebugLog(`[FinalLipSyncAvatar] Model loaded, calling onLoaded for ${selectedAvatar}`);
         notifyLoaded();
       }
     }
@@ -2345,7 +2351,7 @@ function AvatarModel({
             return matName.includes('cornea');
           });
           if (hasCorneaMaterial) {
-            console.log('[FinalLipSyncAvatar] Found cornea mesh to remove in traverse:', child.name);
+            avatarDebugLog('[FinalLipSyncAvatar] Found cornea mesh to remove in traverse:', child.name);
             corneaMeshesToRemove.push(child);
             return; // このメッシュの処理をスキップ
           }
@@ -2395,8 +2401,8 @@ function AvatarModel({
             rotation: child.rotation.clone()
           };
           if (isBoyAvatar) {
-            console.log('舌メッシュ発見:', child.name);
-            console.log('  元の位置:', child.position);
+            avatarDebugLog('舌メッシュ発見:', child.name);
+            avatarDebugLog('  元の位置:', child.position);
           }
         }
         
@@ -2448,11 +2454,11 @@ function AvatarModel({
     corneaMeshesToRemove.forEach((mesh) => {
       if (mesh.parent) {
         mesh.parent.remove(mesh);
-        console.log('[FinalLipSyncAvatar] Removed cornea mesh from scene:', mesh.name);
+        avatarDebugLog('[FinalLipSyncAvatar] Removed cornea mesh from scene:', mesh.name);
       }
     });
     if (corneaMeshesToRemove.length > 0) {
-      console.log(`[FinalLipSyncAvatar] Total cornea meshes removed: ${corneaMeshesToRemove.length}`);
+      avatarDebugLog(`[FinalLipSyncAvatar] Total cornea meshes removed: ${corneaMeshesToRemove.length}`);
     }
 
     // 初期化時にすべてのモーフターゲットを0にリセット
@@ -2531,7 +2537,7 @@ function AvatarModel({
               }
               // 一度だけログ出力
               if (animationTime.current < 0.1) {
-                console.log(`[useFrame] Enforcing matte for ${matName}: roughness=${mat.roughness}, metalness=${mat.metalness}, type=${mat.type}`);
+                avatarDebugLog(`[useFrame] Enforcing matte for ${matName}: roughness=${mat.roughness}, metalness=${mat.metalness}, type=${mat.type}`);
               }
             }
           });
@@ -2572,7 +2578,7 @@ function AvatarModel({
           // デバッグ：瞬きの値をログ出力（10秒に1回）
           const currentTime = Date.now();
           if (currentTime - lastDebugTime.current > 10000 && blinkValue > 0.5) {
-            // console.log(`[${selectedAvatar}] Blinking - Progress: ${blinkProgress.toFixed(2)}, Value: ${blinkValue.toFixed(2)}`);
+            // avatarDebugLog(`[${selectedAvatar}] Blinking - Progress: ${blinkProgress.toFixed(2)}, Value: ${blinkValue.toFixed(2)}`);
             lastDebugTime.current = currentTime;
           }
         } else {
@@ -3297,10 +3303,10 @@ function AvatarModel({
         if (now - lastDebugTime.current > 10000) { // 10秒ごとに1回だけ出力
           lastDebugTime.current = now;
           if (teeth02Bone.current) {
-            // console.log('ボーン制御 Y:', teeth02Bone.current.position.y.toFixed(3));
+            // avatarDebugLog('ボーン制御 Y:', teeth02Bone.current.position.y.toFixed(3));
           }
           if (nugLowerTeethMesh.current) {
-            // console.log('メッシュ制御 Y:', nugLowerTeethMesh.current.position.y.toFixed(3));
+            // avatarDebugLog('メッシュ制御 Y:', nugLowerTeethMesh.current.position.y.toFixed(3));
           }
         }
 
@@ -3419,7 +3425,7 @@ function AvatarModel({
           
           // デバッグ：適用されたモーフターゲットを確認（一度だけ）
           if (blinkValue > 0.9 && !(window as any).blinkDebugLogged) {
-            /* console.log(`[boy_improved] Applying blink morphs:
+            /* avatarDebugLog(`[boy_improved] Applying blink morphs:
               A14/A15: ${(blinkValue * 1.2).toFixed(2)}
               Eye_Blink_L/R: ${blinkValue.toFixed(2)}
               Eyes_Blink: ${(blinkValue * 0.8).toFixed(2)}
@@ -3616,10 +3622,10 @@ function FinalLipSyncAvatarComponent({
   // モデルパスまたはアバタータイプが変更されたらローディング状態をリセット
   useEffect(() => {
     if (modelPath !== currentModelPath) {
-      console.log('[FinalLipSyncAvatar] Model path changed:');
-      console.log('- Previous:', currentModelPath);
-      console.log('- New:', modelPath);
-      console.log('- Is URL:', modelPath.startsWith('http'));
+      avatarDebugLog('[FinalLipSyncAvatar] Model path changed:');
+      avatarDebugLog('- Previous:', currentModelPath);
+      avatarDebugLog('- New:', modelPath);
+      avatarDebugLog('- Is URL:', modelPath.startsWith('http'));
       setIsModelLoaded(false);
       setCurrentModelPath(modelPath);
     }

@@ -8,6 +8,12 @@ import {
 
 type VoiceRole = 'patient_male' | 'patient_female' | 'doctor';
 
+const isSpeechLoggingEnabled = process.env.NEXT_PUBLIC_ENABLE_AUDIO_DEBUG === 'true';
+const speechDebugLog = (...params: unknown[]) => {
+  if (!isSpeechLoggingEnabled) return;
+  console.log(...params);
+};
+
 interface ElevenLabsSpeechHook {
   speak: (
     text: string,
@@ -133,11 +139,11 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         audioRef.current.src = '';
       }
 
-      console.log('Requesting ElevenLabs speech synthesis...');
+      speechDebugLog('Requesting ElevenLabs speech synthesis...');
 
       // テキストから感情を検出
       const emotion = detectEmotion(text);
-      console.log(`Detected emotion: ${emotion} for text: "${text.substring(0, 50)}..."`)
+      speechDebugLog(`Detected emotion: ${emotion} for text: "${text.substring(0, 50)}..."`)
 
       const requestSpeech = async (role?: VoiceRole) => {
         return fetch('/api/elevenlabs', {
@@ -158,11 +164,11 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
 
       if (!response.ok) {
         console.warn(`ElevenLabs API error: ${response.status}. Falling back to Web Speech API.`);
-        console.log('Web Speech API available:', typeof window !== 'undefined' && window.speechSynthesis);
+        speechDebugLog('Web Speech API available:', typeof window !== 'undefined' && window.speechSynthesis);
         setIsLoading(false); // ローディングを終了
         // 401 (Unauthorized/Quota exceeded) or other errors: Use Web Speech API
         if (typeof window !== 'undefined' && window.speechSynthesis) {
-          console.log('Using Web Speech API for fallback...');
+          speechDebugLog('Using Web Speech API for fallback...');
           const utterance = new SpeechSynthesisUtterance(text);
           utterance.lang = language === 'ja' ? 'ja-JP' : 'en-US';
           utterance.rate = 1.0;
@@ -300,8 +306,8 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         const blob = new Blob([byteArray], { type: 'audio/mpeg' });
         const audioUrl = URL.createObjectURL(blob);
 
-        console.log('Audio blob size:', blob.size, 'bytes');
-        console.log('Audio URL created:', audioUrl);
+        speechDebugLog('Audio blob size:', blob.size, 'bytes');
+        speechDebugLog('Audio URL created:', audioUrl);
 
         audio.src = audioUrl;
         audioRef.current = audio;
@@ -341,16 +347,16 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       
       // 音声の準備ができたら（より早いタイミングで）
       audio.onloadstart = () => {
-        // console.log('Audio loading started');
+        // speechDebugLog('Audio loading started');
       };
       
       audio.onloadeddata = () => {
         setIsLoading(false); // データロード完了時点でローディングを終了
-        // console.log('Audio data loaded');
+        // speechDebugLog('Audio data loaded');
       };
       
       audio.onloadedmetadata = () => {
-        // console.log('Audio loaded, duration:', audio.duration);
+        // speechDebugLog('Audio loaded, duration:', audio.duration);
         if (language === 'en' && audio.duration > 0) {
           const processed = preprocessTextForTiming(text);
           englishWordTimingsRef.current = estimateWordTimings(processed, audio.duration);
@@ -359,7 +365,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       
       // canplayイベントで再生可能を検知
       audio.oncanplay = () => {
-        // console.log('Audio can play');
+        // speechDebugLog('Audio can play');
         setIsLoading(false); // 念のため再度falseに
       };
 
@@ -518,17 +524,17 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       
       // 再生開始時の処理
       audio.onplay = () => {
-        console.log('Audio actually playing, duration:', audio.duration, 'seconds');
-        console.log('Audio currentTime:', audio.currentTime);
-        console.log('Audio paused:', audio.paused);
-        console.log('Audio readyState:', audio.readyState);
+        speechDebugLog('Audio actually playing, duration:', audio.duration, 'seconds');
+        speechDebugLog('Audio currentTime:', audio.currentTime);
+        speechDebugLog('Audio paused:', audio.paused);
+        speechDebugLog('Audio readyState:', audio.readyState);
         analyzeAudio();
       };
 
       // 再生終了
       audio.onended = () => {
-        console.log('Audio playback ended');
-        console.log('Final duration was:', audio.duration, 'seconds');
+        speechDebugLog('Audio playback ended');
+        speechDebugLog('Final duration was:', audio.duration, 'seconds');
         setIsCurrentlySpeaking(false);
         setCurrentWord('');
         setSpeechProgress(100);
@@ -577,7 +583,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         
         // 音声初期化がまだの場合は警告のみ
         if (!audioInitializedRef.current) {
-          // console.log('Audio not initialized yet, but will try to play anyway');
+          // speechDebugLog('Audio not initialized yet, but will try to play anyway');
         }
         
         // Safari対応: ブラウザ検出
@@ -594,9 +600,9 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
           audio.load();
         }
 
-        console.log('Audio volume set to:', audio.volume);
-        console.log('Audio muted status:', audio.muted);
-        console.log('Browser detected:', isSafari ? 'Safari' : 'Other');
+        speechDebugLog('Audio volume set to:', audio.volume);
+        speechDebugLog('Audio muted status:', audio.muted);
+        speechDebugLog('Browser detected:', isSafari ? 'Safari' : 'Other');
 
         // リップシンクを先行させるため、先にスピーキング状態を設定
         setIsCurrentlySpeaking(true);
@@ -608,8 +614,8 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         if (playPromise !== undefined) {
           await playPromise
             .then(() => {
-              console.log('ElevenLabs audio playback started');
-              console.log('Browser:', isSafari ? 'Safari' : 'Other');
+              speechDebugLog('ElevenLabs audio playback started');
+              speechDebugLog('Browser:', isSafari ? 'Safari' : 'Other');
               audioInitializedRef.current = true;
             })
             .catch((playError) => {
@@ -636,7 +642,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
               utterance.onstart = () => {
                 setIsCurrentlySpeaking(true);
                 setIsLoading(false);
-                // console.log('Fallback to Web Speech API started');
+                // speechDebugLog('Fallback to Web Speech API started');
               };
               
               utterance.onend = () => {
@@ -646,7 +652,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
                 setAudioLevel(0);
                 setCurrentPhoneme('');
                 if (onEnd) onEnd();
-                // console.log('Fallback speech completed');
+                // speechDebugLog('Fallback speech completed');
               };
               
               utterance.onerror = (_error) => {
@@ -764,7 +770,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         }, 200);
         
         audioInitializedRef.current = true;
-        // console.log('Audio context initialized successfully');
+        // speechDebugLog('Audio context initialized successfully');
       } catch {
         // console.error('Failed to initialize audio context:', error);
         // エラーが発生してもフラグは立てる（フォールバックを使用）

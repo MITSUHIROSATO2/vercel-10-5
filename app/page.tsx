@@ -8,6 +8,12 @@ import { useDemoElevenLabsSpeech } from '@/hooks/useDemoElevenLabsSpeech';
 import { getModelPath } from '@/lib/modelPaths';
 import { audioService } from '@/lib/audioService';
 
+const isPageLoggingEnabled = process.env.NEXT_PUBLIC_ENABLE_UI_DEBUG === 'true';
+const pageDebugLog = (...params: unknown[]) => {
+  if (!isPageLoggingEnabled) return;
+  console.log(...params);
+};
+
 // リップシンクアバターを動的インポート（SSRを無効化）
 const FinalLipSyncAvatar = dynamic(
   () => import('@/components/FinalLipSyncAvatar'),
@@ -36,6 +42,7 @@ import {
 
 export default function Home() {
   const [messages, setMessages] = useState<PatientMessage[]>([]);
+  const messagesRef = useRef<PatientMessage[]>([]);
   const [selectedScenario, setSelectedScenario] = useState<PatientScenario>(patientScenarios[0]);
   const [customScenarios, setCustomScenarios] = useState<PatientScenario[]>([]);
   const [editedScenarios, setEditedScenarios] = useState<{ [key: string]: PatientScenario }>({});
@@ -84,7 +91,7 @@ export default function Home() {
   // アバター変更時にローディング状態をリセット
   const handleAvatarChange = React.useCallback((avatar: 'adult' | 'boy' | 'boy_improved' | 'female', isManual = false) => {
     if (avatar !== selectedAvatar) {
-      console.log(`[Avatar Change] Switching from ${selectedAvatar} to ${avatar}${isManual ? ' (manual)' : ''}`);
+      pageDebugLog(`[Avatar Change] Switching from ${selectedAvatar} to ${avatar}${isManual ? ' (manual)' : ''}`);
       setIsAvatarLoaded(false);
       setSelectedAvatar(avatar);
       if (isManual) {
@@ -97,7 +104,7 @@ export default function Home() {
             scenario.basicInfo?.gender?.includes('女') || scenario.basicInfo?.gender?.toLowerCase().includes('female')
           );
           if (femaleScenario && femaleScenario.id !== selectedScenario.id) {
-            console.log(`[Avatar Change] Auto-switching to female scenario: ${femaleScenario.name}`);
+            pageDebugLog(`[Avatar Change] Auto-switching to female scenario: ${femaleScenario.name}`);
             setSelectedScenario(femaleScenario);
             setMessages([]);
           }
@@ -107,20 +114,20 @@ export default function Home() {
             scenario.basicInfo?.gender?.includes('男') || scenario.basicInfo?.gender?.toLowerCase().includes('male')
           );
           if (maleScenario && maleScenario.id !== selectedScenario.id) {
-            console.log(`[Avatar Change] Auto-switching to male scenario: ${maleScenario.name}`);
+            pageDebugLog(`[Avatar Change] Auto-switching to male scenario: ${maleScenario.name}`);
             setSelectedScenario(maleScenario);
             setMessages([]);
           }
         }
       }
       const modelPath = getModelPath(avatar);
-      console.log(`[Avatar Change] Model path for ${avatar}: ${modelPath}`);
+      pageDebugLog(`[Avatar Change] Model path for ${avatar}: ${modelPath}`);
     }
   }, [selectedAvatar, selectedScenario, customScenarios]);
   
   // onLoaded コールバックをメモ化（selectedAvatarへの依存を削除）
   const handleAvatarLoaded = React.useCallback(() => {
-    console.log(`[Avatar Loaded] Avatar loaded successfully`);
+    pageDebugLog(`[Avatar Loaded] Avatar loaded successfully`);
     setIsAvatarLoaded(true);
   }, []);
 
@@ -162,7 +169,7 @@ export default function Home() {
 
   // 言語変更を追跡
   useEffect(() => {
-    console.log('🌐 Language changed to:', language);
+    pageDebugLog('🌐 Language changed to:', language);
     languageRef.current = language; // useRefも更新
   }, [language]);
 
@@ -178,12 +185,12 @@ export default function Home() {
       // 日本語と英語両方に対応
       if (gender.includes('女') || gender.includes('female')) {
         if (selectedAvatar !== 'female') {
-          console.log(`🎭 Auto-switching to female avatar based on scenario gender: ${selectedScenario.basicInfo.gender}`);
+          pageDebugLog(`🎭 Auto-switching to female avatar based on scenario gender: ${selectedScenario.basicInfo.gender}`);
           handleAvatarChange('female');
         }
       } else if (gender.includes('男') || gender.includes('male')) {
         if (selectedAvatar !== 'boy') {
-          console.log(`🎭 Auto-switching to male avatar based on scenario gender: ${selectedScenario.basicInfo.gender}`);
+          pageDebugLog(`🎭 Auto-switching to male avatar based on scenario gender: ${selectedScenario.basicInfo.gender}`);
           handleAvatarChange('boy');
         }
       }
@@ -194,7 +201,7 @@ export default function Home() {
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (isDemoPlaying && currentDemoIndex === 0 && demoType) {
-      console.log('▶️ Starting demo playback with:', { demoType, demoLanguage, useImprovedDemo });
+      pageDebugLog('▶️ Starting demo playback with:', { demoType, demoLanguage, useImprovedDemo });
       // 少し遅延を入れて状態が確実に更新されるのを待つ
       const timer = setTimeout(() => {
         playNextDemoDialogue(0, demoType);
@@ -206,7 +213,7 @@ export default function Home() {
 
   // デモンストレーション機能
   const playNextDemoDialogue = async (index: number, type: 'full' | 'short') => {
-    console.log('📖 playNextDemoDialogue:', {
+    pageDebugLog('📖 playNextDemoDialogue:', {
       index,
       type,
       demoLanguage,
@@ -220,29 +227,29 @@ export default function Home() {
 
     if (type === 'full') {
       // フルデモはシナリオに基づいて動的に生成
-      console.log('🎯 Generating dynamic FULL demo for scenario:', selectedScenario.name, selectedScenario.id);
+      pageDebugLog('🎯 Generating dynamic FULL demo for scenario:', selectedScenario.name, selectedScenario.id);
       dialogues = demoLanguage === 'ja'
         ? generateDemoDialogues(selectedScenario)
         : generateDemoDialoguesEnglish(selectedScenario).length > 0
           ? generateDemoDialoguesEnglish(selectedScenario)
           : improvedDemoDialoguesEn; // 英語版が実装されるまでフォールバック
-      console.log('📚 Generated dialogues count:', dialogues.length);
-      console.log('🔍 First patient response:', dialogues.find(d => d.speaker === 'patient')?.text);
+      pageDebugLog('📚 Generated dialogues count:', dialogues.length);
+      pageDebugLog('🔍 First patient response:', dialogues.find(d => d.speaker === 'patient')?.text);
     } else {
       // ショートデモもシナリオに基づいて動的に生成
-      console.log('🎯 Generating dynamic SHORT demo for scenario:', selectedScenario.name, selectedScenario.id);
+      pageDebugLog('🎯 Generating dynamic SHORT demo for scenario:', selectedScenario.name, selectedScenario.id);
       dialogues = demoLanguage === 'ja'
         ? generateShortDemoDialogues(selectedScenario, 'ja')
         : generateShortDemoDialogues(selectedScenario, 'en');
-      console.log('📚 Generated short dialogues count:', dialogues.length);
-      console.log('🔍 First patient response:', dialogues.find(d => d.speaker === 'patient')?.text);
+      pageDebugLog('📚 Generated short dialogues count:', dialogues.length);
+      pageDebugLog('🔍 First patient response:', dialogues.find(d => d.speaker === 'patient')?.text);
     }
 
-    console.log('🗣️ Selected dialogue source:',
+    pageDebugLog('🗣️ Selected dialogue source:',
       `Dynamic ${type} demo for "${selectedScenario.name}" (${demoLanguage === 'ja' ? 'Japanese' : 'English'})`
     );
     if (dialogues[index]) {
-      console.log('💬 Current dialogue:', dialogues[index].text.substring(0, 50) + '...');
+      pageDebugLog('💬 Current dialogue:', dialogues[index].text.substring(0, 50) + '...');
     }
     
     if (index >= dialogues.length) {
@@ -275,7 +282,7 @@ export default function Home() {
 
     // 患者の発話の場合のみアバターを動かす
     if (dialogue.speaker === 'patient') {
-      console.log('🎭 デモ: 患者の発話を再生開始:', dialogue.text);
+      pageDebugLog('🎭 デモ: 患者の発話を再生開始:', dialogue.text);
       // 最新の応答を保存（アバターのリップシンク用）
       
       // アバターに応じたElevenLabs voice IDを選択
@@ -288,14 +295,14 @@ export default function Home() {
         setIsSpeaking(true);
         
         // ElevenLabs APIを呼び出す（患者用voice ID）
-        console.log('🔊 ElevenLabs APIを呼び出し中...');
+        pageDebugLog('🔊 ElevenLabs APIを呼び出し中...');
         const requestBody = {
           text: dialogue.text,
           voiceRole: patientVoiceRole,
           emotion: 'neutral', // デモでは感情をニュートラルに設定
           language: demoLanguage // demoLanguageを使用
         };
-        console.log('📤 ElevenLabs APIリクエスト:', requestBody);
+        pageDebugLog('📤 ElevenLabs APIリクエスト:', requestBody);
 
         const response = await fetch('/api/elevenlabs', {
           method: 'POST',
@@ -307,27 +314,27 @@ export default function Home() {
         
         if (response.ok) {
           const data = await response.json();
-          console.log('✅ ElevenLabs API応答受信:', data.audio ? '音声データあり' : '音声データなし');
+          pageDebugLog('✅ ElevenLabs API応答受信:', data.audio ? '音声データあり' : '音声データなし');
           if (data.audio) {
             // Base64音声データを再生しながらリップシンクを継続
             try {
-              console.log('🎵 音声再生を開始...');
+              pageDebugLog('🎵 音声再生を開始...');
               
               // デモ専用の高品質リップシンクフックを使用（本番と同等の品質）
               setIsSpeaking(true);
               
               try {
-                console.log('🎵 playDemoAudio呼び出し中...');
+                pageDebugLog('🎵 playDemoAudio呼び出し中...');
                 // useDemoElevenLabsSpeechフックを使用して本番と同じ品質のリップシンクを実現
                 await playDemoAudio(data.audio, dialogue.text);
-                console.log('✅ playDemoAudio完了');
+                pageDebugLog('✅ playDemoAudio完了');
               } catch (playError) {
                 console.error('❌ playDemoAudioエラー:', playError);
               }
               
               // 音声再生完了後のクリーンアップ
               setIsSpeaking(false);
-              console.log('✅ 音声再生処理完了');
+              pageDebugLog('✅ 音声再生処理完了');
               
               proceedToNext();
               return; // 処理完了
@@ -445,7 +452,7 @@ export default function Home() {
   // startDemo関数を追加
   const startDemo = (type: 'full' | 'short') => {
     const currentLang = languageRef.current; // useRefから最新の言語値を取得
-    console.log('🎬 Starting demo with:', {
+    pageDebugLog('🎬 Starting demo with:', {
       type,
       currentLanguage: currentLang,
       stateLanguage: language,
@@ -536,7 +543,7 @@ export default function Home() {
       
       startConversation((finalTranscript) => {
         if (finalTranscript.trim() && isConversationActiveRef.current) {
-          // console.log('音声認識結果:', finalTranscript);
+          // pageDebugLog('音声認識結果:', finalTranscript);
           handleSendMessage(finalTranscript);
         }
       }, language);
@@ -550,7 +557,7 @@ export default function Home() {
           
           await initializeAudio();
           setAudioInitialized(true);
-          // console.log('✅ 音声システムを初期化しました');
+          // pageDebugLog('✅ 音声システムを初期化しました');
         }, 100);
       }
     } catch {
@@ -580,6 +587,11 @@ export default function Home() {
     setSpeakingState(isCurrentlySpeaking || isSpeaking);
   }, [isCurrentlySpeaking, isSpeaking, setSpeakingState]);
   
+  // 状態と最新の会話ログを同期
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
   // 会話ログの自動スクロール
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -595,7 +607,7 @@ export default function Home() {
     if (!text.trim()) return;
 
     const newMessage: PatientMessage = { role: 'user', content: text };
-    const updatedMessages = [...messages, newMessage];
+    const updatedMessages = [...messagesRef.current, newMessage];
     setMessages(updatedMessages);
     setIsLoadingResponse(true);
 
@@ -622,14 +634,14 @@ export default function Home() {
         setApiError(data.error);
       } else if (data.response) {
         const aiMessage: PatientMessage = { role: 'assistant', content: data.response };
-        setMessages([...updatedMessages, aiMessage]);
+        setMessages(prev => [...prev, aiMessage]);
         
         // 最新の応答を保存（感情分析用）
         // 音声再生（初期化済みでなくても試みる）
         setIsSpeaking(true);
         
         // デバッグ用ログ
-        // console.log('音声再生を試みます:', {
+        // pageDebugLog('音声再生を試みます:', {
         //   audioInitialized,
         //   responseLength: data.response.length,
         //   response: data.response.substring(0, 50) + '...'
@@ -640,17 +652,17 @@ export default function Home() {
         speak(data.response,
           () => {
             setIsSpeaking(false);
-            // console.log('音声再生が完了しました');
+            // pageDebugLog('音声再生が完了しました');
 
             // 音声再生完了後、自動モードの場合は音声認識を再開
             if (isAutoMode && isConversationActiveRef.current) {
-              // console.log('音声再生完了、音声認識を再開待機中...');
+              // pageDebugLog('音声再生完了、音声認識を再開待機中...');
             }
           },
           (_progress) => {
             // プログレスのログは最小限に
             // if (progress % 25 === 0) {
-            //   console.log('Speech progress:', progress);
+            //   pageDebugLog('Speech progress:', progress);
             // }
           },
           language, // 言語設定を追加
@@ -683,7 +695,7 @@ export default function Home() {
       setIsManualAvatarSelection(false); // シナリオ変更時は自動切り替えを再開
       cancel();
       setApiError(null);
-      // console.log('シナリオを変更しました：', scenario.name);
+      // pageDebugLog('シナリオを変更しました：', scenario.name);
     }
   };
 
@@ -698,7 +710,7 @@ export default function Home() {
     
     // localStorageに保存
     localStorage.setItem('customScenarios', JSON.stringify(updatedCustomScenarios));
-    // console.log('新規シナリオを生成しました：', newScenario.name);
+    // pageDebugLog('新規シナリオを生成しました：', newScenario.name);
   };
 
   // 評価の保存
@@ -779,7 +791,7 @@ export default function Home() {
                   <div className="absolute top-4 left-4 z-10 flex gap-2">
                     <button
                       onClick={() => {
-                        console.log('🇬🇧 Switching to English (current:', language, ')');
+                        pageDebugLog('🇬🇧 Switching to English (current:', language, ')');
                         setLanguage('en');
                       }}
                       className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
@@ -792,7 +804,7 @@ export default function Home() {
                     </button>
                     <button
                       onClick={() => {
-                        console.log('🇯🇵 Switching to Japanese (current:', language, ')');
+                        pageDebugLog('🇯🇵 Switching to Japanese (current:', language, ')');
                         setLanguage('ja');
                       }}
                       className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
@@ -1260,7 +1272,7 @@ export default function Home() {
           onClose={() => setShowCriteriaEditor(false)}
           onSave={() => {
             // 評価項目が更新されたことを通知（必要に応じて処理を追加）
-            // console.log('評価項目が更新されました');
+            // pageDebugLog('評価項目が更新されました');
           }}
           language={language}
         />
