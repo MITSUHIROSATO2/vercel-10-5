@@ -276,12 +276,12 @@ export default function AIEvaluationResult({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-cyan-500/30">
+      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl w-full max-w-[min(1100px,90vw)] max-h-[90vh] overflow-hidden border border-cyan-500/30">
         {/* ヘッダー */}
         <div className="p-6 border-b border-cyan-500/30">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-cyan-400 flex items-center gap-2" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+              <h2 className="heading-display font-bold text-cyan-400 flex items-center gap-2" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                 <span>🤖</span> {language === 'ja' ? 'AI医療面接評価' : 'AI Medical Interview Evaluation'}
               </h2>
               <p className="text-gray-400 mt-1 text-sm">
@@ -349,7 +349,7 @@ export default function AIEvaluationResult({
               <div className="bg-gray-800/50 rounded-xl p-6 border border-cyan-500/20">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className="text-fluid-lg font-semibold text-white">
                       {language === 'ja' ? '総合スコア' : 'Total Score'}
                     </h3>
                     <div className="mt-2 inline-flex items-center gap-2 text-sm text-gray-300 bg-gray-900/40 border border-cyan-500/20 px-3 py-1 rounded-lg">

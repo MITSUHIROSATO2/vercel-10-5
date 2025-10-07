@@ -602,12 +602,12 @@ export default function EvaluationList({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden border border-cyan-500/30">
+      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl w-full max-w-[min(1100px,90vw)] max-h-[80vh] overflow-hidden border border-cyan-500/30">
         {/* ヘッダー */}
         <div className="p-6 border-b border-cyan-500/30">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+              <h2 className="heading-display font-bold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                 {language === 'ja' ? '評価履歴' : 'Evaluation History'}
               </h2>
               <p className="text-gray-400 mt-1">
@@ -658,7 +658,7 @@ export default function EvaluationList({
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-4 mb-2">
-                          <h3 className="text-lg font-semibold text-white">
+                          <h3 className="text-fluid-lg font-semibold text-white">
                             {language === 'ja' ? 'シナリオID' : 'Scenario ID'}: {evaluation.scenarioId}
                           </h3>
                           <span className={`text-2xl font-bold ${getScoreColor(percentage)}`}>
@@ -666,7 +666,7 @@ export default function EvaluationList({
                           </span>
                         </div>
                         
-                        <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                           <div>
                             <span className="text-gray-400">
                               {language === 'ja' ? '評価日時' : 'Evaluation Date'}:
@@ -759,7 +759,7 @@ export default function EvaluationList({
                                   <h5 className="text-cyan-400 font-semibold mb-3">
                                     {language === 'ja' ? 'スコアサマリー' : 'Score Summary'}
                                   </h5>
-                                  <div className="grid grid-cols-2 gap-4">
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                       <span className="text-gray-400 text-xs">
                                         {language === 'ja' ? '総合スコア' : 'Total Score'}

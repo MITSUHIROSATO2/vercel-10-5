@@ -769,9 +769,9 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-cyan-900 via-slate-900 to-blue-900 tech-grid">
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent" />
       
-      <div className="container mx-auto px-4 py-8 relative z-10">
+      <div className="responsive-container px-4 py-8 sm:px-6 lg:px-8 relative z-10">
         <header className="text-center mb-8">
-          <h1 className="text-5xl lg:text-6xl font-bold mb-4" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+          <h1 className="heading-hero font-bold mb-4" style={{ fontFamily: 'Orbitron, sans-serif' }}>
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent neon-glow">
               AI DENTAL INTERVIEW SIMULATION
             </span>
@@ -779,7 +779,7 @@ export default function Home() {
           <div className="mt-4 w-32 h-1 mx-auto bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
         </header>
 
-        <div className="max-w-7xl mx-auto space-y-6">
+        <div className="space-y-6">
           {/* 上部：アバター表示 */}
           <div className="glass-effect rounded-2xl border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
             <div className="relative z-0 w-full">
@@ -884,7 +884,7 @@ export default function Home() {
             <div className="flex flex-col h-[400px] gap-4">
             <div className="glass-effect rounded-2xl p-4 border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+                <h2 className="heading-section font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                   {language === 'ja' ? 'シナリオ選択' : 'Scenario Selection'}
                 </h2>
                 <div className="flex gap-2">
@@ -994,7 +994,7 @@ export default function Home() {
             {/* 右側：医療面接 */}
             <div className="glass-effect rounded-2xl p-4 flex flex-col h-[400px] border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+              <h2 className="heading-section font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                 {language === 'ja' ? '医療面接' : 'Medical Interview'}
               </h2>
               

@@ -4,9 +4,57 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --font-fluid-xs: clamp(0.75rem, 0.7rem + 0.15vw, 0.85rem);
+    --font-fluid-sm: clamp(0.875rem, 0.82rem + 0.2vw, 1rem);
+    --font-fluid-base: clamp(1rem, 0.94rem + 0.3vw, 1.15rem);
+    --font-fluid-lg: clamp(1.15rem, 1.04rem + 0.45vw, 1.4rem);
+    --font-fluid-xl: clamp(1.4rem, 1.2rem + 0.6vw, 1.85rem);
+    --font-fluid-display: clamp(1.85rem, 1.5rem + 1.1vw, 2.7rem);
+    --font-fluid-hero: clamp(2.6rem, 2.1rem + 2.2vw, 4.6rem);
+  }
+
+  html {
+    font-size: clamp(15px, 0.85vw + 12px, 18px);
+  }
+
   body {
     @apply bg-gray-900 text-white;
     font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1 {
+    font-size: var(--font-fluid-display);
+    line-height: 1.18;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: var(--font-fluid-xl);
+    line-height: 1.24;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: var(--font-fluid-lg);
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  h4 {
+    font-size: var(--font-fluid-base);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: var(--font-fluid-base);
+  }
+
+  small {
+    font-size: var(--font-fluid-sm);
   }
 }
 
@@ -72,6 +120,51 @@
 
   .transform-3d {
     transform-style: preserve-3d;
+  }
+
+  .text-fluid-xs {
+    font-size: var(--font-fluid-xs);
+  }
+
+  .text-fluid-sm {
+    font-size: var(--font-fluid-sm);
+  }
+
+  .text-fluid-base {
+    font-size: var(--font-fluid-base);
+  }
+
+  .text-fluid-lg {
+    font-size: var(--font-fluid-lg);
+  }
+
+  .heading-section {
+    font-size: var(--font-fluid-xl);
+    line-height: 1.25;
+  }
+
+  .heading-display {
+    font-size: var(--font-fluid-display);
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+  }
+
+  .heading-hero {
+    font-size: var(--font-fluid-hero);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+  }
+
+  .responsive-container {
+    width: min(1200px, calc(100vw - 2.5rem));
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 1600px) {
+    .responsive-container {
+      width: min(1400px, calc(100vw - 4rem));
+    }
   }
 }
 
