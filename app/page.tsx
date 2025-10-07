@@ -771,12 +771,12 @@ export default function Home() {
       
       <div className="responsive-container px-4 py-6 sm:px-6 lg:px-8 relative z-10">
         <header className="text-center mb-6">
-          <h1 className="heading-display font-bold mb-3 text-balance" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+          <h1 className="heading-hero font-bold mb-2 text-balance" style={{ fontFamily: 'Orbitron, sans-serif' }}>
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent neon-glow">
               AI DENTAL INTERVIEW SIMULATION
             </span>
           </h1>
-          <div className="mt-3 w-28 h-1 mx-auto bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
+          <div className="mt-2 w-24 h-[3px] mx-auto bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
         </header>
 
         <div className="space-y-5">
@@ -879,15 +879,15 @@ export default function Home() {
           </div>
 
           {/* 下部：シナリオ選択、AI患者情報、医療面接 */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 items-stretch">
             {/* 左側：シナリオ選択とAI患者情報ボタン */}
-            <div className="flex flex-col gap-4">
-            <div className="glass-effect rounded-2xl p-4 border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
-              <div className="flex items-center justify-between mb-3">
+            <div className="flex flex-col gap-4 lg:gap-5">
+            <div className="glass-effect rounded-2xl p-4 lg:p-5 border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
                 <h2 className="heading-section font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                   {language === 'ja' ? 'シナリオ選択' : 'Scenario Selection'}
                 </h2>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => {
                       if (isDemoPlaying && demoType === 'short') {
@@ -992,8 +992,8 @@ export default function Home() {
             </div>
 
             {/* 右側：医療面接 */}
-            <div className="glass-effect rounded-2xl p-4 flex flex-col border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
-            <div className="flex items-center justify-between mb-3">
+            <div className="glass-effect rounded-2xl p-4 lg:p-5 flex flex-col border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300" style={{ minHeight: 'clamp(320px, 48vh, 420px)' }}>
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
               <h2 className="heading-section font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                 {language === 'ja' ? '医療面接' : 'Medical Interview'}
               </h2>
@@ -1030,7 +1030,7 @@ export default function Home() {
                 </div>
               )}
               
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setShowCriteriaEditor(true)}
                   className="px-3 py-1 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-sm rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all flex items-center gap-2"
@@ -1048,7 +1048,7 @@ export default function Home() {
               </div>
             </div>
             
-            <div ref={chatContainerRef} className="flex-1 overflow-y-auto mb-3 p-3 bg-gray-900/50 rounded-xl space-y-3 custom-scrollbar">
+            <div ref={chatContainerRef} className="flex-1 overflow-y-auto mb-3 p-3 bg-gray-900/50 rounded-xl space-y-3 custom-scrollbar" style={{ maxHeight: 'calc(100% - 140px)' }}>
               {messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-gray-500 text-center">
