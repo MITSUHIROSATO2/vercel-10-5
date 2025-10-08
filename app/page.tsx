@@ -631,17 +631,19 @@ export default function Home() {
       }
 
       const data = await response.json();
-      
+
       if (data.error) {
         setApiError(data.error);
       } else if (data.response) {
+        // 音声出力の意図を先に設定（音声認識停止を継続）
+        isAudioOutputIntendedRef.current = true;
+        setIsSpeaking(true);
+
         const aiMessage: PatientMessage = { role: 'assistant', content: data.response };
         setMessages(prev => [...prev, aiMessage]);
-        
+
         // 最新の応答を保存（感情分析用）
         // 音声再生（初期化済みでなくても試みる）
-        setIsSpeaking(true);
-        isAudioOutputIntendedRef.current = true; // 音声出力開始
         
         // デバッグ用ログ
         // pageDebugLog('音声再生を試みます:', {
@@ -720,13 +722,13 @@ export default function Home() {
   // 評価の保存
   const handleSaveEvaluation = (evaluation: EvaluationType) => {
     // 新規作成のみ
-    setEvaluations(prev => [...prev, evaluation]);
-    setShowAIEvaluation(false);
-
-    // localStorageに保存
-    const storedEvaluations = localStorage.getItem('evaluations');
-    const allEvaluations = storedEvaluations ? JSON.parse(storedEvaluations) : [];
-    localStorage.setItem('evaluations', JSON.stringify([...allEvaluations, evaluation]));
+    setEvaluations(prev => {
+      const updated = [...prev, evaluation];
+      // localStorageに保存（更新後の値を使用）
+      localStorage.setItem('evaluations', JSON.stringify(updated));
+      return updated;
+    });
+    // モーダルは自動で閉じない（ユーザーが手動で閉じる）
   };
 
   // 評価の削除
@@ -1133,7 +1135,7 @@ export default function Home() {
                         ? 'bg-gradient-to-r from-yellow-500 to-orange-500 scale-110'
                         : 'bg-gradient-to-r from-red-500 to-pink-500 scale-110 animate-pulse'
                       : 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:scale-105'
-                  } ${(isLoadingResponse || isCurrentlySpeaking) ? 'opacity-50 cursor-not-allowed' : ''} shadow-lg`}
+                  } ${(isLoadingResponse || isCurrentlySpeaking) ? 'cursor-not-allowed' : ''} shadow-lg`}
                 >
                   <div className="relative">
                     {/* 音声レベルメーター */}
@@ -1252,6 +1254,7 @@ export default function Home() {
           scenarioId={selectedScenario.id}
           onClose={() => setShowAIEvaluation(false)}
           language={language}
+          interviewDurationSeconds={interviewTime}
           availableScenarios={[...patientScenarios, ...customScenarios].map(s => {
             const displayScenario = editedScenarios[s.id] || s;
             const translatedScenario = getTranslatedScenario(displayScenario, language);
