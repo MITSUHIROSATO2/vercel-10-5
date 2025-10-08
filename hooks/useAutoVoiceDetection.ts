@@ -191,9 +191,11 @@ export function useAutoVoiceDetection(): AutoVoiceDetectionHook {
 
         recognitionInstance.onend = () => {
           // console.log('Recognition ended. isConversationActive:', isConversationActiveRef.current, 'isAutoMode:', isAutoMode, 'isProcessing:', isProcessing, 'isSpeaking:', isSpeaking);
-          
-          // 音声認識が終了した場合の状態をリセット
-          setIsListening(false);
+
+          // 音声再生中の一時停止の場合はisListeningを維持
+          if (!isSpeaking) {
+            setIsListening(false);
+          }
           
           // 自動モードで会話継続中の場合は再開
           if (isConversationActiveRef.current && isAutoMode) {
@@ -356,21 +358,19 @@ export function useAutoVoiceDetection(): AutoVoiceDetectionHook {
     setIsSpeaking(speaking);
 
     if (speaking && recognition) {
-      if (isListening) {
-        try {
-          recognition.stop();
-        } catch (e) {
-          // console.log('Failed to stop recognition while speaking:', e);
-        }
+      // 音声再生中は音声認識を停止するが、isListeningは維持（マイク表示のチカチカ防止）
+      try {
+        recognition.stop();
+      } catch (e) {
+        // console.log('Failed to stop recognition while speaking:', e);
       }
-      setIsListening(false);
       return;
     }
 
     // 音声再生が完了したら音声認識を再開
     if (!speaking && isConversationActiveRef.current && isAutoMode && !isProcessing) {
       setTimeout(() => {
-        if (recognition && !isListening && isConversationActiveRef.current) {
+        if (recognition && isConversationActiveRef.current) {
           try {
             recognition.start();
             // console.log('Recognition restarted after speaking complete');
@@ -380,7 +380,7 @@ export function useAutoVoiceDetection(): AutoVoiceDetectionHook {
         }
       }, 300); // 音声再生後すぐに聞き取り再開
     }
-  }, [recognition, isAutoMode, isProcessing, isListening]);
+  }, [recognition, isAutoMode, isProcessing]);
 
   // コンポーネントのクリーンアップ
   useEffect(() => {

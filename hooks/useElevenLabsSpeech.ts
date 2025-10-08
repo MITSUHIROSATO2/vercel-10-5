@@ -176,8 +176,8 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
           utterance.volume = 0.8;
 
           utterance.onstart = () => {
-            setIsCurrentlySpeaking(true);
-            setIsLoading(false);
+            setIsCurrentlySpeaking(true); // 先にスピーキング状態を開始
+            setIsLoading(false); // その後ローディングを終了
           };
 
           utterance.onend = () => {
@@ -247,8 +247,8 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
           utterance.volume = 0.8;
 
           utterance.onstart = () => {
-            setIsCurrentlySpeaking(true);
-            setIsLoading(false);
+            setIsCurrentlySpeaking(true); // 先にスピーキング状態を開始
+            setIsLoading(false); // その後ローディングを終了
           };
 
           utterance.onend = () => {
@@ -349,12 +349,14 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
       audio.onloadstart = () => {
         // speechDebugLog('Audio loading started');
       };
-      
+
       audio.onloadeddata = () => {
-        setIsLoading(false); // データロード完了時点でローディングを終了
+        // 状態遷移を同時に行い、ギャップをなくす
+        setIsCurrentlySpeaking(true); // 先にスピーキング状態を開始
+        setIsLoading(false); // その後ローディングを終了
         // speechDebugLog('Audio data loaded');
       };
-      
+
       audio.onloadedmetadata = () => {
         // speechDebugLog('Audio loaded, duration:', audio.duration);
         if (language === 'en' && audio.duration > 0) {
@@ -362,11 +364,12 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
           englishWordTimingsRef.current = estimateWordTimings(processed, audio.duration);
         }
       };
-      
+
       // canplayイベントで再生可能を検知
       audio.oncanplay = () => {
         // speechDebugLog('Audio can play');
-        setIsLoading(false); // 念のため再度falseに
+        setIsCurrentlySpeaking(true); // 先にスピーキング状態を開始
+        setIsLoading(false); // その後ローディングを終了
       };
 
       // 音声解析の準備
@@ -604,9 +607,6 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
         speechDebugLog('Audio muted status:', audio.muted);
         speechDebugLog('Browser detected:', isSafari ? 'Safari' : 'Other');
 
-        // リップシンクを先行させるため、先にスピーキング状態を設定
-        setIsCurrentlySpeaking(true);
-
         // 音声再生を50ms遅延（リップシンクを先行させる）
         await new Promise(resolve => setTimeout(resolve, 50));
 
@@ -617,6 +617,7 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
               speechDebugLog('ElevenLabs audio playback started');
               speechDebugLog('Browser:', isSafari ? 'Safari' : 'Other');
               audioInitializedRef.current = true;
+              // Note: isCurrentlySpeakingはonloadeddataで既にtrueに設定済み
             })
             .catch((playError) => {
               // エラーをthrowして下のcatchブロックで処理
@@ -640,11 +641,11 @@ export function useElevenLabsSpeech(): ElevenLabsSpeechHook {
               utterance.volume = 0.8;
               
               utterance.onstart = () => {
-                setIsCurrentlySpeaking(true);
-                setIsLoading(false);
+                setIsCurrentlySpeaking(true); // 先にスピーキング状態を開始
+                setIsLoading(false); // その後ローディングを終了
                 // speechDebugLog('Fallback to Web Speech API started');
               };
-              
+
               utterance.onend = () => {
                 setIsCurrentlySpeaking(false);
                 setCurrentWord('');

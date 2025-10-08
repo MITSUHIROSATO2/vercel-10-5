@@ -75,9 +75,9 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-slate-900 rounded-2xl max-w-6xl w-full border border-cyan-500/30">
         {/* ヘッダー */}
-        <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 p-6 border-b border-cyan-500/30">
+        <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 p-4 border-b border-cyan-500/30">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            <h2 className="text-xl font-bold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
               {language === 'ja' ? `シナリオ新規自動生成 by ${scenarioModelLabel}` : `Generate New Scenario with ${scenarioModelLabel}`}
             </h2>
             <div className="flex gap-2">
@@ -109,14 +109,14 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
         </div>
 
         {/* コンテンツ */}
-        <div className="p-6">
-          <h3 className="text-lg font-semibold text-cyan-400 mb-4">{language === 'ja' ? '生成タイプを選択' : 'Select Generation Type'}</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="p-4">
+          <h3 className="text-base font-semibold text-cyan-400 mb-3">{language === 'ja' ? '生成タイプを選択' : 'Select Generation Type'}</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {themes.map(theme => (
               <button
                 key={theme.id}
                 onClick={() => setSelectedTheme(theme.id)}
-                className={`p-4 rounded-xl border-2 transition-all ${
+                className={`p-3 rounded-xl border-2 transition-all ${
                   selectedTheme === theme.id
                     ? 'bg-gradient-to-br from-cyan-900/50 to-blue-900/50 border-cyan-400 shadow-lg shadow-cyan-400/20'
                     : 'bg-slate-800/50 border-slate-700 hover:border-cyan-500/50 hover:bg-slate-800'
@@ -129,7 +129,7 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
             ))}
           </div>
 
-          <div className="mt-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
+          <div className="mt-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
             <h4 className="text-sm font-semibold text-cyan-400 mb-2">{language === 'ja' ? '生成される内容' : 'Generated Content'}</h4>
             <ul className="text-xs text-gray-300 space-y-1">
               <li>• {language === 'ja' ? '患者の基本情報（氏名、年齢、性別、職業）' : 'Basic patient information (name, age, gender, occupation)'}</li>
@@ -141,7 +141,7 @@ export default function ScenarioGenerator({ onGenerate, onCancel, language = 'ja
           </div>
 
           {selectedTheme !== 'random' && (
-            <div className="mt-4 p-4 bg-blue-900/20 rounded-lg border border-blue-500/30">
+            <div className="mt-3 p-3 bg-blue-900/20 rounded-lg border border-blue-500/30">
               <p className="text-sm text-blue-300">
                 {language === 'ja' ? (
                   <><strong>{themes.find(t => t.id === selectedTheme)?.label}</strong>の特徴を持つシナリオが生成されます。

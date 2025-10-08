@@ -485,6 +485,7 @@ export default function Home() {
   }, []);
 
   const isConversationActiveRef = useRef(false);
+  const isAudioOutputIntendedRef = useRef(false); // 音声出力の意図を追跡
   
   // タイマーの管理
   useEffect(() => {
@@ -582,10 +583,11 @@ export default function Home() {
   useEffect(() => {
     setProcessingState(isLoadingResponse);
   }, [isLoadingResponse, setProcessingState]);
-  
+
   useEffect(() => {
-    setSpeakingState(isCurrentlySpeaking || isSpeaking);
-  }, [isCurrentlySpeaking, isSpeaking, setSpeakingState]);
+    // 音声準備中(isLoading)または音声再生中は音声認識を停止
+    setSpeakingState(isLoading || isCurrentlySpeaking || isSpeaking);
+  }, [isLoading, isCurrentlySpeaking, isSpeaking, setSpeakingState]);
   
   // 状態と最新の会話ログを同期
   useEffect(() => {
@@ -639,6 +641,7 @@ export default function Home() {
         // 最新の応答を保存（感情分析用）
         // 音声再生（初期化済みでなくても試みる）
         setIsSpeaking(true);
+        isAudioOutputIntendedRef.current = true; // 音声出力開始
         
         // デバッグ用ログ
         // pageDebugLog('音声再生を試みます:', {
@@ -652,6 +655,7 @@ export default function Home() {
         speak(data.response,
           () => {
             setIsSpeaking(false);
+            isAudioOutputIntendedRef.current = false; // 音声出力終了
             // pageDebugLog('音声再生が完了しました');
 
             // 音声再生完了後、自動モードの場合は音声認識を再開
@@ -717,6 +721,7 @@ export default function Home() {
   const handleSaveEvaluation = (evaluation: EvaluationType) => {
     // 新規作成のみ
     setEvaluations(prev => [...prev, evaluation]);
+    setShowAIEvaluation(false);
 
     // localStorageに保存
     const storedEvaluations = localStorage.getItem('evaluations');
@@ -769,17 +774,16 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-cyan-900 via-slate-900 to-blue-900 tech-grid">
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent" />
       
-      <div className="responsive-container px-4 py-6 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 py-4 relative z-10">
         <header className="text-center mb-6">
-          <h1 className="heading-hero font-bold mb-2 text-balance" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-2" style={{ fontFamily: 'Orbitron, sans-serif' }}>
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent neon-glow">
               AI DENTAL INTERVIEW SIMULATION
             </span>
           </h1>
-          <div className="mt-2 w-24 h-[3px] mx-auto bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" />
         </header>
 
-        <div className="space-y-5">
+        <div className="max-w-7xl mx-auto space-y-4">
           {/* 上部：アバター表示 */}
           <div className="glass-effect rounded-2xl border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
             <div className="relative z-0 w-full">
@@ -862,7 +866,7 @@ export default function Home() {
                 </>
               )}
               {/* リップシンク対応アバター表示部分 */}
-              <div className="scan-overlay" style={{ minHeight: 'clamp(260px, 42vw, 360px)' }}>
+              <div className="scan-overlay" style={{ minHeight: '400px' }}>
                 <FinalLipSyncAvatar
                   key={selectedAvatar} // アバター変更時に完全に再マウント
                   isSpeaking={isSpeaking || isCurrentlySpeaking || isDemoAudioPlaying}
@@ -879,15 +883,15 @@ export default function Home() {
           </div>
 
           {/* 下部：シナリオ選択、AI患者情報、医療面接 */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* 左側：シナリオ選択とAI患者情報ボタン */}
-            <div className="flex flex-col gap-4 lg:gap-5">
-            <div className="glass-effect rounded-2xl p-4 lg:p-5 border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
-              <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                <h2 className="heading-section font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            <div className="flex flex-col h-[320px] gap-4">
+            <div className="glass-effect rounded-2xl p-4 border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
+              <div className="flex items-center justify-between mb-3">
+              <h2 className="text-base font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                   {language === 'ja' ? 'シナリオ選択' : 'Scenario Selection'}
                 </h2>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto">
                   <button
                     onClick={() => {
                       if (isDemoPlaying && demoType === 'short') {
@@ -904,10 +908,12 @@ export default function Home() {
                         });
                       }
                     }}
-                    className="px-2.5 py-1.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all flex items-center gap-1.5"
+                    className="px-2 py-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white text-[10px] sm:text-xs rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all flex items-center gap-0.5 whitespace-nowrap"
                   >
                     <span>{isDemoPlaying && demoType === 'short' ? '⏸️' : '▶️'}</span>
-                    {isDemoPlaying && demoType === 'short' ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'デモ' : 'Demo')}
+                    <span className="whitespace-nowrap">
+                      {isDemoPlaying && demoType === 'short' ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'デモ' : 'Demo')}
+                    </span>
                   </button>
                   <button
                     onClick={() => {
@@ -924,26 +930,29 @@ export default function Home() {
                         });
                       }
                     }}
-                    className="px-2.5 py-1.5 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white text-sm rounded-lg hover:from-cyan-700 hover:to-cyan-800 transition-all flex items-center gap-1.5"
+                    className="px-2 py-1 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white text-[10px] sm:text-xs rounded-lg hover:from-cyan-700 hover:to-cyan-800 transition-all flex items-center gap-0.5 whitespace-nowrap"
                   >
                     <span>{isDemoPlaying && demoType === 'full' ? '⏸️' : '▶️'}</span>
-                    {isDemoPlaying && demoType === 'full' ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'フルデモ' : 'Full Demo')}
+                    <span className="whitespace-nowrap">
+                      {isDemoPlaying && demoType === 'full' ? (language === 'ja' ? '停止' : 'Stop') : (language === 'ja' ? 'フルデモ' : 'Full Demo')}
+                    </span>
                   </button>
                   <button
                     onClick={() => setIsGeneratingScenario(true)}
-                    className="px-2.5 py-1.5 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-sm rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all flex items-center gap-1.5 whitespace-nowrap"
+                    className="px-2 py-1 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-[10px] sm:text-xs rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all flex items-center gap-0.5 whitespace-nowrap"
                   >
                     <span>🎲</span>
-                    {language === 'ja' ? 'シナリオ新規自動生成' : 'Generate New Scenario'}
+                    <span className="whitespace-nowrap">
+                      {language === 'ja' ? 'シナリオ新規自動生成' : 'Generate New Scenario'}
+                    </span>
                   </button>
                   <button
                     onClick={() => setIsEditingScenario(true)}
-                    className="px-2.5 py-1.5 bg-gradient-to-r from-slate-600 to-slate-700 text-white text-sm rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all flex items-center gap-1.5"
+                    className="px-2 py-1 bg-gradient-to-r from-slate-600 to-slate-700 text-white text-[10px] sm:text-xs rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all flex items-center gap-0.5 whitespace-nowrap"
                   >
                     <span>✏️</span>
-                    {language === 'ja' ? '編集' : 'Edit'}
+                    <span className="whitespace-nowrap">{language === 'ja' ? '編集' : 'Edit'}</span>
                   </button>
-                  {/* カスタムシナリオの場合は削除ボタンを表示 */}
                   {customScenarios.some(s => s.id === selectedScenario.id) && (
                     <button
                       onClick={() => {
@@ -954,10 +963,10 @@ export default function Home() {
                           setSelectedScenario(patientScenarios[0]);
                         }
                       }}
-                      className="px-3 py-1 bg-gradient-to-r from-red-600 to-red-700 text-white text-sm rounded-lg hover:from-red-700 hover:to-red-800 transition-all flex items-center gap-2"
+                      className="px-2 py-1 bg-gradient-to-r from-red-600 to-red-700 text-white text-[10px] sm:text-xs rounded-lg hover:from-red-700 hover:to-red-800 transition-all flex items-center gap-0.5 whitespace-nowrap"
                     >
                       <span>🗑️</span>
-                      {language === 'ja' ? '削除' : 'Delete'}
+                      <span className="whitespace-nowrap">{language === 'ja' ? '削除' : 'Delete'}</span>
                     </button>
                   )}
                 </div>
@@ -992,15 +1001,15 @@ export default function Home() {
             </div>
 
             {/* 右側：医療面接 */}
-            <div className="glass-effect rounded-2xl p-4 lg:p-5 flex flex-col border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300" style={{ minHeight: 'clamp(320px, 48vh, 420px)' }}>
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-              <h2 className="heading-section font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+            <div className="glass-effect rounded-2xl p-4 flex flex-col h-[320px] border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-base font-semibold text-cyan-400" style={{ fontFamily: 'Orbitron, sans-serif' }}>
                 {language === 'ja' ? '医療面接' : 'Medical Interview'}
               </h2>
               
               {/* タイマー表示 */}
               {(isTimerRunning || interviewTime > 0) && (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <div className="glass-effect px-3 py-1 rounded-lg border border-cyan-500/30 flex items-center gap-2">
                     <span className="text-cyan-400">⏱️</span>
                     <span className="text-cyan-300 font-mono text-lg">
@@ -1030,25 +1039,25 @@ export default function Home() {
                 </div>
               )}
               
-              <div className="flex flex-wrap gap-2">
+              <div className="flex items-center gap-1.5 overflow-x-auto flex-nowrap">
                 <button
                   onClick={() => setShowCriteriaEditor(true)}
-                  className="px-3 py-1 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-sm rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all flex items-center gap-2"
+                  className="px-3 py-1 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-[11px] sm:text-xs rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all flex items-center gap-1"
                 >
                   <span>⚙️</span>
-                  {language === 'ja' ? '評価項目編集' : 'Edit Criteria'}
+                  <span className="whitespace-nowrap">{language === 'ja' ? '評価項目編集' : 'Edit Criteria'}</span>
                 </button>
                 <button
                   onClick={() => setShowEvaluationList(true)}
-                  className="px-3 py-1 bg-gradient-to-r from-slate-600 to-slate-700 text-white text-sm rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all flex items-center gap-2"
+                  className="px-3 py-1 bg-gradient-to-r from-slate-600 to-slate-700 text-white text-[11px] sm:text-xs rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all flex items-center gap-1"
                 >
                   <span>📂</span>
-                  {language === 'ja' ? '評価履歴' : 'History'}
+                  <span className="whitespace-nowrap">{language === 'ja' ? '評価履歴' : 'History'}</span>
                 </button>
               </div>
             </div>
             
-            <div ref={chatContainerRef} className="flex-1 overflow-y-auto mb-3 p-3 bg-gray-900/50 rounded-xl space-y-3 custom-scrollbar" style={{ maxHeight: 'calc(100% - 140px)' }}>
+            <div ref={chatContainerRef} className="flex-1 overflow-y-auto mb-3 p-3 bg-gray-900/50 rounded-xl space-y-3 custom-scrollbar">
               {messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-gray-500 text-center">
@@ -1106,36 +1115,48 @@ export default function Home() {
 
             <div className="flex items-center gap-4">
               {/* 音声認識制御ボタン */}
-              <button
-                onClick={() => {
-                  if (isListening) {
-                    handleStopConversation();
-                  } else {
-                    handleStartConversation();
-                  }
-                }}
-                disabled={isLoadingResponse || isCurrentlySpeaking}
-                className={`relative w-16 h-16 rounded-full transition-all duration-300 ${
-                  isListening 
-                    ? 'bg-gradient-to-r from-red-500 to-pink-500 scale-110 animate-pulse' 
-                    : 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:scale-105'
-                } ${(isLoadingResponse || isCurrentlySpeaking) ? 'opacity-50 cursor-not-allowed' : ''} shadow-lg`}
-              >
-                <div className="relative">
-                  {/* 音声レベルメーター */}
-                  {isListening && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div 
-                        className="w-14 h-14 rounded-full bg-white/20 transition-transform"
-                        style={{ transform: `scale(${0.8 + voiceActivityLevel * 0.4})` }}
-                      />
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    if (isListening) {
+                      handleStopConversation();
+                    } else {
+                      handleStartConversation();
+                    }
+                  }}
+                  disabled={isLoadingResponse || isCurrentlySpeaking}
+                  className={`relative w-16 h-16 rounded-full transition-colors duration-200 ${
+                    (isListening || isAudioOutputIntendedRef.current)
+                      ? (isLoading || isCurrentlySpeaking || isSpeaking || isAudioOutputIntendedRef.current)
+                        ? 'bg-gradient-to-r from-yellow-500 to-orange-500 scale-110'
+                        : 'bg-gradient-to-r from-red-500 to-pink-500 scale-110 animate-pulse'
+                      : 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:scale-105'
+                  } ${(isLoadingResponse || isCurrentlySpeaking) ? 'opacity-50 cursor-not-allowed' : ''} shadow-lg`}
+                >
+                  <div className="relative">
+                    {/* 音声レベルメーター */}
+                    {isListening && !(isLoading || isCurrentlySpeaking || isSpeaking) && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div
+                          className="w-14 h-14 rounded-full bg-white/20 transition-transform"
+                          style={{ transform: `scale(${0.8 + voiceActivityLevel * 0.4})` }}
+                        />
+                      </div>
+                    )}
+                    <span className="relative text-2xl z-10">
+                      {(isLoading || isCurrentlySpeaking || isSpeaking || isAudioOutputIntendedRef.current) ? '⏸️' : (isListening ? '⏸️' : '🎤')}
+                    </span>
+                  </div>
+                </button>
+                {/* 音声出力中の一時停止表示 */}
+                {isListening && (isLoading || isCurrentlySpeaking || isSpeaking) && (
+                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+                    <div className="bg-yellow-500/90 text-black text-xs px-2 py-1 rounded-full font-medium animate-pulse">
+                      {language === 'ja' ? '一時停止中' : 'Paused'}
                     </div>
-                  )}
-                  <span className="relative text-2xl z-10">
-                    {isListening ? '⏸️' : '🎤'}
-                  </span>
-                </div>
-              </button>
+                  </div>
+                )}
+              </div>
               
               <div className="flex-1">
                 {isListening && (
@@ -1254,7 +1275,6 @@ export default function Home() {
           onNewScenario={() => {
             // シナリオ選択機能を有効化（ボタンのクリックで処理）
           }}
-          interviewDurationSeconds={interviewTime}
         />
       )}
 
