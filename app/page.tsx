@@ -807,13 +807,15 @@ export default function Home() {
                     </button>
                     <button
                       onClick={() => {
-                        pageDebugLog('🇯🇵 Switching to Japanese (current:', language, ')');
-                        setLanguage('ja');
+                        // Temporarily disabled
+                        // pageDebugLog('🇯🇵 Switching to Japanese (current:', language, ')');
+                        // setLanguage('ja');
                       }}
-                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                      disabled={true}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all opacity-50 cursor-not-allowed ${
                         language === 'ja'
                           ? 'bg-blue-600 text-white shadow-lg'
-                          : 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50'
+                          : 'bg-gray-700/50 text-gray-300'
                       }`}
                     >
                       日本語版
